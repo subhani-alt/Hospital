@@ -8,7 +8,7 @@ export default function VirtualAssistantModal() {
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: 'Greetings. I am Apex Concierge, your AI health navigator. How may I assist you today? You can ask about doctors, OPD timings, insurance, or health packages.'
+      text: 'Greetings. I am Apex Concierge, your AI health navigator. How may I assist you today? You can ask about doctors, OP timings, insurance, or health packages.'
     }
   ]);
 
@@ -24,7 +24,7 @@ export default function VirtualAssistantModal() {
 
     // Simulate AI response
     setTimeout(() => {
-      let botResponse = 'Thank you for contacting Apex Health Institute. Our patient relations desk is available 24/7. Would you like to schedule an OPD appointment or speak with an international patient coordinator?';
+      let botResponse = 'Thank you for contacting Apex Health Institute. Our patient relations desk is available 24/7. Would you like to schedule an OP appointment or speak with an international patient coordinator?';
 
       const lower = userText.toLowerCase();
       if (lower.includes('doctor') || lower.includes('specialist')) {

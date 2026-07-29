@@ -83,7 +83,7 @@ export default function Departments() {
                   className="w-full btn-emerald-gradient text-white font-semibold py-3 rounded-full text-xs uppercase tracking-wider shadow-md hover:scale-[1.02] transition flex items-center justify-center gap-2"
                 >
                   <Calendar className="w-4 h-4" />
-                  <span>Book Department OPD</span>
+                  <span>Book Department OP</span>
                 </button>
               </div>
             </div>

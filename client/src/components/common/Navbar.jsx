@@ -72,25 +72,9 @@ export default function Navbar() {
               </select>
             </div>
 
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={toggleDarkMode}
-              className="p-1 rounded-full hover:bg-white/10 text-white/80 transition"
-              title="Toggle Theme"
-            >
-              {isDarkMode ? <Sun className="w-3.5 h-3.5 text-amber-300" /> : <Moon className="w-3.5 h-3.5" />}
-            </button>
 
-            {/* Patient Portal / Login */}
-            {user ? (
-              <Link to="/patient-portal" className="text-[#80CBC4] font-medium hover:underline">
-                Portal ({user.name})
-              </Link>
-            ) : (
-              <Link to="/login" className="hover:text-white transition">
-                Patient Portal
-              </Link>
-            )}
+
+
           </div>
         </div>
       </div>

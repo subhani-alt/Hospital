@@ -39,7 +39,7 @@ export default function Footer() {
               to="/appointment"
               className="bg-white text-[#00695C] hover:bg-emerald-50 font-bold px-6 py-3 rounded-full text-xs uppercase tracking-wider shadow-lg hover:scale-105 transition-all"
             >
-              Book Priority OPD
+              Book Priority OP
             </Link>
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li><Link to="/doctors" className="hover:text-[#80CBC4] transition">Find a Specialist Doctor</Link></li>
-              <li><Link to="/appointment" className="hover:text-[#80CBC4] transition">Book OPD Appointment</Link></li>
+              <li><Link to="/appointment" className="hover:text-[#80CBC4] transition">Book OP Appointment</Link></li>
               <li><Link to="/health-packages" className="hover:text-[#80CBC4] transition">Master Health Packages</Link></li>
               <li><Link to="/international" className="hover:text-[#80CBC4] transition">International Patient Care</Link></li>
               <li><Link to="/careers" className="hover:text-[#80CBC4] transition">Medical Careers & Fellowships</Link></li>

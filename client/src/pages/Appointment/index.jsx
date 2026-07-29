@@ -8,8 +8,8 @@ export default function Appointment() {
   const { bookingDraft, updateBookingDraft, resetBookingDraft } = useStore();
 
   const [step, setStep] = useState(1);
-  const [selectedDept, setSelectedDept] = useState(DEPARTMENTS[0].id);
-  const [selectedDoctor, setSelectedDoctor] = useState(DOCTORS[0]);
+  const [selectedDept, setSelectedDept] = useState('');
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [bookingDate, setBookingDate] = useState('2026-07-30');
   const [timeSlot, setTimeSlot] = useState('10:30 AM');
   const [patientName, setPatientName] = useState('');
@@ -44,7 +44,7 @@ export default function Appointment() {
             Instant Priority Scheduling
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold font-heading tracking-tight">
-            Book an OPD Appointment
+            Book an OP Appointment
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             Select your preferred specialist, date, and consultation format in under 60 seconds.
@@ -82,12 +82,18 @@ export default function Appointment() {
                     <select
                       value={selectedDept}
                       onChange={(e) => {
-                        setSelectedDept(e.target.value);
-                        const docs = DOCTORS.filter((d) => d.department === e.target.value);
-                        if (docs.length) setSelectedDoctor(docs[0]);
+                        const deptId = e.target.value;
+                        setSelectedDept(deptId);
+                        const docs = DOCTORS.filter((d) => d.department === deptId);
+                        if (docs.length) {
+                          setSelectedDoctor(docs[0]);
+                        } else {
+                          setSelectedDoctor(null);
+                        }
                       }}
-                      className="w-full p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-semibold focus:outline-none focus:border-[#00695C]"
+                      className="w-full p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00695C] cursor-pointer"
                     >
+                      <option value="" disabled>-- Select Department --</option>
                       {DEPARTMENTS.map((dept) => (
                         <option key={dept.id} value={dept.id}>
                           {dept.name} ({dept.shortName})
@@ -96,38 +102,66 @@ export default function Appointment() {
                     </select>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
-                      Select Specialist Doctor
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {availableDoctors.map((doc) => (
-                        <div
-                          key={doc.id}
-                          onClick={() => setSelectedDoctor(doc)}
-                          className={`p-4 rounded-2xl border cursor-pointer transition flex items-center gap-3 ${
-                            selectedDoctor?.id === doc.id
-                              ? 'border-[#00695C] bg-[#E0F2F1] dark:bg-[#00695C]/20 shadow-md font-bold'
-                              : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5'
-                          }`}
-                        >
-                          <img src={doc.image} alt={doc.name} className="w-12 h-12 rounded-full object-cover shrink-0" />
-                          <div>
-                            <h4 className="text-sm font-bold text-slate-900 dark:text-white">{doc.name}</h4>
-                            <p className="text-xs text-slate-500">{doc.title}</p>
-                            <span className="text-[11px] text-[#00695C] dark:text-[#80CBC4] font-semibold">
-                              Fee: ₹{doc.consultationFee}
-                            </span>
+                  {/* Show Doctors after Department Selection */}
+                  {selectedDept !== '' && (
+                    <div className="space-y-4 animate-in fade-in duration-200 pt-2 border-t border-slate-100 dark:border-slate-800">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
+                          Specialist Doctors in {DEPARTMENTS.find((d) => d.id === selectedDept)?.shortName} ({availableDoctors.length})
+                        </label>
+                        <span className="text-xs text-[#00695C] dark:text-[#80CBC4] font-medium">
+                          Select doctor to proceed
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {availableDoctors.map((doc) => (
+                          <div
+                            key={doc.id}
+                            onClick={() => setSelectedDoctor(doc)}
+                            className={`p-4 rounded-2xl border cursor-pointer transition flex items-center gap-4 ${
+                              selectedDoctor?.id === doc.id
+                                ? 'border-[#00695C] bg-[#E0F2F1] dark:bg-[#00695C]/20 shadow-md ring-2 ring-[#00695C]'
+                                : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5'
+                            }`}
+                          >
+                            <img
+                              src={doc.image}
+                              alt={doc.name}
+                              className="w-14 h-14 rounded-full object-cover border-2 border-[#00695C] shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                                  {doc.name}
+                                </h4>
+                                <span className="text-xs text-amber-500 font-bold shrink-0 ml-1">
+                                  ★ {doc.rating}
+                                </span>
+                              </div>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-medium">
+                                {doc.title}
+                              </p>
+                              <div className="flex items-center gap-3 mt-1.5 text-xs text-[#00695C] dark:text-[#80CBC4] font-semibold">
+                                <span>{doc.experience} Yrs Exp</span>
+                                <span>• Fee: ₹{doc.consultationFee}</span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="pt-4 flex justify-end">
                     <button
+                      disabled={!selectedDept || !selectedDoctor}
                       onClick={() => setStep(2)}
-                      className="btn-emerald-gradient text-white px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-wider"
+                      className={`px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition ${
+                        selectedDept && selectedDoctor
+                          ? 'btn-emerald-gradient text-white shadow-md hover:scale-105 cursor-pointer'
+                          : 'bg-slate-300 dark:bg-slate-800 text-slate-500 cursor-not-allowed'
+                      }`}
                     >
                       Next: Choose Schedule
                     </button>
@@ -147,7 +181,7 @@ export default function Appointment() {
                           : 'border-slate-200 text-slate-600'
                       }`}
                     >
-                      In-Person Hospital OPD Visit
+                      In-Person Hospital OP Visit
                     </button>
                     <button
                       onClick={() => setConsultationType('online')}
@@ -315,7 +349,7 @@ export default function Appointment() {
               <p><strong>Doctor:</strong> {selectedDoctor?.name}</p>
               <p><strong>Schedule:</strong> {bookingDate} @ {timeSlot}</p>
               <p><strong>Patient:</strong> {patientName}</p>
-              <p><strong>Location:</strong> Gachibowli Main Campus — OPD Block B, 3rd Floor</p>
+              <p><strong>Location:</strong> Gachibowli Main Campus — OP Block B, 3rd Floor</p>
             </div>
 
             <p className="text-xs text-slate-500">

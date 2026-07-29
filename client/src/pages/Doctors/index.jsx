@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DOCTORS } from '../../services/data';
 import { Search, Filter, Star, Calendar, Award } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function Doctors() {
+  const [searchParams] = useSearchParams();
   const [selectedDept, setSelectedDept] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const query = searchParams.get('search');
+    if (query) {
+      setSearchTerm(query);
+    }
+  }, [searchParams]);
 
   const filteredDoctors = DOCTORS.filter((doc) => {
     const matchesDept = selectedDept === 'all' || doc.department === selectedDept;
-    const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          doc.deptName.toLowerCase().includes(searchTerm.toLowerCase());
+    const term = searchTerm.toLowerCase();
+    const matchesSearch = doc.name.toLowerCase().includes(term) || 
+                          doc.deptName.toLowerCase().includes(term) ||
+                          doc.title.toLowerCase().includes(term);
     return matchesDept && matchesSearch;
   });
 

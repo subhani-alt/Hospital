@@ -51,7 +51,7 @@ export default function SymptomCheckerModal() {
         doctor = 'Dr. Vikramaditya Rao';
       } else if (selectedBodyPart === 'joints') {
         recommendedDept = 'Orthopedics';
-        urgency = 'Routine OPD';
+        urgency = 'Routine OP';
         doctor = 'Dr. Rajeshwar Patel';
       } else if (selectedBodyPart === 'urinary') {
         recommendedDept = 'Renal Sciences';

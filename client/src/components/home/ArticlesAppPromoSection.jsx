@@ -88,7 +88,7 @@ export default function ArticlesAppPromoSection() {
             </h3>
 
             <p className="text-sm text-emerald-100/90 leading-relaxed">
-              Book OPD appointments, download lab reports instantly, track real-time queue numbers, and consult doctors via encrypted video tele-consultation.
+              Book OP appointments, download lab reports instantly, track real-time queue numbers, and consult doctors via encrypted video tele-consultation.
             </p>
 
             <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-4">

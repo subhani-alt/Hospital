@@ -10,7 +10,7 @@ export default function Dashboard() {
 
   const STATS = [
     { title: 'Total Patients Treated', value: '52,480', change: '+14%', icon: Users, color: 'from-emerald-600 to-teal-600' },
-    { title: 'Monthly OPD Appointments', value: '1,420', change: '+8%', icon: Calendar, color: 'from-teal-600 to-cyan-600' },
+    { title: 'Monthly OP Appointments', value: '1,420', change: '+8%', icon: Calendar, color: 'from-teal-600 to-cyan-600' },
     { title: 'Active Faculty Doctors', value: '250', change: 'Stable', icon: Stethoscope, color: 'from-cyan-600 to-blue-600' },
     { title: 'Est. Monthly Revenue', value: '₹1.25 Cr', change: '+22%', icon: DollarSign, color: 'from-emerald-700 to-emerald-500' }
   ];
@@ -62,7 +62,7 @@ export default function Dashboard() {
                 activeTab === 'appointments' ? 'bg-[#00695C] text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'
               }`}
             >
-              <Calendar className="w-4 h-4" /> OPD Appointments
+              <Calendar className="w-4 h-4" /> OP Appointments
             </button>
 
             <button
@@ -136,7 +136,7 @@ export default function Dashboard() {
           
           {/* Bar Chart */}
           <div className="lg:col-span-8 bg-[#122824] p-6 rounded-3xl border border-slate-800 space-y-4">
-            <h3 className="text-base font-bold">Monthly OPD Patient Volume</h3>
+            <h3 className="text-base font-bold">Monthly OP Patient Volume</h3>
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={CHART_DATA}>
@@ -191,7 +191,7 @@ export default function Dashboard() {
         {/* Appointments Management Table */}
         <div className="bg-[#122824] p-6 rounded-3xl border border-slate-800 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold">Recent OPD Bookings</h3>
+            <h3 className="text-base font-bold">Recent OP Bookings</h3>
             <span className="text-xs text-[#80CBC4]">Live Synchronized</span>
           </div>
 

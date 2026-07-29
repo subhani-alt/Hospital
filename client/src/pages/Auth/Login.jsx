@@ -26,7 +26,7 @@ export default function Login() {
           <h2 className="text-2xl font-bold font-heading text-slate-900 dark:text-white">
             Patient Portal Login
           </h2>
-          <p className="text-xs text-slate-500">Access lab reports, OPD tokens & consultation history</p>
+          <p className="text-xs text-slate-500">Access lab reports, OP tokens & consultation history</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
