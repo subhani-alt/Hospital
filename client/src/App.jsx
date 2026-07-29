@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 
@@ -9,9 +9,9 @@ import CursorEffect from './components/common/CursorEffect';
 import FloatingButtons from './components/common/FloatingButtons';
 import LoadingScreen from './components/common/LoadingScreen';
 
-import EmergencyModal from './components/forms/EmergencyModal';
-import SymptomCheckerModal from './components/forms/SymptomCheckerModal';
-import VirtualAssistantModal from './components/forms/VirtualAssistantModal';
+const EmergencyModal = lazy(() => import('./components/forms/EmergencyModal'));
+const SymptomCheckerModal = lazy(() => import('./components/forms/SymptomCheckerModal'));
+const VirtualAssistantModal = lazy(() => import('./components/forms/VirtualAssistantModal'));
 
 import Home from './pages/Home';
 import About from './pages/About';
@@ -98,9 +98,11 @@ export default function App() {
 
           {/* Modals & Floating Action Triggers */}
           <FloatingButtons />
-          <EmergencyModal />
-          <SymptomCheckerModal />
-          <VirtualAssistantModal />
+          <Suspense fallback={null}>
+            <EmergencyModal />
+            <SymptomCheckerModal />
+            <VirtualAssistantModal />
+          </Suspense>
         </Router>
 
       </div>

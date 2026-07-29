@@ -7,8 +7,8 @@ export default function LoadingScreen({ onComplete }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setFade(true);
-      if (onComplete) setTimeout(onComplete, 500);
-    }, 1400);
+      if (onComplete) setTimeout(onComplete, 150);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, [onComplete]);

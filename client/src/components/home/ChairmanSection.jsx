@@ -21,6 +21,8 @@ export default function ChairmanSection() {
               <img
                 src={chairman.image}
                 alt={chairman.name}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-[520px] object-cover object-top group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#051224] via-transparent to-transparent" />
