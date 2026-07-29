@@ -109,7 +109,7 @@ export default function Doctors() {
 
               <div className="p-6 pt-0 flex gap-3">
                 <button
-                  onClick={() => navigate('/appointment')}
+                  onClick={() => navigate(`/appointment?doctor=${doc.id}`)}
                   className="w-full btn-emerald-gradient text-white py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:scale-105 transition"
                 >
                   <Calendar className="w-4 h-4" />

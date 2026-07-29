@@ -192,7 +192,7 @@ export default function HeroSection() {
                       <div
                         key={doc.id}
                         onClick={() => {
-                          navigate(`/doctors?search=${encodeURIComponent(doc.name)}`);
+                          navigate(`/appointment?doctor=${doc.id}`);
                           setShowDropdown(false);
                         }}
                         className="p-3.5 bg-[#0A1917] hover:bg-[#00695C]/40 transition-colors cursor-pointer flex items-center gap-3.5 group"

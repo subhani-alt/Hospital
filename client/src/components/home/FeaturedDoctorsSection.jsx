@@ -101,7 +101,7 @@ export default function FeaturedDoctorsSection() {
                 </Link>
 
                 <button
-                  onClick={() => navigate('/appointment')}
+                  onClick={() => navigate(`/appointment?doctor=${doc.id}`)}
                   className="flex-1 btn-emerald-gradient text-white py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md hover:scale-105 transition"
                 >
                   <Calendar className="w-3.5 h-3.5" />

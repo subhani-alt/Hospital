@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DEPARTMENTS, DOCTORS } from '../../services/data';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCard, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
 
 export default function Appointment() {
   const { bookingDraft, updateBookingDraft, resetBookingDraft } = useStore();
+  const [searchParams] = useSearchParams();
 
   const [step, setStep] = useState(1);
   const [selectedDept, setSelectedDept] = useState('');
@@ -17,6 +19,29 @@ export default function Appointment() {
   const [patientEmail, setPatientEmail] = useState('');
   const [consultationType, setConsultationType] = useState('in-person');
   const [isBooked, setIsBooked] = useState(false);
+
+  // Auto pre-select doctor or department from URL parameter
+  useEffect(() => {
+    const doctorParam = searchParams.get('doctor');
+    const deptParam = searchParams.get('dept');
+
+    if (doctorParam) {
+      const doc = DOCTORS.find(
+        (d) => d.id === doctorParam || d.name.toLowerCase().includes(doctorParam.toLowerCase())
+      );
+      if (doc) {
+        setSelectedDoctor(doc);
+        setSelectedDept(doc.department);
+        setStep(2); // Jump directly to Schedule step!
+      }
+    } else if (deptParam) {
+      setSelectedDept(deptParam);
+      const docs = DOCTORS.filter((d) => d.department === deptParam);
+      if (docs.length) {
+        setSelectedDoctor(docs[0]);
+      }
+    }
+  }, [searchParams]);
 
   const TIME_SLOTS = ['09:00 AM', '10:00 AM', '10:30 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM', '06:30 PM'];
 
@@ -172,6 +197,39 @@ export default function Appointment() {
               {/* Step 2: Date & Slot */}
               {step === 2 && (
                 <div className="space-y-6">
+
+                  {/* Doctor Summary Banner */}
+                  {selectedDoctor && (
+                    <div className="p-4 rounded-2xl bg-[#E0F2F1] dark:bg-[#00695C]/20 border border-[#00695C]/30 flex items-center justify-between gap-4 shadow-sm">
+                      <div className="flex items-center gap-3.5">
+                        <img
+                          src={selectedDoctor.image}
+                          alt={selectedDoctor.name}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-[#00695C] shrink-0"
+                        />
+                        <div>
+                          <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                            {selectedDoctor.name}
+                          </h4>
+                          <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                            {selectedDoctor.title} ({selectedDoctor.deptName})
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs text-[#00695C] dark:text-[#80CBC4] font-bold block">
+                          Fee: ₹{selectedDoctor.consultationFee}
+                        </span>
+                        <button
+                          onClick={() => setStep(1)}
+                          className="text-[11px] text-slate-500 hover:underline font-medium"
+                        >
+                          Change Doctor &larr;
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex gap-4">
                     <button
                       onClick={() => setConsultationType('in-person')}
