@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { PhoneCall, Mail, MapPin, ShieldCheck, Award, HeartPulse, Activity, ArrowRight, ExternalLink } from 'lucide-react';
+import { Mail, MapPin, ShieldCheck, Award, HeartPulse, Activity, ArrowRight, ExternalLink } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 
 export default function Footer() {
@@ -14,35 +14,6 @@ export default function Footer() {
       <div className="absolute bottom-0 left-10 w-80 h-80 bg-[#00897B]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
-        
-        {/* Top Emergency CTA Strip */}
-        <div className="bg-gradient-to-r from-[#004D40] via-[#00695C] to-[#00897B] rounded-2xl p-6 sm:p-8 mb-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 border border-white/20">
-          <div className="flex items-center gap-4 text-white text-center md:text-left">
-            <div className="w-14 h-14 rounded-full bg-red-600/30 border border-red-500/50 flex items-center justify-center shrink-0">
-              <PhoneCall className="w-7 h-7 text-red-400 animate-pulse" />
-            </div>
-            <div>
-              <h3 className="text-xl sm:text-2xl font-bold font-heading">Need Emergency Medical Assistance?</h3>
-              <p className="text-sm text-emerald-100 mt-1">
-                24/7 Rapid Response Cardiac & Trauma Critical Care Unit
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={toggleEmergencyModal}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-full text-xs uppercase tracking-wider shadow-lg hover:scale-105 transition-all"
-            >
-              Call Trauma Desk (+91 40 4244 4244)
-            </button>
-            <Link
-              to="/appointment"
-              className="bg-white text-[#00695C] hover:bg-emerald-50 font-bold px-6 py-3 rounded-full text-xs uppercase tracking-wider shadow-lg hover:scale-105 transition-all"
-            >
-              Book Priority OP
-            </Link>
-          </div>
-        </div>
 
         {/* Multi-Column Main Footer */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
