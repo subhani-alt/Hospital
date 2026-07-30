@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DEPARTMENTS, DOCTORS } from '../../services/data';
-import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCard, Sparkles, ChevronDown, Check, Building2, Search } from 'lucide-react';
+import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCard, Sparkles, ChevronDown, Check, Building2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
@@ -17,10 +17,18 @@ export default function Appointment() {
   const [deptSearchQuery, setDeptSearchQuery] = useState('');
   const deptDropdownRef = useRef(null);
 
+  // Custom Calendar State
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [calendarViewDate, setCalendarViewDate] = useState(new Date(2026, 6, 1)); // July 2026
+  const calendarRef = useRef(null);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (deptDropdownRef.current && !deptDropdownRef.current.contains(event.target)) {
         setIsDeptDropdownOpen(false);
+      }
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setIsCalendarOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -374,16 +382,190 @@ export default function Appointment() {
                     </button>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                      Select Preferred Date
-                    </label>
-                    <input
-                      type="date"
-                      value={bookingDate}
-                      onChange={(e) => setBookingDate(e.target.value)}
-                      className="w-full p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-semibold"
-                    />
+                  {/* Custom Animated Calendar & Date Selection */}
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
+                        Select Preferred Appointment Date
+                      </label>
+
+                      {/* Custom Month Calendar Dropdown Button */}
+                      <div className="relative z-40" ref={calendarRef}>
+                        <button
+                          type="button"
+                          onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                          className="inline-flex items-center gap-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#00695C] px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer shadow-sm transition-all"
+                        >
+                          <Calendar className="w-4 h-4 text-[#00695C] dark:text-[#80CBC4]" />
+                          <span>
+                            {new Date(bookingDate + 'T00:00:00').toLocaleDateString('en-US', {
+                              weekday: 'short',
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </span>
+                          <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isCalendarOpen ? 'rotate-180 text-[#00695C]' : ''}`} />
+                        </button>
+
+                        {/* Interactive Month Calendar Popover Widget */}
+                        {isCalendarOpen && (
+                          <div className="absolute top-full right-0 mt-2 bg-white dark:bg-[#0A1917] border-2 border-[#00695C]/40 dark:border-[#80CBC4]/40 rounded-3xl p-5 shadow-[0_30px_90px_rgba(0,0,0,0.5)] z-[100] animate-in fade-in zoom-in-95 duration-200 w-80 sm:w-84">
+                            
+                            {/* Calendar Month Header */}
+                            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
+                              <span className="text-sm font-bold font-heading text-slate-900 dark:text-white">
+                                {calendarViewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                              </span>
+                              <div className="flex items-center gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const prev = new Date(calendarViewDate);
+                                    prev.setMonth(prev.getMonth() - 1);
+                                    setCalendarViewDate(prev);
+                                  }}
+                                  className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-[#00695C] hover:text-white flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+                                >
+                                  <ChevronLeft className="w-4 h-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const next = new Date(calendarViewDate);
+                                    next.setMonth(next.getMonth() + 1);
+                                    setCalendarViewDate(next);
+                                  }}
+                                  className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-[#00695C] hover:text-white flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+                                >
+                                  <ChevronRight className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Weekday Headers */}
+                            <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-slate-400 mb-2">
+                              {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day) => (
+                                <span key={day}>{day}</span>
+                              ))}
+                            </div>
+
+                            {/* Days Grid */}
+                            <div className="grid grid-cols-7 gap-1">
+                              {(() => {
+                                const year = calendarViewDate.getFullYear();
+                                const month = calendarViewDate.getMonth();
+                                const firstDayIndex = new Date(year, month, 1).getDay();
+                                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                                const todayStr = '2026-07-30';
+
+                                const cells = [];
+                                // Empty slots for previous month offset
+                                for (let i = 0; i < firstDayIndex; i++) {
+                                  cells.push(<div key={`empty-${i}`} />);
+                                }
+
+                                for (let day = 1; day <= daysInMonth; day++) {
+                                  const pad = (n) => String(n).padStart(2, '0');
+                                  const dateStr = `${year}-${pad(month + 1)}-${pad(day)}`;
+                                  const isSelected = bookingDate === dateStr;
+                                  const isToday = dateStr === todayStr;
+                                  const isPast = dateStr < todayStr;
+
+                                  cells.push(
+                                    <button
+                                      key={day}
+                                      type="button"
+                                      disabled={isPast}
+                                      onClick={() => {
+                                        setBookingDate(dateStr);
+                                        setIsCalendarOpen(false);
+                                      }}
+                                      className={`h-9 w-9 rounded-xl text-xs font-bold transition-all flex items-center justify-center relative cursor-pointer ${
+                                        isSelected
+                                          ? 'btn-emerald-gradient text-white shadow-md scale-105'
+                                          : isPast
+                                          ? 'text-slate-300 dark:text-slate-700 cursor-not-allowed'
+                                          : 'hover:bg-[#E0F2F1] dark:hover:bg-white/10 text-slate-700 dark:text-slate-200'
+                                      }`}
+                                    >
+                                      <span>{day}</span>
+                                      {isToday && !isSelected && (
+                                        <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[#00695C] dark:bg-[#80CBC4]" />
+                                      )}
+                                    </button>
+                                  );
+                                }
+                                return cells;
+                              })()}
+                            </div>
+
+                            {/* Quick Select Today Action */}
+                            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setBookingDate('2026-07-30');
+                                  setCalendarViewDate(new Date(2026, 6, 1));
+                                  setIsCalendarOpen(false);
+                                }}
+                                className="text-[#00695C] dark:text-[#80CBC4] font-bold hover:underline cursor-pointer"
+                              >
+                                Select Today (July 30)
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setIsCalendarOpen(false)}
+                                className="text-slate-400 hover:text-slate-600 font-medium cursor-pointer"
+                              >
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Quick Date Selection Cards Row (Next 6 Available Days) */}
+                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+                      {(() => {
+                        const quickDays = [];
+                        const baseDate = new Date(2026, 6, 30); // July 30, 2026
+                        for (let i = 0; i < 6; i++) {
+                          const d = new Date(baseDate);
+                          d.setDate(baseDate.getDate() + i);
+                          const pad = (n) => String(n).padStart(2, '0');
+                          const dateStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+                          const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+                          const monthName = d.toLocaleDateString('en-US', { month: 'short' });
+                          const dayNum = d.getDate();
+                          const isSelected = bookingDate === dateStr;
+
+                          quickDays.push(
+                            <div
+                              key={dateStr}
+                              onClick={() => setBookingDate(dateStr)}
+                              className={`p-3 rounded-2xl border text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center ${
+                                isSelected
+                                  ? 'border-[#00695C] bg-[#E0F2F1] dark:bg-[#00695C]/30 text-[#00695C] dark:text-[#80CBC4] shadow-md ring-2 ring-[#00695C] scale-105 font-bold'
+                                  : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300'
+                              }`}
+                            >
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                {i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : dayName}
+                              </span>
+                              <span className="text-lg font-extrabold font-heading my-0.5">
+                                {dayNum}
+                              </span>
+                              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                                {monthName}
+                              </span>
+                            </div>
+                          );
+                        }
+                        return quickDays;
+                      })()}
+                    </div>
                   </div>
 
                   <div>
