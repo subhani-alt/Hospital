@@ -35,49 +35,6 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full transition-all duration-300">
-      
-      {/* Top Utility Announcement Bar */}
-      <div className="bg-[#0A1917] text-white/80 text-xs py-2 px-4 sm:px-8 border-b border-white/10 hidden lg:block">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <button 
-              onClick={toggleEmergencyModal}
-              className="flex items-center gap-2 text-red-400 hover:text-red-300 font-semibold transition"
-            >
-              <PhoneCall className="w-3.5 h-3.5 animate-pulse" />
-              <span>Emergency 24/7 Hotline: +91 40 4244 4244</span>
-            </button>
-            <span className="text-white/20">|</span>
-            <Link to="/international" className="hover:text-[#80CBC4] transition">
-              International Patient Desk
-            </Link>
-            <span className="text-white/20">|</span>
-            <Link to="/health-library" className="hover:text-[#80CBC4] transition">
-              Health Insights & Research
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-5">
-            {/* Language Switcher */}
-            <div className="flex items-center gap-1">
-              <Globe className="w-3.5 h-3.5 text-[#80CBC4]" />
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="bg-transparent text-white border-none text-xs focus:outline-none cursor-pointer"
-              >
-                <option value="en" className="bg-[#0A1917]">English</option>
-                <option value="hi" className="bg-[#0A1917]">हिंदी (Hindi)</option>
-                <option value="te" className="bg-[#0A1917]">తెలుగు (Telugu)</option>
-              </select>
-            </div>
-
-
-
-
-          </div>
-        </div>
-      </div>
 
       {/* Main Glass Navigation Bar */}
       <nav
@@ -213,7 +170,21 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Right CTA Actions */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
+            {/* Language Switcher */}
+            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-white/10 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+              <Globe className="w-4 h-4 text-[#00695C] dark:text-[#80CBC4]" />
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent text-slate-700 dark:text-slate-200 border-none text-xs font-semibold focus:outline-none cursor-pointer"
+              >
+                <option value="en" className="bg-white dark:bg-[#0A1917]">English</option>
+                <option value="hi" className="bg-white dark:bg-[#0A1917]">हिंदी (Hindi)</option>
+                <option value="te" className="bg-white dark:bg-[#0A1917]">తెలుగు (Telugu)</option>
+              </select>
+            </div>
+
             <button
               onClick={() => navigate('/doctors')}
               className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 transition"
@@ -280,6 +251,22 @@ export default function Navbar() {
               Contact & Emergency
             </Link>
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-3">
+              <div className="flex items-center justify-between bg-slate-100 dark:bg-white/10 px-4 py-2.5 rounded-full border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  <Globe className="w-4 h-4 text-[#00695C] dark:text-[#80CBC4]" />
+                  <span>Language</span>
+                </div>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="bg-transparent text-slate-700 dark:text-slate-200 border-none text-xs font-semibold focus:outline-none cursor-pointer"
+                >
+                  <option value="en" className="bg-white dark:bg-[#0A1917]">English</option>
+                  <option value="hi" className="bg-white dark:bg-[#0A1917]">हिंदी (Hindi)</option>
+                  <option value="te" className="bg-white dark:bg-[#0A1917]">తెలుగు (Telugu)</option>
+                </select>
+              </div>
+
               <Link
                 to="/appointment"
                 className="w-full btn-emerald-gradient text-white text-center py-3 rounded-full font-semibold text-sm uppercase tracking-wider"
