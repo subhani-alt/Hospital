@@ -96,7 +96,7 @@ export default function Appointment() {
   };
 
   return (
-    <div className="w-full bg-[#F8FCFB] dark:bg-[#0A1917] text-slate-900 dark:text-white py-12">
+    <div className="w-full bg-[#F8FCFB] dark:bg-[#0A1917] text-slate-900 dark:text-white py-12 relative z-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-8">
         
         {/* Header */}
@@ -105,7 +105,7 @@ export default function Appointment() {
             Instant Priority Scheduling
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold font-heading tracking-tight">
-            Book an OP Appointment
+            Book an Appointment
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             Select your preferred specialist, date, and consultation format in under 60 seconds.
@@ -113,7 +113,7 @@ export default function Appointment() {
         </div>
 
         {!isBooked ? (
-          <div className="bg-white dark:bg-[#122824] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl relative z-10">
+          <div className="bg-white dark:bg-[#122824] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl relative z-30">
             
             {/* Step Progress Header Bar */}
             <div className="bg-[#0A1917] text-white p-4 border-b border-white/10 flex items-center justify-between text-xs rounded-t-3xl">
@@ -142,7 +142,7 @@ export default function Appointment() {
                     </label>
                     
                     {/* Custom Animated Department Dropdown */}
-                    <div className="relative z-30" ref={deptDropdownRef}>
+                    <div className="relative z-50" ref={deptDropdownRef}>
                       <div
                         onClick={() => setIsDeptDropdownOpen(!isDeptDropdownOpen)}
                         className={`w-full p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between cursor-pointer shadow-sm ${
@@ -179,10 +179,10 @@ export default function Appointment() {
 
                       {/* Animated Dropdown Menu List */}
                       {isDeptDropdownOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#0A1917] border-2 border-[#00695C]/30 dark:border-[#80CBC4]/30 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.3)] overflow-hidden z-50 animate-in fade-in zoom-in-95 slide-in-from-top-3 duration-200">
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#0A1917] border-2 border-[#00695C]/40 dark:border-[#80CBC4]/40 rounded-2xl shadow-[0_30px_90px_rgba(0,0,0,0.5)] overflow-hidden z-[100] animate-in fade-in zoom-in-95 slide-in-from-top-3 duration-200">
                           
                           {/* Search / Filter Input */}
-                          <div className="p-3 bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                          <div className="p-3 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
                             <Search className="w-4 h-4 text-slate-400" />
                             <input
                               type="text"
@@ -194,7 +194,7 @@ export default function Appointment() {
                             />
                           </div>
 
-                          <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60 p-2 space-y-1" data-lenis-prevent>
+                          <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60 p-2 space-y-1 bg-white dark:bg-[#0A1917]" data-lenis-prevent>
                             {DEPARTMENTS.filter((d) => d.name.toLowerCase().includes(deptSearchQuery.toLowerCase()) || d.shortName.toLowerCase().includes(deptSearchQuery.toLowerCase())).map((dept) => {
                               const isSelected = selectedDept === dept.id;
                               return (

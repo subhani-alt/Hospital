@@ -7,7 +7,7 @@ export default function Footer() {
   const { toggleEmergencyModal } = useStore();
 
   return (
-    <footer className="bg-[#051224] text-slate-300 pt-16 pb-8 border-t border-white/10 relative overflow-hidden">
+    <footer className="bg-[#051224] text-slate-300 pt-16 pb-8 border-t border-white/10 relative z-0 overflow-hidden">
       
       {/* Background Decorative Glow */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#00695C]/10 rounded-full blur-3xl pointer-events-none" />
