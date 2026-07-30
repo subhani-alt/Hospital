@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PhoneCall, Mail, MapPin, Send, Clock, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
+import { submitContactToSheet } from '../../services/googleSheets';
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toggleEmergencyModal } = useStore();
 
-  const handleSubmit = (e) => {
+  const nameRef = useRef();
+  const phoneRef = useRef();
+  const emailRef = useRef();
+  const messageRef = useRef();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    await submitContactToSheet({
+      name: nameRef.current.value,
+      phone: phoneRef.current.value,
+      email: emailRef.current.value,
+      message: messageRef.current.value,
+    });
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 
@@ -85,6 +100,7 @@ export default function Contact() {
                 <div>
                   <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Your Full Name</label>
                   <input
+                    ref={nameRef}
                     type="text"
                     required
                     placeholder="John Doe"
@@ -96,6 +112,7 @@ export default function Contact() {
                   <div>
                     <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Phone Number</label>
                     <input
+                      ref={phoneRef}
                       type="tel"
                       required
                       placeholder="+91 98765 43210"
@@ -106,6 +123,7 @@ export default function Contact() {
                   <div>
                     <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Email Address</label>
                     <input
+                      ref={emailRef}
                       type="email"
                       required
                       placeholder="patient@example.com"
@@ -117,6 +135,7 @@ export default function Contact() {
                 <div>
                   <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Inquiry / Clinical Question</label>
                   <textarea
+                    ref={messageRef}
                     rows={4}
                     required
                     placeholder="Describe your medical requirement or inquiry..."
@@ -126,10 +145,23 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full btn-emerald-gradient text-white font-bold py-3.5 rounded-full text-xs uppercase tracking-wider shadow-lg hover:scale-[1.02] transition flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
+                  className="w-full btn-emerald-gradient text-white font-bold py-3.5 rounded-full text-xs uppercase tracking-wider shadow-lg hover:scale-[1.02] transition flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>Submit Patient Inquiry</span>
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                      </svg>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Submit Patient Inquiry</span>
+                    </>
+                  )}
                 </button>
               </form>
             ) : (

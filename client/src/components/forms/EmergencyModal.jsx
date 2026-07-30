@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { PhoneCall, AlertTriangle, X, ShieldAlert, Navigation, Clock, CheckCircle2 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
+import { submitEmergencyToSheet } from '../../services/googleSheets';
 
 export default function EmergencyModal() {
   const { isEmergencyModalOpen, toggleEmergencyModal } = useStore();
   const [requestedAmbulance, setRequestedAmbulance] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [patientLocation, setPatientLocation] = useState('');
   const [contactNumber, setContactNumber] = useState('');
 
   if (!isEmergencyModalOpen) return null;
 
-  const handleRequestAmbulance = (e) => {
+  const handleRequestAmbulance = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    await submitEmergencyToSheet({ patientLocation, contactNumber });
+    setIsSubmitting(false);
     setRequestedAmbulance(true);
   };
 
@@ -94,9 +99,22 @@ export default function EmergencyModal() {
 
               <button
                 type="submit"
-                className="w-full btn-emerald-gradient text-white font-bold py-3.5 rounded-xl text-sm uppercase tracking-wider shadow-lg hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+                disabled={isSubmitting}
+                className="w-full btn-emerald-gradient text-white font-bold py-3.5 rounded-xl text-sm uppercase tracking-wider shadow-lg hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <Clock className="w-4 h-4" /> Dispatch Nearest ICU Ambulance
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                    </svg>
+                    Dispatching...
+                  </>
+                ) : (
+                  <>
+                    <Clock className="w-4 h-4" /> Dispatch Nearest ICU Ambulance
+                  </>
+                )}
               </button>
             </form>
           ) : (

@@ -4,6 +4,7 @@ import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCa
 import confetti from 'canvas-confetti';
 import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
+import { submitAppointmentToSheet } from '../../services/googleSheets';
 
 export default function Appointment() {
   const { bookingDraft, updateBookingDraft, resetBookingDraft } = useStore();
@@ -19,6 +20,8 @@ export default function Appointment() {
   const [patientEmail, setPatientEmail] = useState('');
   const [consultationType, setConsultationType] = useState('in-person');
   const [isBooked, setIsBooked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookingToken, setBookingToken] = useState('');
 
   // Auto pre-select doctor or department from URL parameter
   useEffect(() => {
@@ -47,8 +50,28 @@ export default function Appointment() {
 
   const availableDoctors = DOCTORS.filter((d) => d.department === selectedDept);
 
-  const handleFinalSubmit = (e) => {
+  const handleFinalSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
+    // Generate unique booking token
+    const token = `APEX-${new Date().getFullYear()}-${Date.now().toString().slice(-5)}`;
+    setBookingToken(token);
+
+    // Submit to Google Sheets
+    await submitAppointmentToSheet({
+      patientName,
+      patientPhone,
+      patientEmail,
+      doctorName: selectedDoctor?.name,
+      department: selectedDoctor?.deptName,
+      bookingDate,
+      timeSlot,
+      consultationType,
+      consultationFee: selectedDoctor?.consultationFee,
+    });
+
+    setIsSubmitting(false);
     setIsBooked(true);
 
     // Trigger celebratory confetti animation
@@ -381,9 +404,18 @@ export default function Appointment() {
                   <form onSubmit={handleFinalSubmit} className="pt-2">
                     <button
                       type="submit"
-                      className="w-full btn-emerald-gradient text-white font-bold py-4 rounded-full text-sm uppercase tracking-wider shadow-xl hover:scale-[1.02] transition"
+                      disabled={isSubmitting}
+                      className="w-full btn-emerald-gradient text-white font-bold py-4 rounded-full text-sm uppercase tracking-wider shadow-xl hover:scale-[1.02] transition disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      Confirm Appointment & Generate Token
+                      {isSubmitting ? (
+                        <>
+                          <svg className="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                          </svg>
+                          Confirming Appointment...
+                        </>
+                      ) : 'Confirm Appointment & Generate Token'}
                     </button>
                   </form>
                 </div>
@@ -403,7 +435,7 @@ export default function Appointment() {
             </h2>
 
             <div className="bg-slate-50 dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-md mx-auto text-xs space-y-2 text-slate-700 dark:text-slate-300 text-left">
-              <p><strong>Booking Token ID:</strong> APEX-2026-98421</p>
+              <p><strong>Booking Token ID:</strong> {bookingToken}</p>
               <p><strong>Doctor:</strong> {selectedDoctor?.name}</p>
               <p><strong>Schedule:</strong> {bookingDate} @ {timeSlot}</p>
               <p><strong>Patient:</strong> {patientName}</p>
