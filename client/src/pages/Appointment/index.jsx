@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DEPARTMENTS, DOCTORS } from '../../services/data';
-import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCard, Sparkles } from 'lucide-react';
+import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCard, Sparkles, ChevronDown, Check, Building2, Search } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
@@ -13,6 +13,19 @@ export default function Appointment() {
   const [step, setStep] = useState(1);
   const [selectedDept, setSelectedDept] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [isDeptDropdownOpen, setIsDeptDropdownOpen] = useState(false);
+  const [deptSearchQuery, setDeptSearchQuery] = useState('');
+  const deptDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (deptDropdownRef.current && !deptDropdownRef.current.contains(event.target)) {
+        setIsDeptDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   const [bookingDate, setBookingDate] = useState('2026-07-30');
   const [timeSlot, setTimeSlot] = useState('10:30 AM');
   const [patientName, setPatientName] = useState('');
@@ -123,31 +136,116 @@ export default function Appointment() {
               {/* Step 1: Department & Doctor */}
               {step === 1 && (
                 <div className="space-y-6">
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
                       Select Department
                     </label>
-                    <select
-                      value={selectedDept}
-                      onChange={(e) => {
-                        const deptId = e.target.value;
-                        setSelectedDept(deptId);
-                        const docs = DOCTORS.filter((d) => d.department === deptId);
-                        if (docs.length) {
-                          setSelectedDoctor(docs[0]);
-                        } else {
-                          setSelectedDoctor(null);
-                        }
-                      }}
-                      className="w-full p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-[#00695C] cursor-pointer"
-                    >
-                      <option value="" disabled>-- Select Department --</option>
-                      {DEPARTMENTS.map((dept) => (
-                        <option key={dept.id} value={dept.id}>
-                          {dept.name} ({dept.shortName})
-                        </option>
-                      ))}
-                    </select>
+                    
+                    {/* Custom Animated Department Dropdown */}
+                    <div className="relative" ref={deptDropdownRef}>
+                      <div
+                        onClick={() => setIsDeptDropdownOpen(!isDeptDropdownOpen)}
+                        className={`w-full p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between cursor-pointer shadow-sm ${
+                          isDeptDropdownOpen
+                            ? 'border-[#00695C] dark:border-[#80CBC4] bg-white dark:bg-[#0A1917] ring-4 ring-[#00695C]/10 dark:ring-[#80CBC4]/10 shadow-lg'
+                            : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 hover:bg-slate-100 dark:hover:bg-slate-800/80'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
+                            selectedDept ? 'btn-emerald-gradient text-white shadow-md' : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                          }`}>
+                            <Building2 className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block leading-tight">
+                              Specialty Center
+                            </span>
+                            <span className={`text-sm font-bold block mt-0.5 ${
+                              selectedDept ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 font-semibold'
+                            }`}>
+                              {selectedDept
+                                ? DEPARTMENTS.find((d) => d.id === selectedDept)?.name
+                                : '-- Select Department --'}
+                            </span>
+                          </div>
+                        </div>
+                        <ChevronDown
+                          className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${
+                            isDeptDropdownOpen ? 'rotate-180 text-[#00695C] dark:text-[#80CBC4]' : ''
+                          }`}
+                        />
+                      </div>
+
+                      {/* Animated Dropdown Menu List */}
+                      {isDeptDropdownOpen && (
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#0A1917] border-2 border-[#00695C]/30 dark:border-[#80CBC4]/30 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.3)] overflow-hidden z-50 animate-in fade-in zoom-in-95 slide-in-from-top-3 duration-200">
+                          
+                          {/* Search / Filter Input */}
+                          <div className="p-3 bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                            <Search className="w-4 h-4 text-slate-400" />
+                            <input
+                              type="text"
+                              placeholder="Search department or specialty..."
+                              value={deptSearchQuery}
+                              onChange={(e) => setDeptSearchQuery(e.target.value)}
+                              onClick={(e) => e.stopPropagation()}
+                              className="w-full bg-transparent text-xs text-slate-900 dark:text-white focus:outline-none placeholder-slate-400 font-medium"
+                            />
+                          </div>
+
+                          <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60 p-2 space-y-1" data-lenis-prevent>
+                            {DEPARTMENTS.filter((d) => d.name.toLowerCase().includes(deptSearchQuery.toLowerCase()) || d.shortName.toLowerCase().includes(deptSearchQuery.toLowerCase())).map((dept) => {
+                              const isSelected = selectedDept === dept.id;
+                              return (
+                                <div
+                                  key={dept.id}
+                                  onClick={() => {
+                                    setSelectedDept(dept.id);
+                                    const docs = DOCTORS.filter((doc) => doc.department === dept.id);
+                                    if (docs.length) {
+                                      setSelectedDoctor(docs[0]);
+                                    } else {
+                                      setSelectedDoctor(null);
+                                    }
+                                    setIsDeptDropdownOpen(false);
+                                    setDeptSearchQuery('');
+                                  }}
+                                  className={`p-3 rounded-xl cursor-pointer transition-all duration-200 flex items-center justify-between group ${
+                                    isSelected
+                                      ? 'bg-[#E0F2F1] dark:bg-[#00695C]/30 text-[#00695C] dark:text-[#80CBC4] font-bold shadow-sm'
+                                      : 'hover:bg-slate-100 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 font-medium'
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-transform group-hover:scale-110 ${
+                                      isSelected
+                                        ? 'bg-[#00695C] text-white'
+                                        : 'bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                                    }`}>
+                                      {dept.shortName.slice(0, 2).toUpperCase()}
+                                    </div>
+                                    <div>
+                                      <div className="text-sm font-semibold group-hover:text-[#00695C] dark:group-hover:text-[#80CBC4] transition-colors">
+                                        {dept.name}
+                                      </div>
+                                      <div className="text-[11px] text-slate-400 font-normal">
+                                        {dept.shortName} • {dept.tagline}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {isSelected && (
+                                    <div className="w-6 h-6 rounded-full bg-[#00695C] text-white flex items-center justify-center shadow-sm shrink-0">
+                                      <Check className="w-3.5 h-3.5" />
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Show Doctors after Department Selection */}

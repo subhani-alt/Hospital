@@ -1,13 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DOCTORS } from '../../services/data';
-import { Search, Filter, Star, Calendar, Award } from 'lucide-react';
+import { Search, Filter, Star, Calendar, Award, ChevronDown, Check } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function Doctors() {
   const [searchParams] = useSearchParams();
   const [selectedDept, setSelectedDept] = useState('all');
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  const DEPT_OPTIONS = [
+    { value: 'all', label: 'All Departments' },
+    { value: 'gastroenterology', label: 'Gastroenterology & Liver' },
+    { value: 'cardiology', label: 'Cardiac Sciences' },
+    { value: 'oncology', label: 'Robotic Surgical Oncology' },
+    { value: 'neurosciences', label: 'Neurosciences & Spine' },
+    { value: 'orthopedics', label: 'Orthopedics & Joint Replacement' },
+    { value: 'nephrology', label: 'Renal Sciences & Transplant' }
+  ];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const query = searchParams.get('search');
@@ -55,21 +77,42 @@ export default function Doctors() {
             />
           </div>
 
-          <div className="w-full sm:w-auto flex items-center gap-2">
+          <div className="w-full sm:w-auto flex items-center gap-2 relative" ref={dropdownRef}>
             <Filter className="w-4 h-4 text-slate-400 shrink-0" />
-            <select
-              value={selectedDept}
-              onChange={(e) => setSelectedDept(e.target.value)}
-              className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm font-semibold rounded-full px-4 py-2 text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer w-full sm:w-auto"
+            <button
+              type="button"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm font-semibold rounded-full px-4 py-2 text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer w-full sm:w-auto flex items-center justify-between gap-3 shadow-sm hover:border-[#00695C] transition-colors"
             >
-              <option value="all">All Departments</option>
-              <option value="gastroenterology">Gastroenterology & Liver</option>
-              <option value="cardiology">Cardiac Sciences</option>
-              <option value="oncology">Robotic Surgical Oncology</option>
-              <option value="neurosciences">Neurosciences & Spine</option>
-              <option value="orthopedics">Orthopedics & Joint Replacement</option>
-              <option value="nephrology">Renal Sciences & Transplant</option>
-            </select>
+              <span>{DEPT_OPTIONS.find((opt) => opt.value === selectedDept)?.label}</span>
+              <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-[#00695C]' : ''}`} />
+            </button>
+
+            {/* Custom Animated Dropdown Menu */}
+            {isDropdownOpen && (
+              <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-[#0A1917] border-2 border-[#00695C]/30 dark:border-[#80CBC4]/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden z-50 animate-in fade-in zoom-in-95 slide-in-from-top-3 duration-200 p-1.5 space-y-1">
+                {DEPT_OPTIONS.map((opt) => {
+                  const isSelected = selectedDept === opt.value;
+                  return (
+                    <div
+                      key={opt.value}
+                      onClick={() => {
+                        setSelectedDept(opt.value);
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`p-2.5 rounded-xl cursor-pointer text-xs font-semibold flex items-center justify-between transition-colors ${
+                        isSelected
+                          ? 'bg-[#E0F2F1] dark:bg-[#00695C]/30 text-[#00695C] dark:text-[#80CBC4]'
+                          : 'hover:bg-slate-50 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300'
+                      }`}
+                    >
+                      <span>{opt.label}</span>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#00695C] dark:text-[#80CBC4]" />}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
