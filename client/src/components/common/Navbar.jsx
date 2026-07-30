@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
-  PhoneCall, Calendar, Search, Globe, Sun, Moon, Menu, X, ChevronDown, 
+  PhoneCall, Calendar, Search, Globe, Sun, Moon, Menu, X, ChevronDown, Check,
   Stethoscope, Shield, HeartPulse, UserCheck, Award, FileText, ChevronRight, Activity 
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
@@ -11,9 +11,28 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeMegaMenu, setActiveMegaMenu] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const langDropdownRef = useRef(null);
+
   const { isDarkMode, toggleDarkMode, language, setLanguage, toggleEmergencyModal, user } = useStore();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const LANGUAGES = [
+    { code: 'en', name: 'English', native: 'English' },
+    { code: 'hi', name: 'Hindi', native: 'हिंदी' },
+    { code: 'te', name: 'Telugu', native: 'తెలుగు' }
+  ];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(event.target)) {
+        setIsLangDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -171,18 +190,47 @@ export default function Navbar() {
 
           {/* Desktop Right CTA Actions */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
-            {/* Language Switcher */}
-            <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 px-3.5 py-2 rounded-full border border-slate-200/80 dark:border-white/15 transition-colors">
-              <Globe className="w-4 h-4 text-[#00695C] dark:text-[#80CBC4] shrink-0" />
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="bg-transparent text-slate-700 dark:text-slate-200 border-none text-xs font-semibold focus:outline-none cursor-pointer pr-1"
+            {/* Custom Animated Language Switcher */}
+            <div className="relative" ref={langDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+                className="flex items-center gap-2 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 px-3.5 py-2 rounded-full border border-slate-200/80 dark:border-white/15 transition-colors cursor-pointer text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-sm"
               >
-                <option value="en" className="bg-white dark:bg-[#0A1917]">English</option>
-                <option value="hi" className="bg-white dark:bg-[#0A1917]">हिंदी (Hindi)</option>
-                <option value="te" className="bg-white dark:bg-[#0A1917]">తెలుగు (Telugu)</option>
-              </select>
+                <Globe className="w-4 h-4 text-[#00695C] dark:text-[#80CBC4] shrink-0" />
+                <span>{LANGUAGES.find((l) => l.code === language)?.native || 'English'}</span>
+                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${isLangDropdownOpen ? 'rotate-180 text-[#00695C]' : ''}`} />
+              </button>
+
+              {/* Animated Popover Menu */}
+              {isLangDropdownOpen && (
+                <div className="absolute top-full right-0 mt-2 w-44 bg-white dark:bg-[#0A1917] border-2 border-[#00695C]/30 dark:border-[#80CBC4]/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden z-[100] animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200 p-1.5 space-y-1">
+                  {LANGUAGES.map((lang) => {
+                    const isSelected = language === lang.code;
+                    return (
+                      <button
+                        key={lang.code}
+                        type="button"
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          setIsLangDropdownOpen(false);
+                        }}
+                        className={`w-full p-2.5 rounded-xl cursor-pointer text-xs font-semibold flex items-center justify-between transition-colors ${
+                          isSelected
+                            ? 'bg-[#E0F2F1] dark:bg-[#00695C]/30 text-[#00695C] dark:text-[#80CBC4]'
+                            : 'hover:bg-slate-50 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold">{lang.native}</span>
+                          <span className="text-[10px] text-slate-400 font-normal">({lang.name})</span>
+                        </div>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-[#00695C] dark:text-[#80CBC4]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <button
@@ -256,15 +304,22 @@ export default function Navbar() {
                   <Globe className="w-4 h-4 text-[#00695C] dark:text-[#80CBC4]" />
                   <span>Language</span>
                 </div>
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  className="bg-transparent text-slate-700 dark:text-slate-200 border-none text-xs font-semibold focus:outline-none cursor-pointer"
-                >
-                  <option value="en" className="bg-white dark:bg-[#0A1917]">English</option>
-                  <option value="hi" className="bg-white dark:bg-[#0A1917]">हिंदी (Hindi)</option>
-                  <option value="te" className="bg-white dark:bg-[#0A1917]">తెలుగు (Telugu)</option>
-                </select>
+                <div className="flex gap-2">
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      onClick={() => setLanguage(lang.code)}
+                      className={`px-2.5 py-1 rounded-full text-xs font-bold transition-colors ${
+                        language === lang.code
+                          ? 'bg-[#00695C] text-white shadow-sm'
+                          : 'bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-slate-300'
+                      }`}
+                    >
+                      {lang.native}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <Link
