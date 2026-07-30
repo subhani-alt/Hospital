@@ -9,7 +9,6 @@ import PatientJourneySection from '../../components/home/PatientJourneySection';
 import TechnologySection from '../../components/home/TechnologySection';
 import TestimonialsSection from '../../components/home/TestimonialsSection';
 import AwardsInsuranceSection from '../../components/home/AwardsInsuranceSection';
-import HospitalGallerySection from '../../components/home/HospitalGallerySection';
 import ArticlesAppPromoSection from '../../components/home/ArticlesAppPromoSection';
 
 export default function Home() {
@@ -44,9 +43,6 @@ export default function Home() {
 
       {/* 12. Insurance Partners & Accreditations */}
       <AwardsInsuranceSection />
-
-      {/* 13. Hospital Infrastructure Gallery */}
-      <HospitalGallerySection />
 
       {/* 14. Latest Articles & Mobile App Promo */}
       <ArticlesAppPromoSection />
