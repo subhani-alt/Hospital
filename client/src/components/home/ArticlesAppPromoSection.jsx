@@ -1,79 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { BLOGS } from '../../services/data';
-import { BookOpen, Smartphone, QrCode, ArrowRight, Download } from 'lucide-react';
+import { Smartphone, QrCode, Download } from 'lucide-react';
 
 export default function ArticlesAppPromoSection() {
   return (
     <section className="py-20 bg-[#F8FCFB] dark:bg-[#0A1917] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
         
-        {/* Blog / Health Articles Section */}
-        <div>
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-            <div className="max-w-2xl space-y-3">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#00695C] dark:text-[#80CBC4]">
-                Medical Insights & Research
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-bold font-heading text-slate-900 dark:text-white tracking-tight">
-                Latest Clinical Publications
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Stay updated with breakthroughs in robotic surgery, gastroenterology research, and preventative health guides.
-              </p>
-            </div>
-
-            <Link
-              to="/health-library"
-              className="inline-flex items-center gap-2 text-xs font-bold text-[#00695C] dark:text-[#80CBC4] uppercase tracking-wider hover:underline"
-            >
-              <span>View Health Library</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {BLOGS.map((blog) => (
-              <Link
-                key={blog.id}
-                to={`/health-library#${blog.id}`}
-                className="bg-white dark:bg-[#122824] rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-md hover:shadow-2xl hover-glow transition-all duration-300 flex flex-col group"
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={blog.image}
-                    alt={blog.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <span className="absolute top-4 left-4 bg-[#00695C] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                    {blog.category}
-                  </span>
-                </div>
-
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[11px] text-slate-400">
-                      <span>{blog.date}</span>
-                      <span>{blog.readTime}</span>
-                    </div>
-                    <h3 className="text-base font-bold font-heading text-slate-900 dark:text-white group-hover:text-[#00695C] dark:group-hover:text-[#80CBC4] transition line-clamp-2">
-                      {blog.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-                      {blog.summary}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-[#00695C] dark:text-[#80CBC4]">
-                    <span>Read Article</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
         {/* Mobile App Download Banner */}
         <div className="btn-emerald-gradient text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 border border-white/20">
           
