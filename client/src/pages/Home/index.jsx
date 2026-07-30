@@ -4,7 +4,6 @@ import QuickAccessBar from '../../components/home/QuickAccessBar';
 import StatsSection from '../../components/home/StatsSection';
 import DepartmentsSection from '../../components/home/DepartmentsSection';
 import ChairmanSection from '../../components/home/ChairmanSection';
-import FeaturedDoctorsSection from '../../components/home/FeaturedDoctorsSection';
 import WhyChooseUsSection from '../../components/home/WhyChooseUsSection';
 import PatientJourneySection from '../../components/home/PatientJourneySection';
 import TechnologySection from '../../components/home/TechnologySection';
@@ -32,10 +31,7 @@ export default function Home() {
       {/* 5. Chairman's Message & Vision */}
       <ChairmanSection />
 
-      {/* 6. Featured Doctors */}
-      <FeaturedDoctorsSection />
-
-      {/* 7. Why Choose Us (Pillars) */}
+      {/* 6. Why Choose Us (Pillars) */}
       <WhyChooseUsSection />
 
       {/* 8. Patient Journey Timeline */}
