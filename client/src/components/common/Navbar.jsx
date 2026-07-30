@@ -62,11 +62,11 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links & Mega Menu */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8">
             
             <Link
               to="/"
-              className={`text-sm font-medium transition ${
+              className={`text-sm font-medium transition-colors ${
                 location.pathname === '/'
                   ? 'text-[#00695C] dark:text-[#80CBC4] font-semibold'
                   : 'text-slate-700 dark:text-slate-200 hover:text-[#00695C] dark:hover:text-[#80CBC4]'
@@ -75,14 +75,14 @@ export default function Navbar() {
               Home
             </Link>
 
-            {/* Mega Menu Trigger: Departments */}
+            {/* Mega Menu Trigger: Specialties */}
             <div
               className="relative"
               onMouseEnter={() => setActiveMegaMenu('departments')}
               onMouseLeave={() => setActiveMegaMenu(null)}
             >
               <button
-                className={`flex items-center gap-1 text-sm font-medium transition py-2 ${
+                className={`flex items-center gap-1 text-sm font-medium transition-colors py-2 ${
                   location.pathname.startsWith('/departments')
                     ? 'text-[#00695C] dark:text-[#80CBC4] font-semibold'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#00695C] dark:hover:text-[#80CBC4]'
@@ -126,7 +126,7 @@ export default function Navbar() {
 
             <Link
               to="/doctors"
-              className={`text-sm font-medium transition ${
+              className={`text-sm font-medium transition-colors ${
                 location.pathname === '/doctors'
                   ? 'text-[#00695C] dark:text-[#80CBC4] font-semibold'
                   : 'text-slate-700 dark:text-slate-200 hover:text-[#00695C] dark:hover:text-[#80CBC4]'
@@ -137,7 +137,7 @@ export default function Navbar() {
 
             <Link
               to="/health-packages"
-              className={`text-sm font-medium transition ${
+              className={`text-sm font-medium transition-colors ${
                 location.pathname === '/health-packages'
                   ? 'text-[#00695C] dark:text-[#80CBC4] font-semibold'
                   : 'text-slate-700 dark:text-slate-200 hover:text-[#00695C] dark:hover:text-[#80CBC4]'
@@ -148,7 +148,7 @@ export default function Navbar() {
 
             <Link
               to="/about"
-              className={`text-sm font-medium transition ${
+              className={`text-sm font-medium transition-colors ${
                 location.pathname === '/about'
                   ? 'text-[#00695C] dark:text-[#80CBC4] font-semibold'
                   : 'text-slate-700 dark:text-slate-200 hover:text-[#00695C] dark:hover:text-[#80CBC4]'
@@ -159,7 +159,7 @@ export default function Navbar() {
 
             <Link
               to="/contact"
-              className={`text-sm font-medium transition ${
+              className={`text-sm font-medium transition-colors ${
                 location.pathname === '/contact'
                   ? 'text-[#00695C] dark:text-[#80CBC4] font-semibold'
                   : 'text-slate-700 dark:text-slate-200 hover:text-[#00695C] dark:hover:text-[#80CBC4]'
@@ -170,14 +170,14 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Right CTA Actions */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3 shrink-0">
             {/* Language Switcher */}
-            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-white/10 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
-              <Globe className="w-4 h-4 text-[#00695C] dark:text-[#80CBC4]" />
+            <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 px-3.5 py-2 rounded-full border border-slate-200/80 dark:border-white/15 transition-colors">
+              <Globe className="w-4 h-4 text-[#00695C] dark:text-[#80CBC4] shrink-0" />
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="bg-transparent text-slate-700 dark:text-slate-200 border-none text-xs font-semibold focus:outline-none cursor-pointer"
+                className="bg-transparent text-slate-700 dark:text-slate-200 border-none text-xs font-semibold focus:outline-none cursor-pointer pr-1"
               >
                 <option value="en" className="bg-white dark:bg-[#0A1917]">English</option>
                 <option value="hi" className="bg-white dark:bg-[#0A1917]">हिंदी (Hindi)</option>
@@ -187,15 +187,15 @@ export default function Navbar() {
 
             <button
               onClick={() => navigate('/doctors')}
-              className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 transition"
+              className="w-9 h-9 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 flex items-center justify-center transition-colors shrink-0"
               title="Search Doctors or Services"
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-4 h-4" />
             </button>
 
             <Link
               to="/appointment"
-              className="btn-emerald-gradient text-white px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center gap-2 shadow-md hover:scale-105 transition-transform"
+              className="btn-emerald-gradient text-white px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 shrink-0"
             >
               <Calendar className="w-4 h-4" />
               <span>Book Appointment</span>
