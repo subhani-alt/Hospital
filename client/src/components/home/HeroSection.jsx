@@ -184,7 +184,7 @@ export default function HeroSection() {
                 className="w-full sm:w-auto btn-emerald-gradient text-white font-semibold px-8 py-3.5 rounded-full text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-transform shrink-0"
               >
                 <Calendar className="w-4 h-4" />
-                <span>Book OP</span>
+                <span>Book Appointment</span>
               </button>
             </div>
 

@@ -103,7 +103,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li><Link to="/doctors" className="hover:text-[#80CBC4] transition">Find a Specialist Doctor</Link></li>
-              <li><Link to="/appointment" className="hover:text-[#80CBC4] transition">Book OP Appointment</Link></li>
+              <li><Link to="/appointment" className="hover:text-[#80CBC4] transition">Book Appointment</Link></li>
               <li><Link to="/health-packages" className="hover:text-[#80CBC4] transition">Master Health Packages</Link></li>
               <li><Link to="/international" className="hover:text-[#80CBC4] transition">International Patient Care</Link></li>
               <li><Link to="/careers" className="hover:text-[#80CBC4] transition">Medical Careers & Fellowships</Link></li>

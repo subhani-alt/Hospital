@@ -6,7 +6,7 @@ export default function PatientJourneySection() {
     {
       step: '01',
       title: 'Digital Triage & Booking',
-      desc: 'Instant OP appointment scheduling with your choice of specialist via web or AI symptom checker.',
+      desc: 'Instant appointment scheduling with your choice of specialist via web or AI symptom checker.',
       icon: CalendarCheck
     },
     {

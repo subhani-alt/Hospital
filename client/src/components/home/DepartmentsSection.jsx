@@ -98,7 +98,7 @@ export default function DepartmentsSection() {
                     className="btn-emerald-gradient text-white text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1 hover:scale-105 transition"
                   >
                     <Calendar className="w-3 h-3" />
-                    <span>Book OP</span>
+                    <span>Book Appointment</span>
                   </button>
                 </div>
 
