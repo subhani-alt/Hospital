@@ -7,7 +7,6 @@ import ChairmanSection from '../../components/home/ChairmanSection';
 import WhyChooseUsSection from '../../components/home/WhyChooseUsSection';
 import PatientJourneySection from '../../components/home/PatientJourneySection';
 import TechnologySection from '../../components/home/TechnologySection';
-import HealthPackagesSection from '../../components/home/HealthPackagesSection';
 import TestimonialsSection from '../../components/home/TestimonialsSection';
 import AwardsInsuranceSection from '../../components/home/AwardsInsuranceSection';
 import HospitalGallerySection from '../../components/home/HospitalGallerySection';
@@ -40,10 +39,7 @@ export default function Home() {
       {/* 9. Technology & Robotic Surgery */}
       <TechnologySection />
 
-      {/* 10. Health Packages */}
-      <HealthPackagesSection />
-
-      {/* 11. Testimonials & Success Stories */}
+      {/* 10. Testimonials & Success Stories */}
       <TestimonialsSection />
 
       {/* 12. Insurance Partners & Accreditations */}
