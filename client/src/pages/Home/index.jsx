@@ -9,7 +9,6 @@ import PatientJourneySection from '../../components/home/PatientJourneySection';
 import TechnologySection from '../../components/home/TechnologySection';
 import TestimonialsSection from '../../components/home/TestimonialsSection';
 import AwardsInsuranceSection from '../../components/home/AwardsInsuranceSection';
-import ArticlesAppPromoSection from '../../components/home/ArticlesAppPromoSection';
 
 export default function Home() {
   return (
@@ -43,9 +42,6 @@ export default function Home() {
 
       {/* 12. Insurance Partners & Accreditations */}
       <AwardsInsuranceSection />
-
-      {/* 14. Latest Articles & Mobile App Promo */}
-      <ArticlesAppPromoSection />
     </div>
   );
 }
