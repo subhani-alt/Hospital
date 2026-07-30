@@ -44,7 +44,7 @@ export default function Navbar() {
             : 'bg-white/90 dark:bg-[#0A1917]/90 backdrop-blur-md py-4 border-b border-slate-100 dark:border-slate-800'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between">
           
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group">
