@@ -77,7 +77,7 @@ export default function Doctors() {
             />
           </div>
 
-          <div className="w-full sm:w-auto flex items-center gap-2 relative" ref={dropdownRef}>
+          <div className="w-full sm:w-auto flex items-center gap-2 relative z-30" ref={dropdownRef}>
             <Filter className="w-4 h-4 text-slate-400 shrink-0" />
             <button
               type="button"

@@ -113,10 +113,10 @@ export default function Appointment() {
         </div>
 
         {!isBooked ? (
-          <div className="bg-white dark:bg-[#122824] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+          <div className="bg-white dark:bg-[#122824] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl relative z-10">
             
             {/* Step Progress Header Bar */}
-            <div className="bg-[#0A1917] text-white p-4 border-b border-white/10 flex items-center justify-between text-xs">
+            <div className="bg-[#0A1917] text-white p-4 border-b border-white/10 flex items-center justify-between text-xs rounded-t-3xl">
               <div className="flex items-center gap-2 font-semibold">
                 <span className="w-6 h-6 rounded-full bg-[#00695C] text-white flex items-center justify-center text-[11px]">
                   {step}
@@ -142,7 +142,7 @@ export default function Appointment() {
                     </label>
                     
                     {/* Custom Animated Department Dropdown */}
-                    <div className="relative" ref={deptDropdownRef}>
+                    <div className="relative z-30" ref={deptDropdownRef}>
                       <div
                         onClick={() => setIsDeptDropdownOpen(!isDeptDropdownOpen)}
                         className={`w-full p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between cursor-pointer shadow-sm ${
@@ -151,27 +151,27 @@ export default function Appointment() {
                             : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 hover:bg-slate-100 dark:hover:bg-slate-800/80'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors shrink-0 ${
                             selectedDept ? 'btn-emerald-gradient text-white shadow-md' : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
                           }`}>
                             <Building2 className="w-4 h-4" />
                           </div>
-                          <div>
+                          <div className="min-w-0 flex-1">
                             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block leading-tight">
                               Specialty Center
                             </span>
-                            <span className={`text-sm font-bold block mt-0.5 ${
+                            <span className={`text-sm font-bold block mt-0.5 truncate ${
                               selectedDept ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 font-semibold'
                             }`}>
                               {selectedDept
                                 ? DEPARTMENTS.find((d) => d.id === selectedDept)?.name
-                                : '-- Select Department --'}
+                                : 'Select Department'}
                             </span>
                           </div>
                         </div>
                         <ChevronDown
-                          className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${
+                          className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ml-2 ${
                             isDeptDropdownOpen ? 'rotate-180 text-[#00695C] dark:text-[#80CBC4]' : ''
                           }`}
                         />
