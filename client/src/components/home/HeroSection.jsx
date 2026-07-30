@@ -179,6 +179,14 @@ export default function HeroSection() {
                   className="w-full bg-transparent text-white placeholder-slate-400 text-sm focus:outline-none py-2"
                 />
               </div>
+              <button
+                type="button"
+                onClick={() => navigate('/appointment')}
+                className="w-full sm:w-auto btn-emerald-gradient text-white font-semibold px-8 py-3.5 rounded-full text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-transform shrink-0 cursor-pointer"
+              >
+                <Calendar className="w-4 h-4" />
+                <span>Book Appointment</span>
+              </button>
             </div>
 
             {/* Live Autocomplete Dropdown */}
