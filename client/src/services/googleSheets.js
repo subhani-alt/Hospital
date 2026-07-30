@@ -60,16 +60,16 @@ export async function submitAppointmentToSheet({
 }) {
   return postToSheet({
     sheet: 'Appointments',
-    timestamp: new Date().toISOString(),
-    patientName,
-    patientPhone,
-    patientEmail,
-    doctorName,
-    department,
-    bookingDate,
-    timeSlot,
-    consultationType,
-    consultationFee,
+    'Submission Date & Time': new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+    'Patient Name': patientName,
+    'Phone Number': patientPhone,
+    'Email Address': patientEmail,
+    'Doctor Name': doctorName,
+    'Department': department,
+    'Appointment Date': bookingDate,
+    'Time Slot': timeSlot,
+    'Consultation Mode': consultationType === 'online' ? 'HD Tele-Video' : 'In-Person OP Visit',
+    'Consultation Fee (₹)': `₹${consultationFee}`,
   });
 }
 
@@ -84,11 +84,11 @@ export async function submitContactToSheet({
 }) {
   return postToSheet({
     sheet: 'ContactInquiries',
-    timestamp: new Date().toISOString(),
-    name,
-    phone,
-    email,
-    message,
+    'Submission Date & Time': new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+    'Full Name': name,
+    'Phone Number': phone,
+    'Email Address': email,
+    'Patient Inquiry / Message': message,
   });
 }
 
@@ -101,8 +101,8 @@ export async function submitEmergencyToSheet({
 }) {
   return postToSheet({
     sheet: 'EmergencyRequests',
-    timestamp: new Date().toISOString(),
-    patientLocation,
-    contactNumber,
+    'Submission Date & Time': new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+    'Patient Pickup Location': patientLocation,
+    'Attendant Phone Number': contactNumber,
   });
 }
