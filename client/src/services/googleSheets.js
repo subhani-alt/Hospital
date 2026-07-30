@@ -17,12 +17,26 @@ const GOOGLE_SHEET_URL =
  */
 async function postToSheet(payload) {
   try {
+    const jsonPayload = JSON.stringify(payload);
+
+    // Primary delivery: fetch with text/plain (CORS-safelisted for no-cors mode)
     await fetch(GOOGLE_SHEET_URL, {
       method: 'POST',
-      mode: 'no-cors',          // required for Apps Script without custom CORS
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      mode: 'no-cors',
+      cache: 'no-cache',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8',
+      },
+      body: jsonPayload,
     });
+
+    // Fallback delivery via sendBeacon (bypasses CORS & runs in background)
+    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+      const blob = new Blob([jsonPayload], { type: 'text/plain;charset=utf-8' });
+      navigator.sendBeacon(GOOGLE_SHEET_URL, blob);
+    }
+
     return { success: true };
   } catch (err) {
     console.error('[GoogleSheets] Submission error:', err);
