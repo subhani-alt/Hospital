@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const GOOGLE_SHEET_URL =
-  'https://script.google.com/macros/s/AKfycbz6bgwoH9sihueLADSNuc6XcmhLpaQbwfYzBaVF9DFa7kSJ-eupfP2IASKMBIwd8hmk9g/exec';
+  'https://script.google.com/macros/s/AKfycbyQe3Vf-2AhCXxv-u_bAr_YjRW7REUATalGzjZGTN9WlYsFTsq-YnVrOkc3jgWKWWRCbA/exec';
 
 /**
  * Generic helper: POST form data to Google Apps Script Web App.
