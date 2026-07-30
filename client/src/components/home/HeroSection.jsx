@@ -165,7 +165,7 @@ export default function HeroSection() {
           {/* Search Doctor & Specialty Form at Top of Home Page */}
           <form onSubmit={handleSearchSubmit} className="pb-2 relative z-30" ref={searchContainerRef}>
             <div className="glass-panel-dark p-2.5 rounded-full max-w-2xl flex flex-col sm:flex-row items-center gap-2 shadow-2xl border border-white/20">
-              <div className="flex-1 flex items-center gap-3 px-4 w-full">
+              <div className="flex-1 flex items-center gap-3 px-4 w-full py-1">
                 <Search className="w-5 h-5 text-[#80CBC4]" />
                 <input
                   type="text"
@@ -179,13 +179,6 @@ export default function HeroSection() {
                   className="w-full bg-transparent text-white placeholder-slate-400 text-sm focus:outline-none py-2"
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full sm:w-auto btn-emerald-gradient text-white font-semibold px-8 py-3.5 rounded-full text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-transform shrink-0"
-              >
-                <Calendar className="w-4 h-4" />
-                <span>Book Appointment</span>
-              </button>
             </div>
 
             {/* Live Autocomplete Dropdown */}
