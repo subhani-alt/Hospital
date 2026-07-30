@@ -51,11 +51,11 @@ export default function EmergencyModal() {
               Tap to Call Trauma Hotline Directly
             </p>
             <a
-              href="tel:04042444244"
-              className="inline-flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xl px-8 py-4 rounded-full shadow-lg hover:scale-105 transition-all w-full"
+              href="tel:9959198252"
+              className="inline-flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xl px-8 py-4 rounded-full shadow-lg hover:scale-105 transition-all w-full cursor-pointer"
             >
               <PhoneCall className="w-6 h-6 animate-pulse" />
-              <span>+91 40 4244 4244</span>
+              <span>+91 99591 98252</span>
             </a>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Average Ambulance Dispatch Time: &lt; 8 Minutes across Hyderabad metro area

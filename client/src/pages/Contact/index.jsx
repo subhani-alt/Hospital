@@ -55,8 +55,8 @@ export default function Contact() {
                 <h3 className="text-lg font-bold font-heading">24/7 Emergency Trauma Desk</h3>
               </div>
               <p className="text-xs text-red-100">Direct hotline for immediate ICU ambulance dispatch and critical care admission.</p>
-              <a href="tel:04042444244" className="inline-block bg-white text-red-700 font-bold px-6 py-3 rounded-full text-sm shadow-md hover:bg-red-50 transition">
-                +91 40 4244 4244
+              <a href="tel:9959198252" className="inline-block bg-white text-red-700 font-bold px-6 py-3 rounded-full text-sm shadow-md hover:bg-red-50 transition cursor-pointer">
+                +91 99591 98252
               </a>
             </div>
 
