@@ -19,7 +19,7 @@ async function postToSheet(payload) {
   try {
     const jsonPayload = JSON.stringify(payload);
 
-    // Primary delivery: fetch with text/plain (CORS-safelisted for no-cors mode)
+    // Single delivery via fetch with text/plain (CORS-safelisted for no-cors mode)
     await fetch(GOOGLE_SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -30,12 +30,6 @@ async function postToSheet(payload) {
       },
       body: jsonPayload,
     });
-
-    // Fallback delivery via sendBeacon (bypasses CORS & runs in background)
-    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-      const blob = new Blob([jsonPayload], { type: 'text/plain;charset=utf-8' });
-      navigator.sendBeacon(GOOGLE_SHEET_URL, blob);
-    }
 
     return { success: true };
   } catch (err) {
