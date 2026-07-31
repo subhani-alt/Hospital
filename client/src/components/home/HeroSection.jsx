@@ -145,8 +145,7 @@ export default function HeroSection() {
       </video>
 
       {/* Subtle Neutral Overlay for Text Legibility (No Color Tint) */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/25 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/45 z-10 pointer-events-none" />
 
       {/* Video Control Toggle Button */}
       <button
@@ -158,9 +157,9 @@ export default function HeroSection() {
       </button>
 
       {/* Main Hero Content Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-8 py-16 flex-1 flex flex-col justify-center w-full">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-8 py-16 flex-1 flex flex-col justify-center items-center w-full">
         
-        <div className="max-w-3xl space-y-8">
+        <div className="max-w-4xl space-y-8 text-center flex flex-col items-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-xs font-semibold text-white uppercase tracking-widest shadow-sm">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -174,8 +173,8 @@ export default function HeroSection() {
           </h1>
 
           {/* Search Doctor & Specialty Form in the Middle */}
-          <form onSubmit={handleSearchSubmit} className="relative z-30 pt-2" ref={searchContainerRef}>
-            <div className="glass-panel-dark p-2.5 rounded-full max-w-2xl flex flex-col sm:flex-row items-center gap-2 shadow-2xl border border-white/20">
+          <form onSubmit={handleSearchSubmit} className="relative z-30 pt-2 w-full flex justify-center" ref={searchContainerRef}>
+            <div className="glass-panel-dark p-2.5 rounded-full w-full max-w-2xl flex flex-col sm:flex-row items-center gap-2 shadow-2xl border border-white/20 text-left">
               <div className="flex-1 flex items-center gap-3 px-4 w-full py-1">
                 <Search className="w-5 h-5 text-[#80CBC4]" />
                 <input
@@ -202,7 +201,7 @@ export default function HeroSection() {
 
             {/* Live Autocomplete Dropdown */}
             {showDropdown && searchQuery.trim() !== '' && (
-              <div className="absolute top-full left-0 w-full max-w-2xl mt-2 bg-[#0A1917] border-2 border-[#80CBC4]/60 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="absolute top-full left-1/2 -translate-x-1/2 w-full max-w-2xl mt-2 bg-[#0A1917] border-2 border-[#80CBC4]/60 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200 text-left">
                 <div className="p-3 bg-[#00695C]/50 text-[11px] font-bold uppercase tracking-wider text-[#80CBC4] border-b border-white/10 flex justify-between items-center">
                   <span>Matching Doctors & Specialists ({matchingDoctors.length})</span>
                   <span className="text-slate-300 font-normal text-[10px]">Select to view profile</span>
