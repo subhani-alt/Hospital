@@ -267,17 +267,7 @@ export default function HeroSection() {
             1,200 beds across 25 specialty Centers of Excellence. Pioneer in robotic surgery, living-donor organ transplants, and precision gastroenterology.
           </p>
 
-          {/* Key Stat Badges */}
-          <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-slate-300">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#80CBC4] animate-ping" />
-              <span>24/7 Level-1 Trauma Emergency</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-[#80CBC4]" />
-              <span>JCI & NABH Gold Standard Certified</span>
-            </div>
-          </div>
+
 
         </div>
 
