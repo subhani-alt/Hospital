@@ -158,98 +158,98 @@ export default function HeroSection() {
       </button>
 
       {/* Main Hero Content Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-8 pt-16 pb-16 flex-1 flex flex-col justify-center">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-8 pt-10 pb-16 flex-1 flex flex-col justify-between w-full">
         
-        <div className="max-w-3xl space-y-6">
-
-          {/* Search Doctor & Specialty Form at Top of Home Page */}
-          <form onSubmit={handleSearchSubmit} className="pb-2 relative z-30" ref={searchContainerRef}>
-            <div className="glass-panel-dark p-2.5 rounded-full max-w-2xl flex flex-col sm:flex-row items-center gap-2 shadow-2xl border border-white/20">
-              <div className="flex-1 flex items-center gap-3 px-4 w-full py-1">
-                <Search className="w-5 h-5 text-[#80CBC4]" />
-                <input
-                  type="text"
-                  placeholder="Search doctor, procedure or condition (e.g. Dr. Reddy, Ananya, Liver)..."
-                  value={searchQuery}
-                  onFocus={() => setShowDropdown(true)}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowDropdown(true);
-                  }}
-                  className="w-full bg-transparent text-white placeholder-slate-400 text-sm focus:outline-none py-2"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() => navigate('/appointment')}
-                className="w-full sm:w-auto btn-emerald-gradient text-white font-semibold px-8 py-3.5 rounded-full text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-transform shrink-0 cursor-pointer"
-              >
-                <Calendar className="w-4 h-4" />
-                <span>Book Appointment</span>
-              </button>
+        {/* Top Search Doctor & Specialty Form */}
+        <form onSubmit={handleSearchSubmit} className="relative z-30 mb-16 sm:mb-20" ref={searchContainerRef}>
+          <div className="glass-panel-dark p-2.5 rounded-full max-w-2xl flex flex-col sm:flex-row items-center gap-2 shadow-2xl border border-white/20">
+            <div className="flex-1 flex items-center gap-3 px-4 w-full py-1">
+              <Search className="w-5 h-5 text-[#80CBC4]" />
+              <input
+                type="text"
+                placeholder="Search doctor, procedure or condition (e.g. Dr. Reddy, Ananya, Liver)..."
+                value={searchQuery}
+                onFocus={() => setShowDropdown(true)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowDropdown(true);
+                }}
+                className="w-full bg-transparent text-white placeholder-slate-400 text-sm focus:outline-none py-2"
+              />
             </div>
+            <button
+              type="button"
+              onClick={() => navigate('/appointment')}
+              className="w-full sm:w-auto btn-emerald-gradient text-white font-semibold px-8 py-3.5 rounded-full text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-transform shrink-0 cursor-pointer"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Book Appointment</span>
+            </button>
+          </div>
 
-            {/* Live Autocomplete Dropdown */}
-            {showDropdown && searchQuery.trim() !== '' && (
-              <div className="absolute top-full left-0 w-full max-w-2xl mt-2 bg-[#0A1917] border-2 border-[#80CBC4]/60 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="p-3 bg-[#00695C]/50 text-[11px] font-bold uppercase tracking-wider text-[#80CBC4] border-b border-white/10 flex justify-between items-center">
-                  <span>Matching Doctors & Specialists ({matchingDoctors.length})</span>
-                  <span className="text-slate-300 font-normal text-[10px]">Select to view profile</span>
-                </div>
-                <div className="max-h-80 overflow-y-auto divide-y divide-white/10 pb-1" data-lenis-prevent>
-                  {matchingDoctors.length > 0 ? (
-                    matchingDoctors.map((doc) => (
-                      <div
-                        key={doc.id}
-                        onClick={() => {
-                          navigate(`/appointment?doctor=${doc.id}`);
-                          setShowDropdown(false);
-                        }}
-                        className="p-3.5 bg-[#0A1917] hover:bg-[#00695C]/40 transition-colors cursor-pointer flex items-center gap-3.5 group"
-                      >
-                        <img
-                          src={doc.image}
-                          alt={doc.name}
-                          className="w-12 h-12 rounded-full object-cover border-2 border-[#80CBC4] shrink-0 group-hover:scale-105 transition-transform"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-bold text-white group-hover:text-[#80CBC4] transition-colors truncate">
-                              {doc.name}
-                            </h4>
-                            <span className="text-xs text-amber-300 font-extrabold flex items-center gap-1 shrink-0 ml-2">
-                              ★ {doc.rating}
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-200 truncate mt-0.5 font-medium">
-                            {doc.title}
-                          </p>
-                          <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[11px] text-slate-300">
-                            <span className="bg-[#00695C] text-white px-2.5 py-0.5 rounded-full font-semibold">
-                              {doc.deptName}
-                            </span>
-                            <span>• {doc.experience} Yrs Experience</span>
-                            <span>• ₹{doc.consultationFee.toLocaleString('en-IN')} Fee</span>
-                          </div>
+          {/* Live Autocomplete Dropdown */}
+          {showDropdown && searchQuery.trim() !== '' && (
+            <div className="absolute top-full left-0 w-full max-w-2xl mt-2 bg-[#0A1917] border-2 border-[#80CBC4]/60 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="p-3 bg-[#00695C]/50 text-[11px] font-bold uppercase tracking-wider text-[#80CBC4] border-b border-white/10 flex justify-between items-center">
+                <span>Matching Doctors & Specialists ({matchingDoctors.length})</span>
+                <span className="text-slate-300 font-normal text-[10px]">Select to view profile</span>
+              </div>
+              <div className="max-h-80 overflow-y-auto divide-y divide-white/10 pb-1" data-lenis-prevent>
+                {matchingDoctors.length > 0 ? (
+                  matchingDoctors.map((doc) => (
+                    <div
+                      key={doc.id}
+                      onClick={() => {
+                        navigate(`/appointment?doctor=${doc.id}`);
+                        setShowDropdown(false);
+                      }}
+                      className="p-3.5 bg-[#0A1917] hover:bg-[#00695C]/40 transition-colors cursor-pointer flex items-center gap-3.5 group"
+                    >
+                      <img
+                        src={doc.image}
+                        alt={doc.name}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-[#80CBC4] shrink-0 group-hover:scale-105 transition-transform"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-bold text-white group-hover:text-[#80CBC4] transition-colors truncate">
+                            {doc.name}
+                          </h4>
+                          <span className="text-xs text-amber-300 font-extrabold flex items-center gap-1 shrink-0 ml-2">
+                            ★ {doc.rating}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-200 truncate mt-0.5 font-medium">
+                          {doc.title}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[11px] text-slate-300">
+                          <span className="bg-[#00695C] text-white px-2.5 py-0.5 rounded-full font-semibold">
+                            {doc.deptName}
+                          </span>
+                          <span>• {doc.experience} Yrs Experience</span>
+                          <span>• ₹{doc.consultationFee.toLocaleString('en-IN')} Fee</span>
                         </div>
                       </div>
-                    ))
-                  ) : (
-                    <div className="p-5 bg-[#0A1917] text-center text-xs text-slate-300">
-                      No matching doctor found for "<span className="text-white font-semibold">{searchQuery}</span>".
-                      <button 
-                        type="submit" 
-                        className="block mx-auto mt-2 text-[#80CBC4] hover:underline font-semibold text-xs"
-                      >
-                        Search full directory →
-                      </button>
                     </div>
-                  )}
-                </div>
+                  ))
+                ) : (
+                  <div className="p-5 bg-[#0A1917] text-center text-xs text-slate-300">
+                    No matching doctor found for "<span className="text-white font-semibold">{searchQuery}</span>".
+                    <button 
+                      type="submit" 
+                      className="block mx-auto mt-2 text-[#80CBC4] hover:underline font-semibold text-xs"
+                    >
+                      Search full directory →
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </form>
+            </div>
+          )}
+        </form>
 
+        {/* Hero Heading & Badge Container */}
+        <div className="max-w-3xl space-y-6">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-xs font-semibold text-white uppercase tracking-widest shadow-sm">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -261,11 +261,6 @@ export default function HeroSection() {
             Where Science Meets <br />
             <span className="text-white">Compassionate Care.</span>
           </h1>
-
-
-
-
-
         </div>
 
       </div>
