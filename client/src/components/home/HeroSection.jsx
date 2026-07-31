@@ -262,10 +262,7 @@ export default function HeroSection() {
             <span className="text-white">Compassionate Care.</span>
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-base sm:text-xl text-slate-300 font-light leading-relaxed max-w-2xl">
-            1,200 beds across 25 specialty Centers of Excellence. Pioneer in robotic surgery, living-donor organ transplants, and precision gastroenterology.
-          </p>
+
 
 
 
