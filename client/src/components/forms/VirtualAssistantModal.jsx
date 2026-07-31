@@ -28,7 +28,7 @@ export default function VirtualAssistantModal() {
 
       const lower = userText.toLowerCase();
       if (lower.includes('doctor') || lower.includes('specialist')) {
-        botResponse = 'We have 250+ world-renowned clinicians across Gastroenterology, Cardiology, Oncology, Neurosciences, and Orthopedics. You can filter and book doctors via our "OUR DOCTORS" tab.';
+        botResponse = 'We have 250+ world-renowned clinicians across Gastroenterology, Cardiology, Oncology, Neurosciences, and Orthopedics. You can filter and book doctors via our "Our Doctors" tab.';
       } else if (lower.includes('package') || lower.includes('checkup')) {
         botResponse = 'Our Apex Master Health Shield includes 94 vital tests + 3D Echo + Whole Body USG. You can view and compare plans in our "Health Packages" section.';
       } else if (lower.includes('insurance') || lower.includes('cashless')) {
