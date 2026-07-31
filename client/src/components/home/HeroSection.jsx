@@ -160,11 +160,7 @@ export default function HeroSection() {
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-8 py-16 flex-1 flex flex-col justify-center items-center w-full">
         
         <div className="max-w-4xl space-y-8 text-center flex flex-col items-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-xs font-semibold text-white uppercase tracking-widest shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>South Asia's Premier Quaternary Hospital</span>
-          </div>
+
 
           {/* Main Heading */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white font-heading tracking-tight leading-[1.1] drop-shadow-md">
