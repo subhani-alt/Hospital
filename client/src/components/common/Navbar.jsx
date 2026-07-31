@@ -151,7 +151,7 @@ export default function Navbar() {
                   : 'text-slate-700 dark:text-slate-200 hover:text-[#00695C] dark:hover:text-[#80CBC4]'
               }`}
             >
-              Find Doctors
+              OUR DOCTORS
             </Link>
 
             <Link
@@ -281,7 +281,7 @@ export default function Navbar() {
               Centers of Excellence & Departments
             </Link>
             <Link to="/doctors" className="block text-base font-semibold text-slate-800 dark:text-white py-2">
-              Find Doctors
+              OUR DOCTORS
             </Link>
             <Link to="/health-packages" className="block text-base font-semibold text-slate-800 dark:text-white py-2">
               Health Packages
