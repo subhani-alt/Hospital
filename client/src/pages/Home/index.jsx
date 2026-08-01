@@ -2,7 +2,6 @@ import React from 'react';
 import HeroSection from '../../components/home/HeroSection';
 import QuickAccessBar from '../../components/home/QuickAccessBar';
 import StatsSection from '../../components/home/StatsSection';
-import DepartmentsSection from '../../components/home/DepartmentsSection';
 import ChairmanSection from '../../components/home/ChairmanSection';
 import WhyChooseUsSection from '../../components/home/WhyChooseUsSection';
 import PatientJourneySection from '../../components/home/PatientJourneySection';
@@ -21,9 +20,6 @@ export default function Home() {
 
       {/* 3. Hospital Statistics */}
       <StatsSection />
-
-      {/* 4. Featured Departments */}
-      <DepartmentsSection />
 
       {/* 5. Chairman's Message & Vision */}
       <ChairmanSection />
