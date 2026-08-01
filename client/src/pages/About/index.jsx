@@ -1,6 +1,7 @@
 import React from 'react';
 import { Award, ShieldCheck, HeartPulse, Building2, Globe2, Users, CheckCircle } from 'lucide-react';
 import { DOCTORS } from '../../services/data';
+import TechnologySection from '../../components/home/TechnologySection';
 
 export default function About() {
   const TIMELINE = [
@@ -75,6 +76,9 @@ export default function About() {
           ))}
         </div>
       </section>
+
+      {/* Technology & Innovation */}
+      <TechnologySection />
 
     </div>
   );

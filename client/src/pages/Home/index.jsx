@@ -5,7 +5,6 @@ import StatsSection from '../../components/home/StatsSection';
 import ChairmanSection from '../../components/home/ChairmanSection';
 import WhyChooseUsSection from '../../components/home/WhyChooseUsSection';
 import PatientJourneySection from '../../components/home/PatientJourneySection';
-import TechnologySection from '../../components/home/TechnologySection';
 import TestimonialsSection from '../../components/home/TestimonialsSection';
 import AwardsInsuranceSection from '../../components/home/AwardsInsuranceSection';
 
@@ -29,9 +28,6 @@ export default function Home() {
 
       {/* 8. Patient Journey Timeline */}
       <PatientJourneySection />
-
-      {/* 9. Technology & Robotic Surgery */}
-      <TechnologySection />
 
       {/* 10. Testimonials & Success Stories */}
       <TestimonialsSection />
