@@ -1,10 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Mail, MapPin, ShieldCheck, Award, HeartPulse, Activity, ArrowRight, ExternalLink } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 
 export default function Footer() {
   const { toggleEmergencyModal } = useStore();
+  const location = useLocation();
+
+  const handleHomeClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <footer className="bg-[#051224] text-slate-300 pt-16 pb-8 border-t border-white/10 relative z-0 overflow-hidden">
@@ -20,7 +28,7 @@ export default function Footer() {
           
           {/* Col 1: Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-3">
+            <Link to="/" onClick={handleHomeClick} className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl btn-emerald-gradient flex items-center justify-center text-white shadow-md">
                 <Activity className="w-6 h-6" />
               </div>

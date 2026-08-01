@@ -52,6 +52,13 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   }, [location]);
 
+  const handleHomeClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full transition-all duration-300">
 
@@ -66,7 +73,7 @@ export default function Navbar() {
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between">
           
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" onClick={handleHomeClick} className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-xl btn-emerald-gradient flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
               <Activity className="w-6 h-6" />
             </div>
@@ -85,6 +92,7 @@ export default function Navbar() {
             
             <Link
               to="/"
+              onClick={handleHomeClick}
               className={`text-sm font-medium transition-colors ${
                 location.pathname === '/'
                   ? 'text-[#00695C] dark:text-[#80CBC4] font-semibold'
@@ -274,7 +282,14 @@ export default function Navbar() {
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
           <div className="lg:hidden w-full bg-white dark:bg-[#0A1917] border-b border-slate-200 dark:border-slate-800 px-6 py-6 space-y-4 animate-in slide-in-from-top-4 duration-200">
-            <Link to="/" className="block text-base font-semibold text-slate-800 dark:text-white py-2">
+            <Link
+              to="/"
+              onClick={(e) => {
+                handleHomeClick(e);
+                setIsMobileMenuOpen(false);
+              }}
+              className="block text-base font-semibold text-slate-800 dark:text-white py-2"
+            >
               Home
             </Link>
             <Link to="/departments" className="block text-base font-semibold text-slate-800 dark:text-white py-2">
