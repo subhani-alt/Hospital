@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build --prefix client",
+  "buildCommand": "node scripts/build.js",
   "outputDirectory": "client/dist",
   "rewrites": [
     {
