@@ -231,10 +231,14 @@ app.get('/api/analytics', async (req, res) => {
   }
 });
 
-// Port Server Listener
-const PORT = process.env.PORT || 5000;
+// Export Express app for Vercel Serverless Functions
+export default app;
 
-app.listen(PORT, () => {
-  console.log(`[Server] Apex Health Backend API running on port ${PORT}`);
-  connectDB();
-});
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`[Server] Apex Health Backend API running on port ${PORT}`);
+    connectDB();
+  });
+}
+
