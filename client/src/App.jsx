@@ -37,6 +37,59 @@ function ScrollToTop() {
   return null;
 }
 
+// Layout Switcher to exclude patient navbar/footer/floating widgets from Admin panel
+function AppContent() {
+  const { pathname } = useLocation();
+  const isAdminRoute = pathname.startsWith('/admin');
+
+  if (isAdminRoute) {
+    return (
+      <Routes>
+        <Route path="/admin/:tab?" element={<AdminDashboard />} />
+      </Routes>
+    );
+  }
+
+  return (
+    <>
+      <ScrollProgress />
+      <CursorEffect />
+
+      {/* Sticky Luxury Navbar for Patient Portal */}
+      <Navbar />
+
+      {/* Main Patient Portal Content */}
+      <main className="w-full">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/departments" element={<Departments />} />
+          <Route path="/doctors" element={<Doctors />} />
+          <Route path="/appointment" element={<Appointment />} />
+          <Route path="/health-packages" element={<HealthPackages />} />
+          <Route path="/international" element={<International />} />
+          <Route path="/health-library" element={<HealthLibrary />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/patient-portal" element={<Appointment />} />
+        </Routes>
+      </main>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Floating Action Triggers & Modals */}
+      <FloatingButtons />
+      <Suspense fallback={null}>
+        <EmergencyModal />
+        <SymptomCheckerModal />
+        <VirtualAssistantModal />
+      </Suspense>
+    </>
+  );
+}
+
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const { isDarkMode } = useStore();
@@ -70,43 +123,7 @@ export default function App() {
 
         <Router>
           <ScrollToTop />
-          <ScrollProgress />
-          <CursorEffect />
-
-          {/* Sticky Luxury Navbar */}
-          <Navbar />
-
-          {/* Router View */}
-          <main className="w-full">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/departments" element={<Departments />} />
-              <Route path="/doctors" element={<Doctors />} />
-              <Route path="/appointment" element={<Appointment />} />
-              <Route path="/health-packages" element={<HealthPackages />} />
-              <Route path="/international" element={<International />} />
-              <Route path="/health-library" element={<HealthLibrary />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/admin/:tab?" element={<AdminDashboard />} />
-              <Route path="/patient-portal" element={<Appointment />} />
-            </Routes>
-
-          </main>
-
-
-          {/* Footer */}
-          <Footer />
-
-          {/* Modals & Floating Action Triggers */}
-          <FloatingButtons />
-          <Suspense fallback={null}>
-            <EmergencyModal />
-            <SymptomCheckerModal />
-            <VirtualAssistantModal />
-          </Suspense>
+          <AppContent />
         </Router>
 
       </div>
