@@ -330,31 +330,39 @@ export const BASE_DOCTORS = [
 
 
 export function getLiveDoctors() {
+  let list = [...BASE_DOCTORS];
   try {
     const cached = localStorage.getItem('apex_doctors');
     if (cached) {
       const parsed = JSON.parse(cached);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.map(d => ({
-          id: d.id,
-          name: d.name,
-          title: d.title,
-          department: d.department,
-          deptName: d.dept_name || d.deptName || d.department,
-          experience: Number(d.experience),
-          qualification: d.qualification,
-          consultationFee: Number(d.consultation_fee || d.consultationFee),
-          rating: Number(d.rating) || 4.9,
-          reviewsCount: d.reviews_count || d.reviewsCount || 890,
-          image: d.image || '/dr-ananya-sharma.png',
-          languages: Array.isArray(d.languages) ? d.languages : (typeof d.languages === 'string' ? d.languages.split(',').map(s=>s.trim()) : ['English']),
-          bio: d.bio
-        }));
+        const merged = list.map(baseDoc => {
+          const found = parsed.find(c => c.id === baseDoc.id);
+          return found ? { ...baseDoc, ...found } : baseDoc;
+        });
+        const customDocs = parsed.filter(c => !list.some(b => b.id === c.id));
+        list = [...merged, ...customDocs];
       }
     }
   } catch (e) {}
-  return BASE_DOCTORS;
+
+  return list.map(d => ({
+    id: d.id,
+    name: d.name,
+    title: d.title,
+    department: d.department,
+    deptName: d.dept_name || d.deptName || d.department,
+    experience: Number(d.experience) || 10,
+    qualification: d.qualification || 'MD',
+    consultationFee: Number(d.consultation_fee || d.consultationFee || 2000),
+    rating: Number(d.rating) || 4.9,
+    reviewsCount: d.reviews_count || d.reviewsCount || 890,
+    image: d.image || '/dr-ananya-sharma.png',
+    languages: Array.isArray(d.languages) ? d.languages : (typeof d.languages === 'string' ? d.languages.split(',').map(s=>s.trim()) : ['English']),
+    bio: d.bio || ''
+  }));
 }
+
 
 export const DOCTORS = getLiveDoctors();
 
