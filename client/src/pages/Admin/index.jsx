@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Users, Calendar, Activity, DollarSign, Stethoscope, FileText, 
   TrendingUp, CheckCircle2, Clock, AlertCircle, Plus, Search, Filter, 
-  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, ExternalLink
+  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, ExternalLink, Image as ImageIcon
 } from 'lucide-react';
 import { supabase } from '../../config/supabase';
 
@@ -18,14 +18,13 @@ const INITIAL_DEPARTMENTS = [
 ];
 
 const INITIAL_DOCTORS = [
-  { id: 'dr-nageshwar-reddy', name: 'Dr. D. Nageshwar Reddy', title: 'Chairman & Chief of Gastroenterology', department: 'gastroenterology', dept_name: 'Gastroenterology', experience: 38, qualification: 'MD, DM, D.Sc, FAMS, FRCP', consultation_fee: 2500, rating: 4.98, image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600' },
-  { id: 'dr-ananya-sharma', name: 'Dr. Ananya Sharma', title: 'Director — Surgical Oncology & Robotic Care', department: 'oncology', dept_name: 'Oncology', experience: 22, qualification: 'MS, MCh (Oncology), FACS', consultation_fee: 2000, rating: 4.95, image: '/dr-ananya-sharma.png' },
-  { id: 'dr-k-srinivas', name: 'Dr. K. Srinivas', title: 'Senior Director — Interventional Cardiology', department: 'cardiology', dept_name: 'Cardiac Sciences', experience: 26, qualification: 'MD, DM (Cardiology), FACC', consultation_fee: 2200, rating: 4.96, image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600' },
-  { id: 'dr-vikramaditya-rao', name: 'Dr. Vikramaditya Rao', title: 'Chief of Neurosurgery & Spine Surgery', department: 'neurosciences', dept_name: 'Neurosciences', experience: 24, qualification: 'MS, MCh (Neurosurgery)', consultation_fee: 2200, rating: 4.93, image: '/dr-vikramaditya-rao.png' },
-  { id: 'dr-rajeshwar-patel', name: 'Dr. Rajeshwar Patel', title: 'Head — Robotic Joint Replacement', department: 'orthopedics', dept_name: 'Orthopedics', experience: 20, qualification: 'MS (Ortho), FRCS, MCh', consultation_fee: 1800, rating: 4.92, image: '/dr-rajeshwar-patel.png' },
-  { id: 'dr-sk-mukherjee', name: 'Dr. S. K. Mukherjee', title: 'Director — Nephrology & Transplant Services', department: 'nephrology', dept_name: 'Renal Sciences', experience: 28, qualification: 'MD, DM (Nephrology), FISN', consultation_fee: 2000, rating: 4.97, image: '/dr-sk-mukherjee.png' }
+  { id: 'dr-nageshwar-reddy', name: 'Dr. D. Nageshwar Reddy', title: 'Chairman & Chief of Gastroenterology', department: 'gastroenterology', dept_name: 'Gastroenterology', experience: 38, qualification: 'MD, DM, D.Sc, FAMS, FRCP', consultation_fee: 2500, rating: 4.98, image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600', bio: 'Pioneer in Therapeutic Endoscopy, credited with introducing several novel procedures globally.' },
+  { id: 'dr-ananya-sharma', name: 'Dr. Ananya Sharma', title: 'Director — Surgical Oncology & Robotic Care', department: 'oncology', dept_name: 'Oncology', experience: 22, qualification: 'MS, MCh (Oncology), FACS', consultation_fee: 2000, rating: 4.95, image: '/dr-ananya-sharma.png', bio: 'Leading surgical oncologist specializing in robotic-assisted resection.' },
+  { id: 'dr-k-srinivas', name: 'Dr. K. Srinivas', title: 'Senior Director — Interventional Cardiology', department: 'cardiology', dept_name: 'Cardiac Sciences', experience: 26, qualification: 'MD, DM (Cardiology), FACC', consultation_fee: 2200, rating: 4.96, image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600', bio: 'Performed over 15,000 complex coronary angioplasties and pioneer in TAVI/TAVR.' },
+  { id: 'dr-vikramaditya-rao', name: 'Dr. Vikramaditya Rao', title: 'Chief of Neurosurgery & Spine Surgery', department: 'neurosciences', dept_name: 'Neurosciences', experience: 24, qualification: 'MS, MCh (Neurosurgery)', consultation_fee: 2200, rating: 4.93, image: '/dr-vikramaditya-rao.png', bio: 'Expert in skull base surgery, awake brain tumor excision, and DBS.' },
+  { id: 'dr-rajeshwar-patel', name: 'Dr. Rajeshwar Patel', title: 'Head — Robotic Joint Replacement', department: 'orthopedics', dept_name: 'Orthopedics', experience: 20, qualification: 'MS (Ortho), FRCS, MCh', consultation_fee: 1800, rating: 4.92, image: '/dr-rajeshwar-patel.png', bio: 'Pioneered robotic 3D precision knee and hip joint replacements in South Asia.' },
+  { id: 'dr-sk-mukherjee', name: 'Dr. S. K. Mukherjee', title: 'Director — Nephrology & Transplant Services', department: 'nephrology', dept_name: 'Renal Sciences', experience: 28, qualification: 'MD, DM (Nephrology), FISN', consultation_fee: 2000, rating: 4.97, image: '/dr-sk-mukherjee.png', bio: 'National Nephrologist of Eminence with extensive renal transplant experience.' }
 ];
-
 
 const INITIAL_APPOINTMENTS = [
   { id: 'b1a2c3d4-0001', patient_name: 'Rahul Verma', patient_phone: '+91 98765 43210', patient_email: 'rahul.verma@example.com', doctor_name: 'Dr. D. Nageshwar Reddy', department: 'Gastroenterology', date: '2026-08-05', time_slot: '10:30 AM', type: 'in-person', status: 'confirmed', fee: 2500, payment_status: 'paid' },
@@ -79,10 +78,21 @@ export default function AdminDashboard() {
   const [activeModal, setActiveModal] = useState(null); // 'doctor' | 'blog' | 'package' | null
   const [editItem, setEditItem] = useState(null);
 
-  // Forms
-  const [docForm, setDocForm] = useState({ id: '', name: '', title: '', department: 'gastroenterology', dept_name: 'Gastroenterology', qualification: '', experience: 10, consultation_fee: 2000, rating: 4.9, image: '', bio: '' });
-  const [blogForm, setBlogForm] = useState({ id: '', title: '', category: 'Medical Breakthroughs', author: 'Dr. Ananya Sharma', date: '2026-08-02', read_time: '5 min read', summary: '', content: '', image: '' });
-  const [pkgForm, setPkgForm] = useState({ id: '', name: '', badge: 'Popular', category: 'Comprehensive', price: 9999, original_price: 15000, tests_count: 50, recommended_for: 'Adults Aged 30+' });
+  // Form States
+  const [docForm, setDocForm] = useState({ 
+    id: '', name: '', title: '', department: 'gastroenterology', dept_name: 'Gastroenterology', 
+    qualification: '', experience: 10, consultation_fee: 2000, rating: 4.9, image: '', languages: 'English, Hindi', bio: '' 
+  });
+  
+  const [blogForm, setBlogForm] = useState({ 
+    id: '', title: '', category: 'Medical Breakthroughs', author: 'Dr. Ananya Sharma', 
+    date: '2026-08-02', read_time: '5 min read', summary: '', content: '', image: '' 
+  });
+  
+  const [pkgForm, setPkgForm] = useState({ 
+    id: '', name: '', badge: 'Most Popular', category: 'Comprehensive', 
+    price: 9999, original_price: 15000, tests_count: 50, recommended_for: 'Adults Aged 30+' 
+  });
 
   useEffect(() => {
     loadAllData();
@@ -137,17 +147,27 @@ export default function AdminDashboard() {
   // --- CRUD ACTIONS FOR DOCTORS ---
   const handleSaveDoctor = async (e) => {
     e.preventDefault();
+    const deptMap = {
+      gastroenterology: 'Gastroenterology',
+      oncology: 'Oncology',
+      cardiology: 'Cardiac Sciences',
+      neurosciences: 'Neurosciences',
+      orthopedics: 'Orthopedics',
+      nephrology: 'Renal Sciences'
+    };
+
     const payload = {
       id: docForm.id || `doc-${Date.now()}`,
       name: docForm.name,
       title: docForm.title,
       department: docForm.department,
-      dept_name: docForm.dept_name || 'General Medicine',
+      dept_name: deptMap[docForm.department] || docForm.dept_name || 'General Medicine',
       qualification: docForm.qualification || 'MD, MBBS',
       experience: Number(docForm.experience) || 10,
       consultation_fee: Number(docForm.consultation_fee) || 2000,
       rating: Number(docForm.rating) || 4.9,
-      image: docForm.image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600',
+      image: docForm.image || '/dr-ananya-sharma.png',
+      languages: Array.isArray(docForm.languages) ? docForm.languages : (docForm.languages ? docForm.languages.split(',').map(s => s.trim()) : ['English']),
       bio: docForm.bio || 'Leading medical specialist.'
     };
 
@@ -406,7 +426,7 @@ export default function AdminDashboard() {
               <button 
                 onClick={() => {
                   setEditItem(null);
-                  setDocForm({ id: '', name: '', title: '', department: 'gastroenterology', dept_name: 'Gastroenterology', qualification: '', experience: 10, consultation_fee: 2000, rating: 4.9, image: '', bio: '' });
+                  setDocForm({ id: '', name: '', title: '', department: 'gastroenterology', dept_name: 'Gastroenterology', qualification: '', experience: 10, consultation_fee: 2000, rating: 4.9, image: '', languages: 'English, Hindi', bio: '' });
                   setActiveModal('doctor');
                 }}
                 className="bg-[#00695C] hover:bg-[#004D40] text-white text-xs font-semibold px-5 py-2.5 rounded-full flex items-center gap-2 shadow-md transition"
@@ -432,7 +452,7 @@ export default function AdminDashboard() {
               <button 
                 onClick={() => {
                   setEditItem(null);
-                  setPkgForm({ id: '', name: '', badge: 'Popular', category: 'Comprehensive', price: 9999, original_price: 15000, tests_count: 50, recommended_for: 'Adults Aged 30+' });
+                  setPkgForm({ id: '', name: '', badge: 'Most Popular', category: 'Comprehensive', price: 9999, original_price: 15000, tests_count: 50, recommended_for: 'Adults Aged 30+' });
                   setActiveModal('package');
                 }}
                 className="bg-[#00695C] hover:bg-[#004D40] text-white text-xs font-semibold px-5 py-2.5 rounded-full flex items-center gap-2 shadow-md transition"
@@ -562,7 +582,7 @@ export default function AdminDashboard() {
                   type="text" 
                   placeholder="Search by patient, doctor or department..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.g.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="bg-slate-50 text-xs text-slate-900 outline-none w-full sm:w-64 placeholder-slate-400 p-2 rounded-xl border border-slate-200 focus:bg-white"
                 />
               </div>
@@ -654,7 +674,7 @@ export default function AdminDashboard() {
               <div key={doc.id} className="bg-white p-6 rounded-3xl border border-slate-200/80 space-y-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
                 <div className="space-y-3">
                   <div className="flex items-center gap-4">
-                    <img src={doc.image} alt={doc.name} className="w-16 h-16 rounded-2xl object-cover border-2 border-[#00695C] shrink-0" />
+                    <img src={doc.image || '/dr-ananya-sharma.png'} alt={doc.name} className="w-16 h-16 rounded-2xl object-cover border-2 border-[#00695C] shrink-0" />
                     <div>
                       <h3 className="font-bold text-slate-900 text-base">{doc.name}</h3>
                       <p className="text-xs text-[#00695C] font-semibold">{doc.title}</p>
@@ -665,11 +685,29 @@ export default function AdminDashboard() {
                     <div><strong>Qualification:</strong> {doc.qualification}</div>
                     <div><strong>Experience:</strong> {doc.experience} Years</div>
                     <div><strong>Consultation Fee:</strong> <span className="text-emerald-700 font-bold">₹{doc.consultation_fee}</span></div>
+                    {doc.bio && <div className="text-[11px] text-slate-500 pt-1 line-clamp-2">{doc.bio}</div>}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <button onClick={() => { setEditItem(doc); setDocForm(doc); setActiveModal('doctor'); }} className="text-xs font-semibold text-[#00695C] hover:underline flex items-center gap-1"><Edit className="w-3.5 h-3.5" /> Edit</button>
+                  <button onClick={() => { 
+                    setEditItem(doc); 
+                    setDocForm({
+                      id: doc.id,
+                      name: doc.name || '',
+                      title: doc.title || '',
+                      department: doc.department || 'gastroenterology',
+                      dept_name: doc.dept_name || 'Gastroenterology',
+                      qualification: doc.qualification || '',
+                      experience: doc.experience || 10,
+                      consultation_fee: doc.consultation_fee || 2000,
+                      rating: doc.rating || 4.9,
+                      image: doc.image || '',
+                      languages: Array.isArray(doc.languages) ? doc.languages.join(', ') : (doc.languages || 'English'),
+                      bio: doc.bio || ''
+                    }); 
+                    setActiveModal('doctor'); 
+                  }} className="text-xs font-semibold text-[#00695C] hover:underline flex items-center gap-1"><Edit className="w-3.5 h-3.5" /> Edit</button>
                   <button onClick={() => handleDeleteDoctor(doc.id)} className="text-xs font-semibold text-rose-600 hover:underline flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> Remove</button>
                 </div>
               </div>
@@ -743,52 +781,218 @@ export default function AdminDashboard() {
 
       </main>
 
-      {/* DOCTOR MODAL */}
+      {/* ENHANCED DOCTOR MODAL */}
       {activeModal === 'doctor' && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 w-full max-w-xl p-6 rounded-3xl space-y-4 shadow-2xl text-slate-900">
-            <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Doctor Profile' : 'Add New Doctor'}</h3>
-            <form onSubmit={handleSaveDoctor} className="space-y-3 text-xs">
-              <input type="text" required value={docForm.name} onChange={e => setDocForm({...docForm, name: e.target.value})} placeholder="Doctor Name" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none" />
-              <input type="text" required value={docForm.title} onChange={e => setDocForm({...docForm, title: e.target.value})} placeholder="Designation Title" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none" />
-              <input type="number" required value={docForm.consultation_fee} onChange={e => setDocForm({...docForm, consultation_fee: e.target.value})} placeholder="Fee (₹)" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none" />
-              <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-md">Save</button>
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 w-full max-w-2xl p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl text-slate-900 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Doctor Profile' : 'Add New Faculty Doctor'}</h3>
+                <p className="text-xs text-slate-500">Update clinician credentials, department assignment, and photo URL</p>
+              </div>
+              <button onClick={() => setActiveModal(null)} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-700 transition">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveDoctor} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Doctor Full Name *</label>
+                  <input type="text" required value={docForm.name} onChange={e => setDocForm({...docForm, name: e.target.value})} placeholder="e.g. Dr. Ananya Sharma" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Designation & Title *</label>
+                  <input type="text" required value={docForm.title} onChange={e => setDocForm({...docForm, title: e.target.value})} placeholder="e.g. Director — Surgical Oncology" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Clinical Department *</label>
+                  <select 
+                    value={docForm.department} 
+                    onChange={e => setDocForm({...docForm, department: e.target.value})}
+                    className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none font-semibold transition"
+                  >
+                    <option value="gastroenterology">Gastroenterology & Hepatology</option>
+                    <option value="oncology">Surgical & Radiation Oncology</option>
+                    <option value="cardiology">Cardiac Sciences</option>
+                    <option value="neurosciences">Neurosciences & Spine</option>
+                    <option value="orthopedics">Orthopedics & Joint Care</option>
+                    <option value="nephrology">Renal Sciences & Urology</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Qualifications & Degrees</label>
+                  <input type="text" value={docForm.qualification} onChange={e => setDocForm({...docForm, qualification: e.target.value})} placeholder="e.g. MS, MCh (Oncology), FACS" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Experience (Years)</label>
+                  <input type="number" required value={docForm.experience} onChange={e => setDocForm({...docForm, experience: e.target.value})} placeholder="e.g. 22" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Consultation Fee (₹) *</label>
+                  <input type="number" required value={docForm.consultation_fee} onChange={e => setDocForm({...docForm, consultation_fee: e.target.value})} placeholder="e.g. 2000" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Doctor Photo Image URL / Path</label>
+                  <div className="flex gap-2">
+                    <input type="text" value={docForm.image} onChange={e => setDocForm({...docForm, image: e.target.value})} placeholder="/dr-ananya-sharma.png or Unsplash URL" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Languages Spoken</label>
+                  <input type="text" value={docForm.languages} onChange={e => setDocForm({...docForm, languages: e.target.value})} placeholder="English, Hindi, Telugu" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-700 font-semibold mb-1">Clinical Biography & Specializations</label>
+                <textarea rows={3} value={docForm.bio} onChange={e => setDocForm({...docForm, bio: e.target.value})} placeholder="Enter doctor's medical background, research achievements and clinical focus areas..." className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-xl font-bold shadow-md transition flex items-center gap-2">
+                  <Check className="w-4 h-4" /> Save Doctor Profile
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* BLOG MODAL */}
+      {/* ENHANCED BLOG MODAL */}
       {activeModal === 'blog' && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 w-full max-w-xl p-6 rounded-3xl space-y-4 shadow-2xl text-slate-900">
-            <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Article' : 'Publish Article'}</h3>
-            <form onSubmit={handleSaveBlog} className="space-y-3 text-xs">
-              <input type="text" required value={blogForm.title} onChange={e => setBlogForm({...blogForm, title: e.target.value})} placeholder="Article Title" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none" />
-              <textarea rows={3} value={blogForm.summary} onChange={e => setBlogForm({...blogForm, summary: e.target.value})} placeholder="Summary Excerpt" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none" />
-              <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-md">Save</button>
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 w-full max-w-2xl p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl text-slate-900 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Health Article' : 'Publish New Health Article'}</h3>
+                <p className="text-xs text-slate-500">Manage Health Library publications and medical breakthroughs</p>
+              </div>
+              <button onClick={() => setActiveModal(null)} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-700 transition">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveBlog} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="block text-slate-700 font-semibold mb-1">Article Title *</label>
+                  <input type="text" required value={blogForm.title} onChange={e => setBlogForm({...blogForm, title: e.target.value})} placeholder="e.g. How 5G-Enabled Robotic Surgery is Revolutionizing Healthcare" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Category *</label>
+                  <select 
+                    value={blogForm.category} 
+                    onChange={e => setBlogForm({...blogForm, category: e.target.value})}
+                    className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none font-semibold transition"
+                  >
+                    <option value="Medical Breakthroughs">Medical Breakthroughs</option>
+                    <option value="Gastroenterology">Gastroenterology</option>
+                    <option value="Oncology">Oncology</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Neurosciences">Neurosciences</option>
+                    <option value="Preventive Health">Preventive Health</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Author Name *</label>
+                  <input type="text" required value={blogForm.author} onChange={e => setBlogForm({...blogForm, author: e.target.value})} placeholder="e.g. Dr. Ananya Sharma" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Read Time</label>
+                  <input type="text" value={blogForm.read_time} onChange={e => setBlogForm({...blogForm, read_time: e.target.value})} placeholder="e.g. 6 min read" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Cover Image URL</label>
+                  <input type="text" value={blogForm.image} onChange={e => setBlogForm({...blogForm, image: e.target.value})} placeholder="Unsplash image URL..." className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-700 font-semibold mb-1">Summary Excerpt *</label>
+                <textarea rows={3} required value={blogForm.summary} onChange={e => setBlogForm({...blogForm, summary: e.target.value})} placeholder="Brief overview excerpt to show on cards..." className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-xl font-bold shadow-md transition flex items-center gap-2">
+                  <Check className="w-4 h-4" /> Save Article
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* PACKAGE MODAL */}
+      {/* ENHANCED PACKAGE MODAL */}
       {activeModal === 'package' && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 w-full max-w-xl p-6 rounded-3xl space-y-4 shadow-2xl text-slate-900">
-            <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Health Package' : 'Add Package'}</h3>
-            <form onSubmit={handleSavePackage} className="space-y-3 text-xs">
-              <input type="text" required value={pkgForm.name} onChange={e => setPkgForm({...pkgForm, name: e.target.value})} placeholder="Package Name" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none" />
-              <input type="number" required value={pkgForm.price} onChange={e => setPkgForm({...pkgForm, price: e.target.value})} placeholder="Offer Price (₹)" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none" />
-              <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-md">Save</button>
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 w-full max-w-2xl p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl text-slate-900 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Health Package' : 'Add New Checkup Package'}</h3>
+                <p className="text-xs text-slate-500">Configure package diagnostic tests, pricing, and recommended age groups</p>
+              </div>
+              <button onClick={() => setActiveModal(null)} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-700 transition">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSavePackage} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="block text-slate-700 font-semibold mb-1">Package Name *</label>
+                  <input type="text" required value={pkgForm.name} onChange={e => setPkgForm({...pkgForm, name: e.target.value})} placeholder="e.g. Apex Executive Master Health Shield" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Category</label>
+                  <input type="text" value={pkgForm.category} onChange={e => setPkgForm({...pkgForm, category: e.target.value})} placeholder="e.g. Comprehensive" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Badge Tag</label>
+                  <input type="text" value={pkgForm.badge} onChange={e => setPkgForm({...pkgForm, badge: e.target.value})} placeholder="e.g. Most Popular" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Offer Price (₹) *</label>
+                  <input type="number" required value={pkgForm.price} onChange={e => setPkgForm({...pkgForm, price: e.target.value})} placeholder="e.g. 14999" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Original Price (₹)</label>
+                  <input type="number" value={pkgForm.original_price} onChange={e => setPkgForm({...pkgForm, original_price: e.target.value})} placeholder="e.g. 22000" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Total Tests Count</label>
+                  <input type="number" value={pkgForm.tests_count} onChange={e => setPkgForm({...pkgForm, tests_count: e.target.value})} placeholder="e.g. 94" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Recommended For</label>
+                  <input type="text" value={pkgForm.recommended_for} onChange={e => setPkgForm({...pkgForm, recommended_for: e.target.value})} placeholder="e.g. Men & Women Aged 35+" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-xl font-bold shadow-md transition flex items-center gap-2">
+                  <Check className="w-4 h-4" /> Save Package
+                </button>
               </div>
             </form>
           </div>

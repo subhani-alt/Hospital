@@ -923,66 +923,82 @@ export default function Dashboard() {
 
       {/* --- MODAL 1: DOCTOR FORM MODAL --- */}
       {activeModal === 'doctor' && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <h3 className="text-xl font-bold text-white">{editItem ? 'Edit Doctor Profile' : 'Add New Doctor to Roster'}</h3>
-              <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 w-full max-w-2xl p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl text-slate-900 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Doctor Profile' : 'Add New Faculty Doctor'}</h3>
+                <p className="text-xs text-slate-500">Update clinician credentials, department assignment, and photo URL</p>
+              </div>
+              <button onClick={() => setActiveModal(null)} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-700 transition">
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
             <form onSubmit={handleSaveDoctor} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-slate-400 mb-1">Doctor Name *</label>
-                <input type="text" required value={docForm.name} onChange={e => setDocForm({...docForm, name: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-[#00695C]" placeholder="e.g. Dr. D. Nageshwar Reddy" />
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Designation Title *</label>
-                <input type="text" required value={docForm.title} onChange={e => setDocForm({...docForm, title: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-[#00695C]" placeholder="e.g. Director — Surgical Oncology" />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-400 mb-1">Department</label>
-                  <select value={docForm.department} onChange={e => {
-                    const deptObj = INITIAL_DEPARTMENTS.find(d => d.id === e.target.value);
-                    setDocForm({...docForm, department: e.target.value, dept_name: deptObj ? deptObj.name : e.target.value});
-                  }} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none">
-                    {INITIAL_DEPARTMENTS.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                  <label className="block text-slate-700 font-semibold mb-1">Doctor Full Name *</label>
+                  <input type="text" required value={docForm.name} onChange={e => setDocForm({...docForm, name: e.target.value})} placeholder="e.g. Dr. Ananya Sharma" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Designation & Title *</label>
+                  <input type="text" required value={docForm.title} onChange={e => setDocForm({...docForm, title: e.target.value})} placeholder="e.g. Director — Surgical Oncology" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Clinical Department *</label>
+                  <select 
+                    value={docForm.department} 
+                    onChange={e => setDocForm({...docForm, department: e.target.value})}
+                    className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none font-semibold transition"
+                  >
+                    <option value="gastroenterology">Gastroenterology & Hepatology</option>
+                    <option value="oncology">Surgical & Radiation Oncology</option>
+                    <option value="cardiology">Cardiac Sciences</option>
+                    <option value="neurosciences">Neurosciences & Spine</option>
+                    <option value="orthopedics">Orthopedics & Joint Care</option>
+                    <option value="nephrology">Renal Sciences & Urology</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">Consultation Fee (₹)</label>
-                  <input type="number" required value={docForm.consultation_fee} onChange={e => setDocForm({...docForm, consultation_fee: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Qualification</label>
-                  <input type="text" value={docForm.qualification} onChange={e => setDocForm({...docForm, qualification: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" placeholder="MD, DM, FRCS" />
+                  <label className="block text-slate-700 font-semibold mb-1">Qualifications & Degrees</label>
+                  <input type="text" value={docForm.qualification} onChange={e => setDocForm({...docForm, qualification: e.target.value})} placeholder="e.g. MS, MCh (Oncology), FACS" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">Experience (Years)</label>
-                  <input type="number" value={docForm.experience} onChange={e => setDocForm({...docForm, experience: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
+                  <label className="block text-slate-700 font-semibold mb-1">Experience (Years)</label>
+                  <input type="number" required value={docForm.experience} onChange={e => setDocForm({...docForm, experience: e.target.value})} placeholder="e.g. 22" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Consultation Fee (₹) *</label>
+                  <input type="number" required value={docForm.consultation_fee} onChange={e => setDocForm({...docForm, consultation_fee: e.target.value})} placeholder="e.g. 2000" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Doctor Photo Image URL / Path</label>
+                  <input type="text" value={docForm.image} onChange={e => setDocForm({...docForm, image: e.target.value})} placeholder="/dr-ananya-sharma.png or Unsplash URL" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Languages Spoken</label>
+                  <input type="text" value={docForm.languages} onChange={e => setDocForm({...docForm, languages: e.target.value})} placeholder="English, Hindi, Telugu" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Doctor Image URL</label>
-                <input type="text" value={docForm.image} onChange={e => setDocForm({...docForm, image: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" placeholder="https://..." />
+                <label className="block text-slate-700 font-semibold mb-1">Clinical Biography & Specializations</label>
+                <textarea rows={3} value={docForm.bio} onChange={e => setDocForm({...docForm, bio: e.target.value})} placeholder="Enter doctor's medical background, research achievements and clinical focus areas..." className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
               </div>
 
-              <div>
-                <label className="block text-slate-400 mb-1">Bio Summary</label>
-                <textarea rows={3} value={docForm.bio} onChange={e => setDocForm({...docForm, bio: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-800 text-slate-300 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-lg">Save Doctor</button>
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-xl font-bold shadow-md transition flex items-center gap-2">
+                  <Check className="w-4 h-4" /> Save Doctor Profile
+                </button>
               </div>
             </form>
           </div>
@@ -991,44 +1007,67 @@ export default function Dashboard() {
 
       {/* --- MODAL 2: BLOG FORM MODAL --- */}
       {activeModal === 'blog' && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <h3 className="text-xl font-bold text-white">{editItem ? 'Edit Health Article' : 'Publish New Article'}</h3>
-              <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 w-full max-w-2xl p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl text-slate-900 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Health Article' : 'Publish New Health Article'}</h3>
+                <p className="text-xs text-slate-500">Manage Health Library publications and medical breakthroughs</p>
+              </div>
+              <button onClick={() => setActiveModal(null)} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-700 transition">
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
             <form onSubmit={handleSaveBlog} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-slate-400 mb-1">Article Title *</label>
-                <input type="text" required value={blogForm.title} onChange={e => setBlogForm({...blogForm, title: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Category</label>
-                  <input type="text" value={blogForm.category} onChange={e => setBlogForm({...blogForm, category: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="block text-slate-700 font-semibold mb-1">Article Title *</label>
+                  <input type="text" required value={blogForm.title} onChange={e => setBlogForm({...blogForm, title: e.target.value})} placeholder="e.g. How 5G-Enabled Robotic Surgery is Revolutionizing Healthcare" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">Author</label>
-                  <input type="text" value={blogForm.author} onChange={e => setBlogForm({...blogForm, author: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
+                  <label className="block text-slate-700 font-semibold mb-1">Category *</label>
+                  <select 
+                    value={blogForm.category} 
+                    onChange={e => setBlogForm({...blogForm, category: e.target.value})}
+                    className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none font-semibold transition"
+                  >
+                    <option value="Medical Breakthroughs">Medical Breakthroughs</option>
+                    <option value="Gastroenterology">Gastroenterology</option>
+                    <option value="Oncology">Oncology</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Neurosciences">Neurosciences</option>
+                    <option value="Preventive Health">Preventive Health</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Author Name *</label>
+                  <input type="text" required value={blogForm.author} onChange={e => setBlogForm({...blogForm, author: e.target.value})} placeholder="e.g. Dr. Ananya Sharma" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Read Time</label>
+                  <input type="text" value={blogForm.read_time} onChange={e => setBlogForm({...blogForm, read_time: e.target.value})} placeholder="e.g. 6 min read" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Cover Image URL</label>
+                  <input type="text" value={blogForm.image} onChange={e => setBlogForm({...blogForm, image: e.target.value})} placeholder="Unsplash image URL..." className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Image URL</label>
-                <input type="text" value={blogForm.image} onChange={e => setBlogForm({...blogForm, image: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
+                <label className="block text-slate-700 font-semibold mb-1">Summary Excerpt *</label>
+                <textarea rows={3} required value={blogForm.summary} onChange={e => setBlogForm({...blogForm, summary: e.target.value})} placeholder="Brief overview excerpt to show on cards..." className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
               </div>
 
-              <div>
-                <label className="block text-slate-400 mb-1">Summary Excerpt</label>
-                <textarea rows={3} value={blogForm.summary} onChange={e => setBlogForm({...blogForm, summary: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-800 text-slate-300 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-lg">Save Article</button>
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-xl font-bold shadow-md transition flex items-center gap-2">
+                  <Check className="w-4 h-4" /> Save Article
+                </button>
               </div>
             </form>
           </div>
@@ -1037,46 +1076,61 @@ export default function Dashboard() {
 
       {/* --- MODAL 3: PACKAGE FORM MODAL --- */}
       {activeModal === 'package' && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <h3 className="text-xl font-bold text-white">{editItem ? 'Edit Health Package' : 'Add Health Package'}</h3>
-              <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 w-full max-w-2xl p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl text-slate-900 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{editItem ? 'Edit Health Package' : 'Add New Checkup Package'}</h3>
+                <p className="text-xs text-slate-500">Configure package diagnostic tests, pricing, and recommended age groups</p>
+              </div>
+              <button onClick={() => setActiveModal(null)} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-700 transition">
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
             <form onSubmit={handleSavePackage} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-slate-400 mb-1">Package Name *</label>
-                <input type="text" required value={pkgForm.name} onChange={e => setPkgForm({...pkgForm, name: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="block text-slate-700 font-semibold mb-1">Package Name *</label>
+                  <input type="text" required value={pkgForm.name} onChange={e => setPkgForm({...pkgForm, name: e.target.value})} placeholder="e.g. Apex Executive Master Health Shield" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Category</label>
+                  <input type="text" value={pkgForm.category} onChange={e => setPkgForm({...pkgForm, category: e.target.value})} placeholder="e.g. Comprehensive" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Badge Tag</label>
+                  <input type="text" value={pkgForm.badge} onChange={e => setPkgForm({...pkgForm, badge: e.target.value})} placeholder="e.g. Most Popular" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Offer Price (₹) *</label>
+                  <input type="number" required value={pkgForm.price} onChange={e => setPkgForm({...pkgForm, price: e.target.value})} placeholder="e.g. 14999" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Original Price (₹)</label>
+                  <input type="number" value={pkgForm.original_price} onChange={e => setPkgForm({...pkgForm, original_price: e.target.value})} placeholder="e.g. 22000" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Total Tests Count</label>
+                  <input type="number" value={pkgForm.tests_count} onChange={e => setPkgForm({...pkgForm, tests_count: e.target.value})} placeholder="e.g. 94" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Recommended For</label>
+                  <input type="text" value={pkgForm.recommended_for} onChange={e => setPkgForm({...pkgForm, recommended_for: e.target.value})} placeholder="e.g. Men & Women Aged 35+" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Offer Price (₹) *</label>
-                  <input type="number" required value={pkgForm.price} onChange={e => setPkgForm({...pkgForm, price: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-
-                <div>
-                  <label className="block text-slate-400 mb-1">Original Price (₹)</label>
-                  <input type="number" value={pkgForm.original_price} onChange={e => setPkgForm({...pkgForm, original_price: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Tests Count</label>
-                  <input type="number" value={pkgForm.tests_count} onChange={e => setPkgForm({...pkgForm, tests_count: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-
-                <div>
-                  <label className="block text-slate-400 mb-1">Badge Tag</label>
-                  <input type="text" value={pkgForm.badge} onChange={e => setPkgForm({...pkgForm, badge: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" placeholder="Most Popular" />
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-800 text-slate-300 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-lg">Save Package</button>
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-xl font-bold shadow-md transition flex items-center gap-2">
+                  <Check className="w-4 h-4" /> Save Package
+                </button>
               </div>
             </form>
           </div>
