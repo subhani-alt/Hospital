@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DEPARTMENTS, DOCTORS } from '../../services/data';
+import { DEPARTMENTS, DOCTORS, createAppointmentInSupabase } from '../../services/data';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCard, Sparkles, ChevronDown, Check, Building2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useSearchParams } from 'react-router-dom';
@@ -79,6 +79,23 @@ export default function Appointment() {
     const token = `APEX-${new Date().getFullYear()}-${Date.now().toString().slice(-5)}`;
     setBookingToken(token);
 
+    // Submit to Supabase
+    try {
+      await createAppointmentInSupabase({
+        patientName,
+        patientPhone,
+        patientEmail,
+        doctorName: selectedDoctor?.name || 'Assigned Specialist',
+        department: selectedDoctor?.deptName || selectedDept || 'General Medicine',
+        date: bookingDate,
+        timeSlot,
+        type: consultationType,
+        fee: selectedDoctor?.consultationFee || 2000
+      });
+    } catch (err) {
+      console.warn('Supabase appointment submission notice:', err);
+    }
+
     // Submit to Google Sheets
     await submitAppointmentToSheet({
       patientName,
@@ -102,6 +119,7 @@ export default function Appointment() {
       origin: { y: 0.6 }
     });
   };
+
 
   return (
     <div className="w-full bg-[#F8FCFB] dark:bg-[#0A1917] text-slate-900 dark:text-white py-12 relative z-20">

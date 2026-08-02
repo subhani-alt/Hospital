@@ -24,6 +24,7 @@ import HealthLibrary from './pages/HealthLibrary';
 import Careers from './pages/Careers';
 import Contact from './pages/Contact';
 import Login from './pages/Auth/Login';
+import AdminDashboard from './pages/Admin';
 
 import { useStore } from './store/useStore';
 
@@ -89,9 +90,12 @@ export default function App() {
               <Route path="/careers" element={<Careers />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/admin/:tab?" element={<AdminDashboard />} />
               <Route path="/patient-portal" element={<Appointment />} />
             </Routes>
+
           </main>
+
 
           {/* Footer */}
           <Footer />

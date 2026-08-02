@@ -1,5 +1,7 @@
-// Mock Dataset for Apex Health Institute — World Class Hospital Data
+// Supabase Database Data Provider & Website Model Cache for Apex Health Institute
+import { supabase } from '../config/supabase.js';
 
+// Base cache data from website
 export const DEPARTMENTS = [
   {
     id: 'gastroenterology',
@@ -354,3 +356,129 @@ export const HOSPITAL_STATS = [
   { label: 'Clinical Research Publications', value: '850+', numeric: 850 },
   { label: 'Surgical Success Rate', value: '99.4%', numeric: 99.4 }
 ];
+
+// Async Supabase Direct Database Query Functions
+export const getSupabaseDepartments = async () => {
+  try {
+    const { data, error } = await supabase.from('departments').select('*');
+    if (error || !data || data.length === 0) return DEPARTMENTS;
+    return data.map(d => ({
+      id: d.id,
+      name: d.name,
+      shortName: d.short_name,
+      tagline: d.tagline,
+      icon: d.icon,
+      image: d.image,
+      description: d.description,
+      stats: d.stats,
+      treatments: d.treatments,
+      technology: d.technology,
+      headOfDept: d.head_of_dept
+    }));
+  } catch (err) {
+    return DEPARTMENTS;
+  }
+};
+
+export const getSupabaseDoctors = async () => {
+  try {
+    const { data, error } = await supabase.from('doctors').select('*');
+    if (error || !data || data.length === 0) return DOCTORS;
+    return data.map(d => ({
+      id: d.id,
+      name: d.name,
+      title: d.title,
+      department: d.department,
+      deptName: d.dept_name,
+      experience: d.experience,
+      qualification: d.qualification,
+      awards: d.awards,
+      image: d.image,
+      rating: Number(d.rating),
+      reviewsCount: d.reviews_count,
+      consultationFee: Number(d.consultation_fee),
+      languages: d.languages,
+      availability: d.availability,
+      bio: d.bio,
+      locations: d.locations,
+      researchPapers: d.research_papers,
+      patientsTreated: d.patients_treated
+    }));
+  } catch (err) {
+    return DOCTORS;
+  }
+};
+
+export const getSupabaseHealthPackages = async () => {
+  try {
+    const { data, error } = await supabase.from('health_packages').select('*');
+    if (error || !data || data.length === 0) return HEALTH_PACKAGES;
+    return data.map(p => ({
+      id: p.id,
+      name: p.name,
+      badge: p.badge,
+      category: p.category,
+      price: Number(p.price),
+      originalPrice: Number(p.original_price),
+      testsCount: p.tests_count,
+      recommendedFor: p.recommended_for,
+      highlights: p.highlights,
+      inclusions: p.inclusions
+    }));
+  } catch (err) {
+    return HEALTH_PACKAGES;
+  }
+};
+
+export const getSupabaseBlogs = async () => {
+  try {
+    const { data, error } = await supabase.from('blogs').select('*');
+    if (error || !data || data.length === 0) return BLOGS;
+    return data.map(b => ({
+      id: b.id,
+      title: b.title,
+      category: b.category,
+      author: b.author,
+      date: b.date,
+      readTime: b.read_time,
+      image: b.image,
+      summary: b.summary,
+      content: b.content
+    }));
+  } catch (err) {
+    return BLOGS;
+  }
+};
+
+export const createAppointmentInSupabase = async (appointment) => {
+  const { data, error } = await supabase.from('appointments').insert([{
+    patient_name: appointment.patientName,
+    patient_phone: appointment.patientPhone,
+    patient_email: appointment.patientEmail,
+    doctor_name: appointment.doctorName,
+    department: appointment.department,
+    date: appointment.date,
+    time_slot: appointment.timeSlot,
+    type: appointment.type || 'in-person',
+    fee: appointment.fee || 2000,
+    status: 'pending',
+    payment_status: 'unpaid'
+  }]).select();
+
+  if (error) throw error;
+  return data[0];
+};
+
+export const createContactInquiryInSupabase = async (inquiry) => {
+  const { data, error } = await supabase.from('contact_inquiries').insert([{
+    name: inquiry.name,
+    email: inquiry.email,
+    phone: inquiry.phone,
+    subject: inquiry.subject,
+    message: inquiry.message,
+    status: 'unread'
+  }]).select();
+
+  if (error) throw error;
+  return data[0];
+};

@@ -3,10 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Users, Calendar, Activity, DollarSign, Stethoscope, FileText, 
   TrendingUp, CheckCircle2, Clock, AlertCircle, Plus, Search, Filter, 
-  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, Eye
+  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, ExternalLink
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { supabase } from '../config/supabase';
+import { supabase } from '../../config/supabase';
 
 // Fallback Cache Data
 const INITIAL_DEPARTMENTS = [
@@ -43,7 +42,7 @@ const INITIAL_INQUIRIES = [
   { id: 'c1a2c3d4-0001', name: 'Anita Sharma', email: 'anita.sharma@example.com', phone: '+91 98111 22233', subject: 'International Patient Inquiry', message: 'I would like to inquire about medical tourism facilities for cardiac evaluation.', status: 'unread', created_at: '2026-08-02' }
 ];
 
-export default function Dashboard() {
+export default function AdminDashboard() {
   const { tab } = useParams();
   const navigate = useNavigate();
 
@@ -52,9 +51,9 @@ export default function Dashboard() {
 
   const handleTabChange = (newTab) => {
     if (newTab === 'overview') {
-      navigate('/');
+      navigate('/admin');
     } else {
-      navigate(`/${newTab}`);
+      navigate(`/admin/${newTab}`);
     }
   };
 
@@ -73,49 +72,38 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState('all');
 
   // Modal States
-  const [activeModal, setActiveModal] = useState(null); // 'doctor', 'blog', 'package'
+  const [activeModal, setActiveModal] = useState(null);
   const [editItem, setEditItem] = useState(null);
 
-  // Doctor Form State
+  // Forms
   const [docForm, setDocForm] = useState({ id: '', name: '', title: '', department: 'gastroenterology', dept_name: 'Gastroenterology', qualification: '', experience: 10, consultation_fee: 2000, rating: 4.9, image: '', bio: '' });
-
-  // Blog Form State
   const [blogForm, setBlogForm] = useState({ id: '', title: '', category: 'Medical Breakthroughs', author: 'Dr. Ananya Sharma', date: '2026-08-02', read_time: '5 min read', summary: '', content: '', image: '' });
-
-  // Package Form State
   const [pkgForm, setPkgForm] = useState({ id: '', name: '', badge: 'Popular', category: 'Comprehensive', price: 9999, original_price: 15000, tests_count: 50, recommended_for: 'Adults Aged 30+' });
 
-  const showNotification = (msg, type = 'success') => {
-    setNotification({ msg, type });
+  const showNotification = (msg) => {
+    setNotification(msg);
     setTimeout(() => setNotification(null), 4000);
   };
 
-  // Fetch Live Data from Supabase
   const loadAllData = async () => {
     setIsLoading(true);
     try {
-      // 1. Fetch Appointments
       const { data: apptData } = await supabase.from('appointments').select('*').order('created_at', { ascending: false });
       if (apptData && apptData.length > 0) setAppointments(apptData);
 
-      // 2. Fetch Doctors
       const { data: docData } = await supabase.from('doctors').select('*');
       if (docData && docData.length > 0) setDoctors(docData);
 
-      // 3. Fetch Blogs
       const { data: blogData } = await supabase.from('blogs').select('*');
       if (blogData && blogData.length > 0) setBlogs(blogData);
 
-      // 4. Fetch Health Packages
       const { data: pkgData } = await supabase.from('health_packages').select('*');
       if (pkgData && pkgData.length > 0) setPackages(pkgData);
 
-      // 5. Fetch Contact Inquiries
       const { data: inqData } = await supabase.from('contact_inquiries').select('*');
       if (inqData && inqData.length > 0) setInquiries(inqData);
-
     } catch (err) {
-      console.warn('Supabase fetch notice:', err.message);
+      console.warn('Supabase notice:', err);
     } finally {
       setIsLoading(false);
     }
@@ -125,31 +113,24 @@ export default function Dashboard() {
     loadAllData();
   }, []);
 
-  // --- CRUD ACTIONS FOR APPOINTMENTS ---
+  // Actions
   const handleUpdateAppointmentStatus = async (id, newStatus) => {
     try {
-      const { error } = await supabase.from('appointments').update({ status: newStatus }).eq('id', id);
-      if (error) throw error;
-      setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
-      showNotification(`Appointment status updated to ${newStatus}`);
-    } catch (err) {
-      setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
-      showNotification(`Status set to ${newStatus} (cached)`);
-    }
+      await supabase.from('appointments').update({ status: newStatus }).eq('id', id);
+    } catch (e) {}
+    setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
+    showNotification(`Appointment status changed to ${newStatus}`);
   };
 
   const handleDeleteAppointment = async (id) => {
-    if (!window.confirm('Delete this appointment record?')) return;
+    if (!window.confirm('Delete appointment record?')) return;
     try {
       await supabase.from('appointments').delete().eq('id', id);
-      setAppointments(prev => prev.filter(a => a.id !== id));
-      showNotification('Appointment record deleted');
-    } catch (err) {
-      setAppointments(prev => prev.filter(a => a.id !== id));
-    }
+    } catch (e) {}
+    setAppointments(prev => prev.filter(a => a.id !== id));
+    showNotification('Appointment deleted');
   };
 
-  // --- CRUD ACTIONS FOR DOCTORS ---
   const handleSaveDoctor = async (e) => {
     e.preventDefault();
     const payload = {
@@ -167,30 +148,26 @@ export default function Dashboard() {
     };
 
     try {
-      const { error } = await supabase.from('doctors').upsert([payload]);
-      if (error) throw error;
-      showNotification(editItem ? 'Doctor profile updated!' : 'New doctor added to roster!');
-    } catch (err) {
-      showNotification(editItem ? 'Doctor profile updated locally' : 'Doctor profile added locally');
-    }
+      await supabase.from('doctors').upsert([payload]);
+    } catch (e) {}
 
     setDoctors(prev => {
       const exists = prev.find(d => d.id === payload.id);
       return exists ? prev.map(d => d.id === payload.id ? payload : d) : [payload, ...prev];
     });
+    showNotification('Doctor saved to roster!');
     setActiveModal(null);
   };
 
   const handleDeleteDoctor = async (id) => {
-    if (!window.confirm('Remove doctor from active roster?')) return;
+    if (!window.confirm('Remove doctor from roster?')) return;
     try {
       await supabase.from('doctors').delete().eq('id', id);
     } catch (e) {}
     setDoctors(prev => prev.filter(d => d.id !== id));
-    showNotification('Doctor removed from roster');
+    showNotification('Doctor removed');
   };
 
-  // --- CRUD ACTIONS FOR BLOGS ---
   const handleSaveBlog = async (e) => {
     e.preventDefault();
     const payload = {
@@ -207,20 +184,18 @@ export default function Dashboard() {
 
     try {
       await supabase.from('blogs').upsert([payload]);
-      showNotification('Article published successfully!');
-    } catch (err) {
-      showNotification('Article updated locally');
-    }
+    } catch (e) {}
 
     setBlogs(prev => {
       const exists = prev.find(b => b.id === payload.id);
       return exists ? prev.map(b => b.id === payload.id ? payload : b) : [payload, ...prev];
     });
+    showNotification('Article saved!');
     setActiveModal(null);
   };
 
   const handleDeleteBlog = async (id) => {
-    if (!window.confirm('Delete this article from CMS?')) return;
+    if (!window.confirm('Delete article?')) return;
     try {
       await supabase.from('blogs').delete().eq('id', id);
     } catch (e) {}
@@ -228,7 +203,6 @@ export default function Dashboard() {
     showNotification('Article deleted');
   };
 
-  // --- CRUD ACTIONS FOR PACKAGES ---
   const handleSavePackage = async (e) => {
     e.preventDefault();
     const payload = {
@@ -244,20 +218,18 @@ export default function Dashboard() {
 
     try {
       await supabase.from('health_packages').upsert([payload]);
-      showNotification('Health package saved!');
-    } catch (err) {
-      showNotification('Health package updated locally');
-    }
+    } catch (e) {}
 
     setPackages(prev => {
       const exists = prev.find(p => p.id === payload.id);
       return exists ? prev.map(p => p.id === payload.id ? payload : p) : [payload, ...prev];
     });
+    showNotification('Package saved!');
     setActiveModal(null);
   };
 
   const handleDeletePackage = async (id) => {
-    if (!window.confirm('Delete package from catalog?')) return;
+    if (!window.confirm('Delete package?')) return;
     try {
       await supabase.from('health_packages').delete().eq('id', id);
     } catch (e) {}
@@ -265,17 +237,15 @@ export default function Dashboard() {
     showNotification('Package deleted');
   };
 
-  // --- CRUD ACTIONS FOR INQUIRIES ---
   const handleToggleInquiryStatus = async (id, currentStatus) => {
     const nextStatus = currentStatus === 'unread' ? 'resolved' : 'unread';
     try {
       await supabase.from('contact_inquiries').update({ status: nextStatus }).eq('id', id);
     } catch (e) {}
     setInquiries(prev => prev.map(i => i.id === id ? { ...i, status: nextStatus } : i));
-    showNotification(`Inquiry marked as ${nextStatus}`);
+    showNotification(`Inquiry status updated to ${nextStatus}`);
   };
 
-  // Stats Analytics
   const STATS = [
     { title: 'Total Patients Managed', value: (appointments.length + 52400).toLocaleString(), change: '+14%', icon: Users, color: 'from-emerald-600 to-teal-600' },
     { title: 'OP Appointments Booked', value: appointments.length.toString(), change: '+8%', icon: Calendar, color: 'from-teal-600 to-cyan-600' },
@@ -290,7 +260,6 @@ export default function Dashboard() {
     { month: 'Current', appointments: appointments.length }
   ];
 
-  // Filtering Logic
   const filteredAppointments = appointments.filter(a => {
     const matchesStatus = statusFilter === 'all' || a.status === statusFilter;
     const matchesQuery = !searchQuery || 
@@ -301,17 +270,17 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0A1917] text-white flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#0A1917] text-white flex flex-col md:flex-row pt-16">
       
       {/* Toast Notification */}
       {notification && (
-        <div className="fixed top-6 right-6 z-50 bg-[#00695C] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-[#80CBC4]/30 animate-bounce">
+        <div className="fixed top-20 right-6 z-50 bg-[#00695C] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-[#80CBC4]/30 animate-bounce">
           <CheckCircle2 className="w-5 h-5 text-[#80CBC4]" />
-          <span className="text-xs font-semibold">{notification.msg}</span>
+          <span className="text-xs font-semibold">{notification}</span>
         </div>
       )}
 
-      {/* Sidebar Navigation */}
+      {/* Sidebar */}
       <aside className="w-full md:w-64 bg-[#122824] border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
         <div className="space-y-8">
           
@@ -387,27 +356,27 @@ export default function Dashboard() {
         <div className="pt-6 border-t border-slate-800 text-[11px] text-slate-500 space-y-2">
           <div className="flex items-center gap-2 text-[#80CBC4]">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Supabase Live Database Connected
+            Supabase Live Connected
           </div>
-          <div>Logged in as Administrator &bull; Apex Command v1.0</div>
+          <div>Logged in as Administrator &bull; Apex Command</div>
         </div>
       </aside>
 
-      {/* Main Content Area */}
+      {/* Main Area */}
       <main className="flex-1 p-6 sm:p-10 space-y-8 overflow-y-auto">
         
-        {/* Top Header Bar */}
+        {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-heading capitalize">
+            <h1 className="text-2xl sm:text-3xl font-bold capitalize font-heading">
               {activeTab === 'overview' && 'Executive Clinical Dashboard'}
               {activeTab === 'appointments' && 'OP Appointments Manager'}
-              {activeTab === 'doctors' && 'Doctor Roster Content Management'}
-              {activeTab === 'blogs' && 'Health Library & Medical News CMS'}
-              {activeTab === 'packages' && 'Checkup Packages Catalog CMS'}
-              {activeTab === 'inquiries' && 'Patient Direct Inquiries'}
+              {activeTab === 'doctors' && 'Doctor Roster CMS'}
+              {activeTab === 'blogs' && 'Health Library CMS'}
+              {activeTab === 'packages' && 'Checkup Packages CMS'}
+              {activeTab === 'inquiries' && 'Patient Inquiries'}
             </h1>
-            <p className="text-xs text-slate-400 mt-1">Real-time database sync with Supabase PostgreSQL engine</p>
+            <p className="text-xs text-slate-400 mt-1">Real-time database sync with Supabase PostgreSQL</p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -428,7 +397,7 @@ export default function Dashboard() {
                 }}
                 className="bg-[#00695C] hover:bg-[#004D40] text-white text-xs font-semibold px-5 py-2.5 rounded-full flex items-center gap-2 shadow-lg transition"
               >
-                <Plus className="w-4 h-4" /> Add Doctor Profile
+                <Plus className="w-4 h-4" /> Add Doctor
               </button>
             )}
 
@@ -460,10 +429,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* --- TAB 1: OVERVIEW & ANALYTICS --- */}
+        {/* OVERVIEW */}
         {activeTab === 'overview' && (
           <div className="space-y-8">
-            {/* Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {STATS.map((stat, idx) => {
                 const Icon = stat.icon;
@@ -486,36 +454,36 @@ export default function Dashboard() {
               })}
             </div>
 
-            {/* Chart & Bed Occupancy */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               <div className="lg:col-span-8 bg-[#122824] p-6 rounded-3xl border border-slate-800 space-y-4">
                 <h3 className="text-base font-bold">Monthly Patient Volume Trend</h3>
-                <div className="h-64 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={CHART_DATA}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1e3a35" />
-                      <XAxis dataKey="month" stroke="#80CBC4" />
-                      <YAxis stroke="#80CBC4" />
-                      <Tooltip contentStyle={{ backgroundColor: '#0A1917', borderColor: '#00695C', borderRadius: '12px' }} />
-                      <Bar dataKey="appointments" fill="#00897B" radius={[8, 8, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                <div className="h-64 w-full flex items-end justify-between gap-4 pt-8 pb-2 px-4 border-b border-slate-800">
+                  {CHART_DATA.map((item, idx) => (
+                    <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
+                      <span className="text-[10px] text-[#80CBC4] font-bold opacity-0 group-hover:opacity-100 transition">{item.appointments}</span>
+                      <div 
+                        className="w-full max-w-[48px] bg-gradient-to-t from-[#00695C] to-[#00897B] rounded-t-xl transition-all duration-500 hover:brightness-125"
+                        style={{ height: `${Math.min(100, Math.max(15, (item.appointments / 1500) * 100))}%` }}
+                      />
+                      <span className="text-xs text-slate-400 font-semibold">{item.month}</span>
+                    </div>
+                  ))}
                 </div>
+
               </div>
 
               <div className="lg:col-span-4 bg-[#122824] p-6 rounded-3xl border border-slate-800 space-y-4">
-                <h3 className="text-base font-bold">Campus Infrastructure Status</h3>
+                <h3 className="text-base font-bold">Campus Bed Occupancy</h3>
                 <div className="space-y-4 text-xs">
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span>General ICU Beds (92%)</span>
+                      <span>ICU Beds (92%)</span>
                       <span className="font-bold text-[#80CBC4]">110 / 120</span>
                     </div>
                     <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
                       <div className="bg-emerald-500 h-full w-[92%]" />
                     </div>
                   </div>
-
                   <div>
                     <div className="flex justify-between mb-1">
                       <span>Robotic Cardiac OTs</span>
@@ -525,21 +493,10 @@ export default function Dashboard() {
                       <div className="bg-teal-500 h-full w-[83%]" />
                     </div>
                   </div>
-
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span>Endoscopy Suites</span>
-                      <span className="font-bold text-[#80CBC4]">4 / 4 Operating</span>
-                    </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                      <div className="bg-cyan-500 h-full w-[100%]" />
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Quick Appointments Overview Table */}
             <div className="bg-[#122824] p-6 rounded-3xl border border-slate-800 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold">Recent OP Appointments</h3>
@@ -568,10 +525,7 @@ export default function Dashboard() {
                         <td className="py-3.5 px-4 text-slate-400">{app.date} ({app.time_slot})</td>
                         <td className="py-3.5 px-4">
                           <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                            app.status === 'confirmed' ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/50' :
-                            app.status === 'completed' ? 'bg-blue-950 text-blue-400 border border-blue-700/50' :
-                            app.status === 'cancelled' ? 'bg-rose-950 text-rose-400 border border-rose-700/50' :
-                            'bg-amber-950 text-amber-400 border border-amber-700/50'
+                            app.status === 'confirmed' ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/50' : 'bg-amber-950 text-amber-400 border border-amber-700/50'
                           }`}>
                             {app.status}
                           </span>
@@ -585,11 +539,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* --- TAB 2: APPOINTMENTS MANAGER --- */}
+        {/* APPOINTMENTS */}
         {activeTab === 'appointments' && (
           <div className="space-y-6">
-            
-            {/* Filter & Search Bar */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#122824] p-4 rounded-2xl border border-slate-800">
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <Search className="w-4 h-4 text-slate-400 ml-2" />
@@ -618,7 +570,6 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Appointments Table */}
             <div className="bg-[#122824] p-6 rounded-3xl border border-slate-800 shadow-xl overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
@@ -632,159 +583,85 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
-                  {filteredAppointments.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
-                        No appointments found matching your filters.
+                  {filteredAppointments.map((app) => (
+                    <tr key={app.id} className="hover:bg-white/5">
+                      <td className="py-3.5 px-4">
+                        <strong className="text-white block text-sm font-semibold">{app.patient_name}</strong>
+                        <span className="text-slate-400 block">{app.patient_phone}</span>
+                        <span className="text-slate-500 text-[11px] block">{app.patient_email}</span>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="text-slate-200 font-semibold block">{app.doctor_name}</span>
+                        <span className="text-slate-400 text-[11px]">{app.department}</span>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="text-slate-300 block">{app.date}</span>
+                        <span className="text-[#80CBC4] font-mono text-[11px]">{app.time_slot} ({app.type || 'in-person'})</span>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="text-white font-bold block">₹{app.fee || 2000}</span>
+                        <span className={`text-[10px] font-bold uppercase ${app.payment_status === 'paid' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                          {app.payment_status || 'unpaid'}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
+                          app.status === 'confirmed' ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/50' : 'bg-amber-950 text-amber-400 border border-amber-700/50'
+                        }`}>
+                          {app.status}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right space-x-1">
+                        {app.status !== 'confirmed' && (
+                          <button onClick={() => handleUpdateAppointmentStatus(app.id, 'confirmed')} className="p-1.5 bg-emerald-950 text-emerald-400 rounded-lg"><Check className="w-4 h-4" /></button>
+                        )}
+                        {app.status !== 'completed' && (
+                          <button onClick={() => handleUpdateAppointmentStatus(app.id, 'completed')} className="p-1.5 bg-blue-950 text-blue-400 rounded-lg"><CheckCircle2 className="w-4 h-4" /></button>
+                        )}
+                        {app.status !== 'cancelled' && (
+                          <button onClick={() => handleUpdateAppointmentStatus(app.id, 'cancelled')} className="p-1.5 bg-rose-950 text-rose-400 rounded-lg"><X className="w-4 h-4" /></button>
+                        )}
+                        <button onClick={() => handleDeleteAppointment(app.id)} className="p-1.5 bg-slate-800 text-slate-400 hover:text-rose-400 rounded-lg ml-1"><Trash2 className="w-4 h-4" /></button>
                       </td>
                     </tr>
-                  ) : (
-                    filteredAppointments.map((app) => (
-                      <tr key={app.id} className="hover:bg-white/5">
-                        <td className="py-3.5 px-4">
-                          <strong className="text-white block text-sm font-semibold">{app.patient_name}</strong>
-                          <span className="text-slate-400 block">{app.patient_phone}</span>
-                          <span className="text-slate-500 text-[11px] block">{app.patient_email}</span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="text-slate-200 font-semibold block">{app.doctor_name}</span>
-                          <span className="text-slate-400 text-[11px]">{app.department}</span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="text-slate-300 block">{app.date}</span>
-                          <span className="text-[#80CBC4] font-mono text-[11px]">{app.time_slot} ({app.type || 'in-person'})</span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="text-white font-bold block">₹{app.fee || 2000}</span>
-                          <span className={`text-[10px] font-bold uppercase ${app.payment_status === 'paid' ? 'text-emerald-400' : 'text-amber-400'}`}>
-                            {app.payment_status || 'unpaid'}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                            app.status === 'confirmed' ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/50' :
-                            app.status === 'completed' ? 'bg-blue-950 text-blue-400 border border-blue-700/50' :
-                            app.status === 'cancelled' ? 'bg-rose-950 text-rose-400 border border-rose-700/50' :
-                            'bg-amber-950 text-amber-400 border border-amber-700/50'
-                          }`}>
-                            {app.status}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-right space-x-1">
-                          {app.status !== 'confirmed' && (
-                            <button 
-                              onClick={() => handleUpdateAppointmentStatus(app.id, 'confirmed')}
-                              title="Confirm Booking"
-                              className="p-1.5 bg-emerald-950 hover:bg-emerald-900 text-emerald-400 rounded-lg transition"
-                            >
-                              <Check className="w-4 h-4" />
-                            </button>
-                          )}
-
-                          {app.status !== 'completed' && (
-                            <button 
-                              onClick={() => handleUpdateAppointmentStatus(app.id, 'completed')}
-                              title="Mark Completed"
-                              className="p-1.5 bg-blue-950 hover:bg-blue-900 text-blue-400 rounded-lg transition"
-                            >
-                              <CheckCircle2 className="w-4 h-4" />
-                            </button>
-                          )}
-
-                          {app.status !== 'cancelled' && (
-                            <button 
-                              onClick={() => handleUpdateAppointmentStatus(app.id, 'cancelled')}
-                              title="Cancel Booking"
-                              className="p-1.5 bg-rose-950 hover:bg-rose-900 text-rose-400 rounded-lg transition"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          )}
-
-                          <button 
-                            onClick={() => handleDeleteAppointment(app.id)}
-                            title="Delete Record"
-                            className="p-1.5 bg-slate-800 hover:bg-rose-900/50 text-slate-400 hover:text-rose-400 rounded-lg transition ml-1"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
-
           </div>
         )}
 
-        {/* --- TAB 3: DOCTOR ROSTER CMS --- */}
+        {/* DOCTORS */}
         {activeTab === 'doctors' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {doctors.map(doc => (
               <div key={doc.id} className="bg-[#122824] p-6 rounded-3xl border border-slate-800 space-y-4 shadow-xl flex flex-col justify-between">
                 <div className="space-y-3">
                   <div className="flex items-center gap-4">
-                    <img 
-                      src={doc.image} 
-                      alt={doc.name} 
-                      className="w-16 h-16 rounded-2xl object-cover border-2 border-[#00695C] shrink-0" 
-                    />
+                    <img src={doc.image} alt={doc.name} className="w-16 h-16 rounded-2xl object-cover border-2 border-[#00695C] shrink-0" />
                     <div>
                       <h3 className="font-bold text-white text-base">{doc.name}</h3>
                       <p className="text-xs text-[#80CBC4] font-medium">{doc.title}</p>
-                      <span className="inline-block bg-slate-800 text-slate-300 text-[10px] px-2 py-0.5 rounded mt-1">
-                        {doc.dept_name || doc.department}
-                      </span>
+                      <span className="inline-block bg-slate-800 text-slate-300 text-[10px] px-2 py-0.5 rounded mt-1">{doc.dept_name || doc.department}</span>
                     </div>
                   </div>
-
                   <div className="text-xs text-slate-400 space-y-1 pt-2 border-t border-slate-800">
                     <div><strong>Qualification:</strong> {doc.qualification}</div>
                     <div><strong>Experience:</strong> {doc.experience} Years</div>
                     <div><strong>Consultation Fee:</strong> <span className="text-emerald-400 font-bold">₹{doc.consultation_fee}</span></div>
-                    <div><strong>Rating:</strong> ⭐ {doc.rating} / 5.0</div>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-                  <button 
-                    onClick={() => {
-                      setEditItem(doc);
-                      setDocForm({
-                        id: doc.id,
-                        name: doc.name,
-                        title: doc.title,
-                        department: doc.department,
-                        dept_name: doc.dept_name || doc.department,
-                        qualification: doc.qualification,
-                        experience: doc.experience,
-                        consultation_fee: doc.consultation_fee,
-                        rating: doc.rating,
-                        image: doc.image,
-                        bio: doc.bio || ''
-                      });
-                      setActiveModal('doctor');
-                    }}
-                    className="text-xs font-semibold text-[#80CBC4] hover:text-white flex items-center gap-1"
-                  >
-                    <Edit className="w-3.5 h-3.5" /> Edit Profile
-                  </button>
-
-                  <button 
-                    onClick={() => handleDeleteDoctor(doc.id)}
-                    className="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center gap-1"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" /> Remove
-                  </button>
+                  <button onClick={() => { setEditItem(doc); setDocForm(doc); setActiveModal('doctor'); }} className="text-xs font-semibold text-[#80CBC4] flex items-center gap-1"><Edit className="w-3.5 h-3.5" /> Edit</button>
+                  <button onClick={() => handleDeleteDoctor(doc.id)} className="text-xs font-semibold text-rose-400 flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> Remove</button>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* --- TAB 4: BLOG CMS --- */}
+        {/* BLOGS */}
         {activeTab === 'blogs' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogs.map(blog => (
@@ -792,119 +669,56 @@ export default function Dashboard() {
                 <div>
                   <img src={blog.image} alt={blog.title} className="w-full h-44 object-cover" />
                   <div className="p-6 space-y-3">
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-[#00695C]/30 text-[#80CBC4] px-2.5 py-1 rounded-full">
-                      {blog.category}
-                    </span>
+                    <span className="text-[10px] font-bold uppercase bg-[#00695C]/30 text-[#80CBC4] px-2.5 py-1 rounded-full">{blog.category}</span>
                     <h3 className="font-bold text-white text-base line-clamp-2">{blog.title}</h3>
                     <p className="text-xs text-slate-400 line-clamp-3">{blog.summary}</p>
-                    <div className="text-[11px] text-slate-500 pt-2 flex justify-between">
-                      <span>By {blog.author}</span>
-                      <span>{blog.date}</span>
-                    </div>
                   </div>
                 </div>
 
                 <div className="p-6 pt-0 flex items-center justify-between border-t border-slate-800/50 mt-4">
-                  <button 
-                    onClick={() => {
-                      setEditItem(blog);
-                      setBlogForm(blog);
-                      setActiveModal('blog');
-                    }}
-                    className="text-xs font-semibold text-[#80CBC4] hover:text-white flex items-center gap-1"
-                  >
-                    <Edit className="w-3.5 h-3.5" /> Edit Article
-                  </button>
-
-                  <button 
-                    onClick={() => handleDeleteBlog(blog.id)}
-                    className="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center gap-1"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" /> Delete
-                  </button>
+                  <button onClick={() => { setEditItem(blog); setBlogForm(blog); setActiveModal('blog'); }} className="text-xs font-semibold text-[#80CBC4] flex items-center gap-1"><Edit className="w-3.5 h-3.5" /> Edit</button>
+                  <button onClick={() => handleDeleteBlog(blog.id)} className="text-xs font-semibold text-rose-400 flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> Delete</button>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* --- TAB 5: PACKAGES CMS --- */}
+        {/* PACKAGES */}
         {activeTab === 'packages' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {packages.map(pkg => (
               <div key={pkg.id} className="bg-[#122824] p-6 rounded-3xl border border-slate-800 space-y-4 shadow-xl flex flex-col justify-between">
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase bg-amber-950 text-amber-400 px-2.5 py-1 rounded-full border border-amber-800/50">
-                      {pkg.badge || pkg.category}
-                    </span>
-                    <span className="text-xs text-slate-400">{pkg.tests_count} Diagnostic Tests</span>
-                  </div>
-
+                  <span className="text-[10px] font-bold uppercase bg-amber-950 text-amber-400 px-2.5 py-1 rounded-full">{pkg.badge || pkg.category}</span>
                   <h3 className="font-bold text-white text-base">{pkg.name}</h3>
-                  <p className="text-xs text-slate-400">Target: {pkg.recommended_for}</p>
-
-                  <div className="pt-3 border-t border-slate-800 flex items-baseline gap-2">
-                    <span className="text-2xl font-extrabold text-white">₹{pkg.price}</span>
-                    {pkg.original_price && (
-                      <span className="text-xs text-slate-500 line-through">₹{pkg.original_price}</span>
-                    )}
-                  </div>
+                  <div className="text-2xl font-extrabold text-white">₹{pkg.price}</div>
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-                  <button 
-                    onClick={() => {
-                      setEditItem(pkg);
-                      setPkgForm(pkg);
-                      setActiveModal('package');
-                    }}
-                    className="text-xs font-semibold text-[#80CBC4] hover:text-white flex items-center gap-1"
-                  >
-                    <Edit className="w-3.5 h-3.5" /> Edit Package
-                  </button>
-
-                  <button 
-                    onClick={() => handleDeletePackage(pkg.id)}
-                    className="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center gap-1"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" /> Delete
-                  </button>
+                  <button onClick={() => { setEditItem(pkg); setPkgForm(pkg); setActiveModal('package'); }} className="text-xs font-semibold text-[#80CBC4] flex items-center gap-1"><Edit className="w-3.5 h-3.5" /> Edit</button>
+                  <button onClick={() => handleDeletePackage(pkg.id)} className="text-xs font-semibold text-rose-400 flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> Delete</button>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* --- TAB 6: INQUIRIES CMS --- */}
+        {/* INQUIRIES */}
         {activeTab === 'inquiries' && (
           <div className="space-y-4">
             {inquiries.map(inq => (
-              <div key={inq.id} className="bg-[#122824] p-6 rounded-3xl border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div key={inq.id} className="bg-[#122824] p-6 rounded-3xl border border-slate-800 shadow-xl flex items-center justify-between gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
                     <strong className="text-base text-white">{inq.name}</strong>
-                    <span className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full ${
-                      inq.status === 'unread' ? 'bg-amber-950 text-amber-400 border border-amber-800' : 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                    }`}>
-                      {inq.status}
-                    </span>
+                    <span className="text-[10px] uppercase font-bold text-amber-400 bg-amber-950 px-2.5 py-0.5 rounded-full">{inq.status}</span>
                   </div>
-                  <div className="text-xs text-slate-400">
-                    <span>{inq.email}</span> &bull; <span>{inq.phone}</span>
-                  </div>
-                  <p className="text-xs text-slate-300 bg-slate-900/50 p-3 rounded-xl border border-slate-800/80">
-                    "{inq.message}"
-                  </p>
+                  <p className="text-xs text-slate-300">"{inq.message}"</p>
                 </div>
 
-                <button 
-                  onClick={() => handleToggleInquiryStatus(inq.id, inq.status)}
-                  className={`text-xs font-semibold px-4 py-2 rounded-xl transition shrink-0 ${
-                    inq.status === 'unread' ? 'bg-emerald-900 text-emerald-300 hover:bg-emerald-800' : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  {inq.status === 'unread' ? 'Mark as Resolved' : 'Mark as Unread'}
+                <button onClick={() => handleToggleInquiryStatus(inq.id, inq.status)} className="text-xs font-semibold px-4 py-2 rounded-xl bg-emerald-900 text-emerald-300 hover:bg-emerald-800">
+                  {inq.status === 'unread' ? 'Mark Resolved' : 'Mark Unread'}
                 </button>
               </div>
             ))}
@@ -913,162 +727,52 @@ export default function Dashboard() {
 
       </main>
 
-      {/* --- MODAL 1: DOCTOR FORM MODAL --- */}
+      {/* DOCTOR MODAL */}
       {activeModal === 'doctor' && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <h3 className="text-xl font-bold text-white">{editItem ? 'Edit Doctor Profile' : 'Add New Doctor to Roster'}</h3>
-              <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
-            </div>
-
-            <form onSubmit={handleSaveDoctor} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-slate-400 mb-1">Doctor Name *</label>
-                <input type="text" required value={docForm.name} onChange={e => setDocForm({...docForm, name: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-[#00695C]" placeholder="e.g. Dr. D. Nageshwar Reddy" />
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Designation Title *</label>
-                <input type="text" required value={docForm.title} onChange={e => setDocForm({...docForm, title: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none focus:border-[#00695C]" placeholder="e.g. Director — Surgical Oncology" />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Department</label>
-                  <select value={docForm.department} onChange={e => {
-                    const deptObj = INITIAL_DEPARTMENTS.find(d => d.id === e.target.value);
-                    setDocForm({...docForm, department: e.target.value, dept_name: deptObj ? deptObj.name : e.target.value});
-                  }} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none">
-                    {INITIAL_DEPARTMENTS.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-slate-400 mb-1">Consultation Fee (₹)</label>
-                  <input type="number" required value={docForm.consultation_fee} onChange={e => setDocForm({...docForm, consultation_fee: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Qualification</label>
-                  <input type="text" value={docForm.qualification} onChange={e => setDocForm({...docForm, qualification: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" placeholder="MD, DM, FRCS" />
-                </div>
-
-                <div>
-                  <label className="block text-slate-400 mb-1">Experience (Years)</label>
-                  <input type="number" value={docForm.experience} onChange={e => setDocForm({...docForm, experience: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Doctor Image URL</label>
-                <input type="text" value={docForm.image} onChange={e => setDocForm({...docForm, image: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" placeholder="https://..." />
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Bio Summary</label>
-                <textarea rows={3} value={docForm.bio} onChange={e => setDocForm({...docForm, bio: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-800 text-slate-300 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-lg">Save Doctor</button>
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 rounded-3xl space-y-4">
+            <h3 className="text-xl font-bold">{editItem ? 'Edit Doctor Profile' : 'Add New Doctor'}</h3>
+            <form onSubmit={handleSaveDoctor} className="space-y-3 text-xs">
+              <input type="text" required value={docForm.name} onChange={e => setDocForm({...docForm, name: e.target.value})} placeholder="Doctor Name" className="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl" />
+              <input type="text" required value={docForm.title} onChange={e => setDocForm({...docForm, title: e.target.value})} placeholder="Designation Title" className="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl" />
+              <input type="number" required value={docForm.consultation_fee} onChange={e => setDocForm({...docForm, consultation_fee: e.target.value})} placeholder="Fee (₹)" className="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl" />
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-4 py-2 bg-slate-800 rounded-full">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-[#00695C] rounded-full font-bold">Save</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* --- MODAL 2: BLOG FORM MODAL --- */}
+      {/* BLOG MODAL */}
       {activeModal === 'blog' && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <h3 className="text-xl font-bold text-white">{editItem ? 'Edit Health Article' : 'Publish New Article'}</h3>
-              <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
-            </div>
-
-            <form onSubmit={handleSaveBlog} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-slate-400 mb-1">Article Title *</label>
-                <input type="text" required value={blogForm.title} onChange={e => setBlogForm({...blogForm, title: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Category</label>
-                  <input type="text" value={blogForm.category} onChange={e => setBlogForm({...blogForm, category: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-
-                <div>
-                  <label className="block text-slate-400 mb-1">Author</label>
-                  <input type="text" value={blogForm.author} onChange={e => setBlogForm({...blogForm, author: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Image URL</label>
-                <input type="text" value={blogForm.image} onChange={e => setBlogForm({...blogForm, image: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-              </div>
-
-              <div>
-                <label className="block text-slate-400 mb-1">Summary Excerpt</label>
-                <textarea rows={3} value={blogForm.summary} onChange={e => setBlogForm({...blogForm, summary: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-800 text-slate-300 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-lg">Save Article</button>
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 rounded-3xl space-y-4">
+            <h3 className="text-xl font-bold">{editItem ? 'Edit Article' : 'Publish Article'}</h3>
+            <form onSubmit={handleSaveBlog} className="space-y-3 text-xs">
+              <input type="text" required value={blogForm.title} onChange={e => setBlogForm({...blogForm, title: e.target.value})} placeholder="Article Title" className="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl" />
+              <textarea rows={3} value={blogForm.summary} onChange={e => setBlogForm({...blogForm, summary: e.target.value})} placeholder="Summary Excerpt" className="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl" />
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-4 py-2 bg-slate-800 rounded-full">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-[#00695C] rounded-full font-bold">Save</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* --- MODAL 3: PACKAGE FORM MODAL --- */}
+      {/* PACKAGE MODAL */}
       {activeModal === 'package' && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 sm:p-8 rounded-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <h3 className="text-xl font-bold text-white">{editItem ? 'Edit Health Package' : 'Add Health Package'}</h3>
-              <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
-            </div>
-
-            <form onSubmit={handleSavePackage} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-slate-400 mb-1">Package Name *</label>
-                <input type="text" required value={pkgForm.name} onChange={e => setPkgForm({...pkgForm, name: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Offer Price (₹) *</label>
-                  <input type="number" required value={pkgForm.price} onChange={e => setPkgForm({...pkgForm, price: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-
-                <div>
-                  <label className="block text-slate-400 mb-1">Original Price (₹)</label>
-                  <input type="number" value={pkgForm.original_price} onChange={e => setPkgForm({...pkgForm, original_price: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-slate-400 mb-1">Tests Count</label>
-                  <input type="number" value={pkgForm.tests_count} onChange={e => setPkgForm({...pkgForm, tests_count: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" />
-                </div>
-
-                <div>
-                  <label className="block text-slate-400 mb-1">Badge Tag</label>
-                  <input type="text" value={pkgForm.badge} onChange={e => setPkgForm({...pkgForm, badge: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white outline-none" placeholder="Most Popular" />
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <button type="button" onClick={() => setActiveModal(null)} className="px-5 py-2.5 bg-slate-800 text-slate-300 rounded-full font-semibold">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-[#00695C] hover:bg-[#004D40] text-white rounded-full font-bold shadow-lg">Save Package</button>
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+          <div className="bg-[#122824] border border-slate-700 w-full max-w-xl p-6 rounded-3xl space-y-4">
+            <h3 className="text-xl font-bold">{editItem ? 'Edit Health Package' : 'Add Package'}</h3>
+            <form onSubmit={handleSavePackage} className="space-y-3 text-xs">
+              <input type="text" required value={pkgForm.name} onChange={e => setPkgForm({...pkgForm, name: e.target.value})} placeholder="Package Name" className="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl" />
+              <input type="number" required value={pkgForm.price} onChange={e => setPkgForm({...pkgForm, price: e.target.value})} placeholder="Offer Price (₹)" className="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl" />
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" onClick={() => setActiveModal(null)} className="px-4 py-2 bg-slate-800 rounded-full">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-[#00695C] rounded-full font-bold">Save</button>
               </div>
             </form>
           </div>

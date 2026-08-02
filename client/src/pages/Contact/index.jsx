@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { PhoneCall, Mail, MapPin, Send, Clock, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
-import { submitContactToSheet } from '../../services/googleSheets';
+import { createContactInquiryInSupabase } from '../../services/data';
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -16,6 +16,19 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    try {
+      await createContactInquiryInSupabase({
+        name: nameRef.current.value,
+        phone: phoneRef.current.value,
+        email: emailRef.current.value,
+        message: messageRef.current.value,
+        subject: 'General Patient Inquiry'
+      });
+    } catch (err) {
+      console.warn('Supabase contact submission notice:', err);
+    }
+
     await submitContactToSheet({
       name: nameRef.current.value,
       phone: phoneRef.current.value,
@@ -25,6 +38,7 @@ export default function Contact() {
     setIsSubmitting(false);
     setSubmitted(true);
   };
+
 
   return (
     <div className="w-full bg-[#F8FCFB] dark:bg-[#0A1917] text-slate-900 dark:text-white py-12 space-y-16">
