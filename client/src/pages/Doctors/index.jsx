@@ -21,8 +21,14 @@ export default function Doctors() {
     { value: 'oncology', label: 'Robotic Surgical Oncology' },
     { value: 'neurosciences', label: 'Neurosciences & Spine' },
     { value: 'orthopedics', label: 'Orthopedics & Joint Replacement' },
-    { value: 'nephrology', label: 'Renal Sciences & Transplant' }
+    { value: 'nephrology', label: 'Renal Sciences & Transplant' },
+    { value: 'pulmonology', label: 'Pulmonology & Critical Care' },
+    { value: 'pediatrics', label: 'Child Health & Pediatrics' },
+    { value: 'endocrinology', label: 'Diabetes & Endocrinology' },
+    { value: 'dermatology', label: 'Dermatology & Aesthetics' },
+    { value: 'ent', label: 'ENT & Head-Neck Care' }
   ];
+
 
   useEffect(() => {
     function refreshList() {
