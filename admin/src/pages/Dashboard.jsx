@@ -182,8 +182,18 @@ export default function Dashboard() {
       const exists = prev.find(d => d.id === payload.id);
       return exists ? prev.map(d => d.id === payload.id ? payload : d) : [payload, ...prev];
     });
+
+    try {
+      const savedDocs = JSON.parse(localStorage.getItem('apex_doctors') || '[]');
+      const updatedDocs = savedDocs.find(d => d.id === payload.id) 
+        ? savedDocs.map(d => d.id === payload.id ? payload : d) 
+        : [payload, ...savedDocs];
+      localStorage.setItem('apex_doctors', JSON.stringify(updatedDocs));
+    } catch (e) {}
+
     setActiveModal(null);
   };
+
 
   const handleDeleteDoctor = async (id) => {
     if (!window.confirm('Remove doctor from active roster?')) return;

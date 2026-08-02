@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DOCTORS } from '../../services/data';
 import { Search, Filter, Star, Calendar, Award, ChevronDown, Check } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { supabase } from '../../config/supabase';
 
 export default function Doctors() {
   const [searchParams] = useSearchParams();
   const [selectedDept, setSelectedDept] = useState('all');
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [doctorsList, setDoctorsList] = useState(DOCTORS);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -20,6 +22,42 @@ export default function Doctors() {
     { value: 'orthopedics', label: 'Orthopedics & Joint Replacement' },
     { value: 'nephrology', label: 'Renal Sciences & Transplant' }
   ];
+
+  useEffect(() => {
+    async function fetchLiveDoctors() {
+      try {
+        const { data, error } = await supabase.from('doctors').select('*');
+        if (data && data.length > 0) {
+          const formatted = data.map(d => ({
+            id: d.id,
+            name: d.name,
+            title: d.title,
+            department: d.department,
+            deptName: d.dept_name || d.department,
+            experience: d.experience,
+            qualification: d.qualification,
+            consultationFee: Number(d.consultation_fee),
+            rating: Number(d.rating) || 4.9,
+            image: d.image || '/dr-ananya-sharma.png',
+            languages: Array.isArray(d.languages) ? d.languages : (typeof d.languages === 'string' ? d.languages.split(',') : ['English']),
+            bio: d.bio
+          }));
+          setDoctorsList(formatted);
+          return;
+        }
+      } catch (err) {}
+
+      try {
+        const cached = localStorage.getItem('apex_doctors');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed.length > 0) setDoctorsList(parsed);
+        }
+      } catch (e) {}
+    }
+
+    fetchLiveDoctors();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -38,14 +76,15 @@ export default function Doctors() {
     }
   }, [searchParams]);
 
-  const filteredDoctors = DOCTORS.filter((doc) => {
+  const filteredDoctors = doctorsList.filter((doc) => {
     const matchesDept = selectedDept === 'all' || doc.department === selectedDept;
     const term = searchTerm.toLowerCase();
-    const matchesSearch = doc.name.toLowerCase().includes(term) || 
-                          doc.deptName.toLowerCase().includes(term) ||
-                          doc.title.toLowerCase().includes(term);
+    const matchesSearch = (doc.name && doc.name.toLowerCase().includes(term)) || 
+                          (doc.deptName && doc.deptName.toLowerCase().includes(term)) ||
+                          (doc.title && doc.title.toLowerCase().includes(term));
     return matchesDept && matchesSearch;
   });
+
 
   return (
     <div className="w-full bg-[#F8FCFB] dark:bg-[#0A1917] text-slate-900 dark:text-white py-12 space-y-10">

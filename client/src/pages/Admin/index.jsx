@@ -171,28 +171,41 @@ export default function AdminDashboard() {
       bio: docForm.bio || 'Leading medical specialist.'
     };
 
-    try {
-      await supabase.from('doctors').upsert([payload]);
+    const { error } = await supabase.from('doctors').upsert([payload]);
+
+    if (error) {
+      console.error('Supabase Doctor Upsert Error:', error.message);
+      showNotification(`Saved locally (${error.message})`);
+    } else {
       showNotification('Doctor profile saved to database!');
-    } catch (err) {
-      showNotification('Doctor profile updated locally');
     }
 
     setDoctors(prev => {
       const exists = prev.find(d => d.id === payload.id);
       return exists ? prev.map(d => d.id === payload.id ? payload : d) : [payload, ...prev];
     });
+
+    try {
+      const savedDocs = JSON.parse(localStorage.getItem('apex_doctors') || '[]');
+      const updatedDocs = savedDocs.find(d => d.id === payload.id) 
+        ? savedDocs.map(d => d.id === payload.id ? payload : d) 
+        : [payload, ...savedDocs];
+      localStorage.setItem('apex_doctors', JSON.stringify(updatedDocs));
+    } catch (e) {}
+
     setActiveModal(null);
   };
 
   const handleDeleteDoctor = async (id) => {
     if (!window.confirm('Remove doctor from active roster?')) return;
-    try {
-      await supabase.from('doctors').delete().eq('id', id);
-    } catch (e) {}
+    const { error } = await supabase.from('doctors').delete().eq('id', id);
+    if (error) {
+      console.error('Supabase Delete Doctor Error:', error.message);
+    }
     setDoctors(prev => prev.filter(d => d.id !== id));
     showNotification('Doctor removed from roster');
   };
+
 
   // --- CRUD ACTIONS FOR BLOGS ---
   const handleSaveBlog = async (e) => {
