@@ -301,27 +301,31 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0A1917] text-white flex flex-col md:flex-row">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col md:flex-row font-sans">
       
       {/* Toast Notification */}
       {notification && (
-        <div className="fixed top-6 right-6 z-50 bg-[#00695C] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-[#80CBC4]/30 animate-bounce">
-          <CheckCircle2 className="w-5 h-5 text-[#80CBC4]" />
+        <div className={`fixed top-6 right-6 z-50 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border text-xs font-semibold animate-bounce ${
+          notification.type === 'error' 
+            ? 'bg-rose-600 text-white border-rose-400' 
+            : 'bg-[#00695C] text-white border-[#80CBC4]/30'
+        }`}>
+          {notification.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle2 className="w-5 h-5 text-[#80CBC4]" />}
           <span className="text-xs font-semibold">{notification.msg}</span>
         </div>
       )}
 
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 bg-[#122824] border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
+      <aside className="w-full md:w-64 bg-white border-r border-slate-200 p-6 flex flex-col justify-between shrink-0 shadow-sm">
         <div className="space-y-8">
           
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#00695C] to-[#00897B] flex items-center justify-center text-white shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#00695C] to-[#00897B] flex items-center justify-center text-white shadow-md">
               <Activity className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-lg font-bold tracking-tight">APEX ADMIN</h2>
-              <span className="text-[10px] text-[#80CBC4] uppercase tracking-widest font-semibold block">Hospital CMS & Command</span>
+              <h2 className="text-lg font-bold tracking-tight text-slate-900">APEX ADMIN</h2>
+              <span className="text-[10px] text-[#00695C] uppercase tracking-widest font-bold block">Hospital CMS & Command</span>
             </div>
           </div>
 
@@ -329,7 +333,7 @@ export default function Dashboard() {
             <button
               onClick={() => handleTabChange('overview')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                activeTab === 'overview' ? 'bg-[#00695C] text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'
+                activeTab === 'overview' ? 'bg-[#00695C] text-white shadow-md font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
               }`}
             >
               <TrendingUp className="w-4 h-4" /> Overview & Analytics
@@ -338,7 +342,7 @@ export default function Dashboard() {
             <button
               onClick={() => handleTabChange('appointments')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                activeTab === 'appointments' ? 'bg-[#00695C] text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'
+                activeTab === 'appointments' ? 'bg-[#00695C] text-white shadow-md font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
               }`}
             >
               <Calendar className="w-4 h-4" /> OP Appointments ({appointments.length})
@@ -347,7 +351,7 @@ export default function Dashboard() {
             <button
               onClick={() => handleTabChange('doctors')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                activeTab === 'doctors' ? 'bg-[#00695C] text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'
+                activeTab === 'doctors' ? 'bg-[#00695C] text-white shadow-md font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
               }`}
             >
               <Stethoscope className="w-4 h-4" /> Doctor Roster ({doctors.length})
@@ -356,7 +360,7 @@ export default function Dashboard() {
             <button
               onClick={() => handleTabChange('blogs')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                activeTab === 'blogs' ? 'bg-[#00695C] text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'
+                activeTab === 'blogs' ? 'bg-[#00695C] text-white shadow-md font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
               }`}
             >
               <FileText className="w-4 h-4" /> Health Blog CMS ({blogs.length})
@@ -365,7 +369,7 @@ export default function Dashboard() {
             <button
               onClick={() => handleTabChange('packages')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                activeTab === 'packages' ? 'bg-[#00695C] text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'
+                activeTab === 'packages' ? 'bg-[#00695C] text-white shadow-md font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
               }`}
             >
               <Layers className="w-4 h-4" /> Health Packages ({packages.length})
@@ -374,7 +378,7 @@ export default function Dashboard() {
             <button
               onClick={() => handleTabChange('inquiries')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                activeTab === 'inquiries' ? 'bg-[#00695C] text-white shadow-lg' : 'text-slate-400 hover:bg-white/5'
+                activeTab === 'inquiries' ? 'bg-[#00695C] text-white shadow-md font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
               }`}
             >
               <Mail className="w-4 h-4" /> Patient Inquiries ({inquiries.length})
