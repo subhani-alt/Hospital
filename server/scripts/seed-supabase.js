@@ -110,7 +110,7 @@ const DOCTORS = [
     consultation_fee: 2500,
     languages: ['English', 'Telugu', 'Hindi'],
     availability: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-    bio: 'Pioneer in Therapeutic Endoscopy, credited with introducing several novel procedures globally.',
+    bio: 'Pioneer in Therapeutic Endoscopy, credited with introducing several novel procedures globally. Published over 600 research papers.',
     locations: ['Main Campus — Gachibowli', 'Executive Suite'],
     research_papers: 650,
     patients_treated: '250,000+'
@@ -124,7 +124,7 @@ const DOCTORS = [
     experience: 22,
     qualification: 'MS, MCh (Oncology), FACS, Fellow Johns Hopkins',
     awards: ['Global Cancer Care Excellence 2024', 'Presidential Gold Medal in Surgery'],
-    image: 'https://images.unsplash.com/photo-1594824813566-78853d928236?auto=format&fit=crop&q=80&w=600',
+    image: '/dr-ananya-sharma.png',
     rating: 4.95,
     reviews_count: 890,
     consultation_fee: 2000,
@@ -154,6 +154,66 @@ const DOCTORS = [
     locations: ['Main Campus — Gachibowli', 'Banjara Hills Center'],
     research_papers: 180,
     patients_treated: '45,000+'
+  },
+  {
+    id: 'dr-vikramaditya-rao',
+    name: 'Dr. Vikramaditya Rao',
+    title: 'Chief of Neurosurgery & Spine Surgery',
+    department: 'neurosciences',
+    dept_name: 'Neurosciences',
+    experience: 24,
+    qualification: 'MS, MCh (Neurosurgery), Fellow Mayo Clinic',
+    awards: ['Neuro Innovation Leadership Award', 'Gold Medalist Neurosurgery'],
+    image: '/dr-vikramaditya-rao.png',
+    rating: 4.93,
+    reviews_count: 760,
+    consultation_fee: 2200,
+    languages: ['English', 'Telugu', 'Hindi'],
+    availability: ['Mon', 'Tue', 'Thu', 'Sat'],
+    bio: 'Expert in skull base surgery, awake brain tumor excision, deep brain stimulation for Parkinson’s, and endoscopic spine surgery.',
+    locations: ['Main Campus — Gachibowli'],
+    research_papers: 95,
+    patients_treated: '14,000+'
+  },
+  {
+    id: 'dr-rajeshwar-patel',
+    name: 'Dr. Rajeshwar Patel',
+    title: 'Head — Robotic Joint Replacement',
+    department: 'orthopedics',
+    dept_name: 'Orthopedics',
+    experience: 20,
+    qualification: 'MS (Ortho), FRCS (Edin), MCh (UK)',
+    awards: ['Mako Robotic Surgical Luminary', 'Best Orthopedic Surgeon 2024'],
+    image: '/dr-rajeshwar-patel.png',
+    rating: 4.92,
+    reviews_count: 940,
+    consultation_fee: 1800,
+    languages: ['English', 'Hindi', 'Gujarati'],
+    availability: ['Mon', 'Wed', 'Thu', 'Fri'],
+    bio: 'Pioneered robotic 3D precision knee and hip joint replacements in South Asia.',
+    locations: ['Main Campus — Gachibowli', 'Banjara Hills Center'],
+    research_papers: 85,
+    patients_treated: '22,000+'
+  },
+  {
+    id: 'dr-sk-mukherjee',
+    name: 'Dr. S. K. Mukherjee',
+    title: 'Director — Nephrology & Transplant Services',
+    department: 'nephrology',
+    dept_name: 'Renal Sciences',
+    experience: 28,
+    qualification: 'MD, DM (Nephrology), FISN, FASN',
+    awards: ['National Nephrologist of Eminence', 'Lifetime Transplant Excellence'],
+    image: '/dr-sk-mukherjee.png',
+    rating: 4.97,
+    reviews_count: 1080,
+    consultation_fee: 2000,
+    languages: ['English', 'Hindi', 'Bengali'],
+    availability: ['Mon', 'Wed', 'Thu', 'Fri'],
+    bio: 'National Nephrologist of Eminence with extensive renal transplant experience.',
+    locations: ['Main Campus — Gachibowli'],
+    research_papers: 210,
+    patients_treated: '35,000+'
   }
 ];
 
@@ -173,7 +233,7 @@ async function seedData() {
   if (docErr) {
     console.error('Error seeding doctors:', docErr.message);
   } else {
-    console.log('Successfully seeded Doctors table!');
+    console.log('Successfully seeded Doctors table with all 6 faculty doctors!');
   }
 }
 
