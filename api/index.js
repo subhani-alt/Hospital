@@ -109,6 +109,82 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+app.post('/api/doctors', async (req, res) => {
+  try {
+    const payload = req.body;
+    const { data, error } = await supabase.from('doctors').upsert([payload]).select();
+    if (error) return res.status(400).json({ success: false, message: error.message });
+    return res.status(200).json({ success: true, data: data[0] });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.delete('/api/doctors/:id', async (req, res) => {
+  try {
+    const { error } = await supabase.from('doctors').delete().eq('id', req.params.id);
+    if (error) return res.status(400).json({ success: false, message: error.message });
+    return res.status(200).json({ success: true, message: 'Doctor deleted' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.get('/api/appointments', async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('appointments').select('*').order('created_at', { ascending: false });
+    if (error) return res.status(400).json({ success: false, message: error.message });
+    return res.status(200).json({ success: true, data });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.put('/api/appointments/:id', async (req, res) => {
+  try {
+    const { status, payment_status } = req.body;
+    const updates = {};
+    if (status) updates.status = status;
+    if (payment_status) updates.payment_status = payment_status;
+    const { data, error } = await supabase.from('appointments').update(updates).eq('id', req.params.id).select();
+    if (error) return res.status(400).json({ success: false, message: error.message });
+    return res.status(200).json({ success: true, data: data[0] });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.delete('/api/appointments/:id', async (req, res) => {
+  try {
+    const { error } = await supabase.from('appointments').delete().eq('id', req.params.id);
+    if (error) return res.status(400).json({ success: false, message: error.message });
+    return res.status(200).json({ success: true, message: 'Appointment deleted' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.get('/api/inquiries', async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('contact_inquiries').select('*').order('created_at', { ascending: false });
+    if (error) return res.status(400).json({ success: false, message: error.message });
+    return res.status(200).json({ success: true, data });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.put('/api/inquiries/:id', async (req, res) => {
+  try {
+    const { status } = req.body;
+    const { data, error } = await supabase.from('contact_inquiries').update({ status }).eq('id', req.params.id).select();
+    if (error) return res.status(400).json({ success: false, message: error.message });
+    return res.status(200).json({ success: true, data: data[0] });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 app.get('/api/analytics', async (req, res) => {
   try {
     const { count: appointmentCount } = await supabase.from('appointments').select('*', { count: 'exact', head: true });
@@ -121,3 +197,4 @@ app.get('/api/analytics', async (req, res) => {
 });
 
 export default app;
+
