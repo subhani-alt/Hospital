@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DOCTORS } from '../../services/data';
+import { DOCTORS, getLiveDoctors } from '../../services/data';
 import { Search, Filter, Star, Calendar, Award, ChevronDown, Check } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../../config/supabase';
+
 
 export default function Doctors() {
   const [searchParams] = useSearchParams();
@@ -24,40 +25,21 @@ export default function Doctors() {
   ];
 
   useEffect(() => {
-    async function fetchLiveDoctors() {
-      try {
-        const { data, error } = await supabase.from('doctors').select('*');
-        if (data && data.length > 0) {
-          const formatted = data.map(d => ({
-            id: d.id,
-            name: d.name,
-            title: d.title,
-            department: d.department,
-            deptName: d.dept_name || d.department,
-            experience: d.experience,
-            qualification: d.qualification,
-            consultationFee: Number(d.consultation_fee),
-            rating: Number(d.rating) || 4.9,
-            image: d.image || '/dr-ananya-sharma.png',
-            languages: Array.isArray(d.languages) ? d.languages : (typeof d.languages === 'string' ? d.languages.split(',') : ['English']),
-            bio: d.bio
-          }));
-          setDoctorsList(formatted);
-          return;
-        }
-      } catch (err) {}
-
-      try {
-        const cached = localStorage.getItem('apex_doctors');
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (parsed.length > 0) setDoctorsList(parsed);
-        }
-      } catch (e) {}
+    function refreshList() {
+      setDoctorsList(getLiveDoctors());
     }
 
-    fetchLiveDoctors();
+    refreshList();
+
+    window.addEventListener('apex_doctors_updated', refreshList);
+    window.addEventListener('storage', refreshList);
+
+    return () => {
+      window.removeEventListener('apex_doctors_updated', refreshList);
+      window.removeEventListener('storage', refreshList);
+    };
   }, []);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {

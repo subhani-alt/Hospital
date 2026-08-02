@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { DOCTORS } from '../../services/data';
+import { getLiveDoctors } from '../../services/data';
 import { Star, Award, Calendar, ChevronRight, ShieldCheck } from 'lucide-react';
 
 export default function FeaturedDoctorsSection() {
   const navigate = useNavigate();
+  const [doctorsList, setDoctorsList] = useState(() => getLiveDoctors());
+
+  useEffect(() => {
+    const handleUpdate = () => setDoctorsList(getLiveDoctors());
+    window.addEventListener('apex_doctors_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('apex_doctors_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
 
   return (
     <section className="py-20 bg-[#F8FCFB] dark:bg-[#0A1917] relative">
@@ -35,7 +46,8 @@ export default function FeaturedDoctorsSection() {
 
         {/* Doctor Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {DOCTORS.map((doc) => (
+          {doctorsList.map((doc) => (
+
             <div
               key={doc.id}
               className="bg-white dark:bg-[#122824] rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-md hover:shadow-2xl hover-glow transition-all duration-300 flex flex-col justify-between group"

@@ -83,7 +83,8 @@ export const DEPARTMENTS = [
   }
 ];
 
-export const DOCTORS = [
+export const BASE_DOCTORS = [
+
   {
     id: 'dr-nageshwar-reddy',
     name: 'Dr. D. Nageshwar Reddy',
@@ -206,7 +207,38 @@ export const DOCTORS = [
   }
 ];
 
+
+export function getLiveDoctors() {
+  try {
+    const cached = localStorage.getItem('apex_doctors');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map(d => ({
+          id: d.id,
+          name: d.name,
+          title: d.title,
+          department: d.department,
+          deptName: d.dept_name || d.deptName || d.department,
+          experience: Number(d.experience),
+          qualification: d.qualification,
+          consultationFee: Number(d.consultation_fee || d.consultationFee),
+          rating: Number(d.rating) || 4.9,
+          reviewsCount: d.reviews_count || d.reviewsCount || 890,
+          image: d.image || '/dr-ananya-sharma.png',
+          languages: Array.isArray(d.languages) ? d.languages : (typeof d.languages === 'string' ? d.languages.split(',').map(s=>s.trim()) : ['English']),
+          bio: d.bio
+        }));
+      }
+    }
+  } catch (e) {}
+  return BASE_DOCTORS;
+}
+
+export const DOCTORS = getLiveDoctors();
+
 export const HEALTH_PACKAGES = [
+
   {
     id: 'executive-master-check',
     name: 'Apex Executive Master Health Shield',

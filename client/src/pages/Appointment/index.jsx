@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DEPARTMENTS, DOCTORS, createAppointmentInSupabase } from '../../services/data';
+import { DEPARTMENTS, getLiveDoctors, createAppointmentInSupabase } from '../../services/data';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCard, Sparkles, ChevronDown, Check, Building2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useSearchParams } from 'react-router-dom';
@@ -15,12 +15,23 @@ export default function Appointment() {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isDeptDropdownOpen, setIsDeptDropdownOpen] = useState(false);
   const [deptSearchQuery, setDeptSearchQuery] = useState('');
+  const [doctorsList, setDoctorsList] = useState(() => getLiveDoctors());
   const deptDropdownRef = useRef(null);
 
   // Custom Calendar State
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [calendarViewDate, setCalendarViewDate] = useState(new Date(2026, 6, 1)); // July 2026
   const calendarRef = useRef(null);
+
+  useEffect(() => {
+    const handleUpdate = () => setDoctorsList(getLiveDoctors());
+    window.addEventListener('apex_doctors_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('apex_doctors_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -50,7 +61,7 @@ export default function Appointment() {
     const deptParam = searchParams.get('dept');
 
     if (doctorParam) {
-      const doc = DOCTORS.find(
+      const doc = doctorsList.find(
         (d) => d.id === doctorParam || d.name.toLowerCase().includes(doctorParam.toLowerCase())
       );
       if (doc) {
@@ -60,16 +71,17 @@ export default function Appointment() {
       }
     } else if (deptParam) {
       setSelectedDept(deptParam);
-      const docs = DOCTORS.filter((d) => d.department === deptParam);
+      const docs = doctorsList.filter((d) => d.department === deptParam);
       if (docs.length) {
         setSelectedDoctor(docs[0]);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, doctorsList]);
 
   const TIME_SLOTS = ['09:00 AM', '10:00 AM', '10:30 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM', '06:30 PM'];
 
-  const availableDoctors = DOCTORS.filter((d) => d.department === selectedDept);
+  const availableDoctors = doctorsList.filter((d) => d.department === selectedDept);
+
 
   const handleFinalSubmit = async (e) => {
     e.preventDefault();
