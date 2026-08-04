@@ -22,9 +22,9 @@ export default function LoadingScreen({ onComplete }) {
       <div className="relative flex flex-col items-center">
         {/* Brand Logo */}
         <img
-          src="/prestige-logo.png"
+          src="/prestige-logo-white.png"
           alt="Prestige Hospitals"
-          className="h-16 sm:h-20 object-contain animate-pulse mb-2"
+          className="h-16 sm:h-20 w-auto object-contain animate-pulse mb-2"
         />
         <p className="text-xs tracking-widest text-[#80CBC4]/80 uppercase font-semibold">
           Care That Matters &bull; Global Excellence

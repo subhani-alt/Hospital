@@ -30,9 +30,9 @@ export default function Footer() {
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" onClick={handleHomeClick} className="flex items-center gap-3">
               <img
-                src="/prestige-logo.png"
+                src="/prestige-logo-white.png"
                 alt="Prestige Hospitals"
-                className="h-12 sm:h-14 object-contain brightness-110"
+                className="h-12 sm:h-14 w-auto object-contain"
               />
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">

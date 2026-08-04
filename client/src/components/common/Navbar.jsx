@@ -57,9 +57,14 @@ export default function Navbar() {
           {/* Brand Logo */}
           <Link to="/" onClick={handleHomeClick} className="flex items-center gap-3 group">
             <img
-              src="/prestige-logo.png"
+              src="/prestige-logo-dark.png"
               alt="Prestige Hospitals"
-              className="h-10 sm:h-12 object-contain group-hover:scale-105 transition-transform"
+              className="h-10 sm:h-12 w-auto object-contain group-hover:scale-105 transition-transform dark:hidden"
+            />
+            <img
+              src="/prestige-logo-white.png"
+              alt="Prestige Hospitals"
+              className="h-10 sm:h-12 w-auto object-contain group-hover:scale-105 transition-transform hidden dark:block"
             />
           </Link>
 

@@ -400,9 +400,9 @@ export default function Dashboard() {
           
           <div className="flex items-center gap-3">
             <img
-              src="/prestige-logo.png"
+              src="/prestige-logo-dark.png"
               alt="Prestige Hospitals Admin"
-              className="h-10 sm:h-12 object-contain"
+              className="h-10 sm:h-12 w-auto object-contain"
             />
           </div>
 
