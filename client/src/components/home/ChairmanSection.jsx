@@ -33,8 +33,9 @@ export default function ChairmanSection() {
                   <h4 className="text-base font-bold text-white font-heading">{chairman.name}</h4>
                   <p className="text-xs text-[#80CBC4]">{chairman.title}</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-[#00695C] text-white flex items-center justify-center shrink-0 font-bold text-xs">
-                  38+ yrs
+                <div className="text-right shrink-0">
+                  <span className="text-sm font-bold text-[#80CBC4] block leading-none">38+ Yrs</span>
+                  <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block mt-0.5">Experience</span>
                 </div>
               </div>
             </div>
