@@ -14,18 +14,18 @@ export default function LoadingScreen({ onComplete }) {
 
   return (
     <div
-      className={`fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#0A1917] transition-opacity duration-500 ease-out ${
+      className={`fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-white transition-opacity duration-500 ease-out ${
         fade ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
       <div className="relative flex flex-col items-center">
         {/* Brand Logo */}
         <img
-          src="/prestige-logo-white.png"
+          src="/prestige-logo-dark.png"
           alt="Prestige Hospitals"
           className="h-16 sm:h-20 w-auto object-contain animate-pulse mb-3"
         />
-        <p className="text-xs tracking-widest text-[#80CBC4]/80 uppercase font-semibold">
+        <p className="text-xs tracking-widest text-[#00695C] uppercase font-semibold">
           Care That Matters &bull; Global Excellence
         </p>
       </div>
