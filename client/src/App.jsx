@@ -96,6 +96,7 @@ export default function App() {
 
   // Initialize Lenis Smooth Scroll
   useEffect(() => {
+    let animId;
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -105,11 +106,12 @@ export default function App() {
 
     function raf(time) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      animId = requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
+    animId = requestAnimationFrame(raf);
 
     return () => {
+      if (animId) cancelAnimationFrame(animId);
       lenis.destroy();
     };
   }, []);

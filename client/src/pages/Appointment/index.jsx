@@ -55,7 +55,7 @@ export default function Appointment() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingToken, setBookingToken] = useState('');
 
-  // Auto pre-select doctor or department from URL parameter
+  // Auto pre-select doctor or department from URL parameter (e.g. from AI Symptom Checker)
   useEffect(() => {
     const doctorParam = searchParams.get('doctor');
     const deptParam = searchParams.get('dept');
@@ -67,13 +67,16 @@ export default function Appointment() {
       if (doc) {
         setSelectedDoctor(doc);
         setSelectedDept(doc.department);
-        setStep(2); // Jump directly to Schedule step!
+        setStep(2); // Jump directly to Booking Schedule step!
+        setTimeout(() => window.scrollTo({ top: 250, behavior: 'smooth' }), 100);
       }
     } else if (deptParam) {
       setSelectedDept(deptParam);
       const docs = doctorsList.filter((d) => d.department === deptParam);
       if (docs.length) {
         setSelectedDoctor(docs[0]);
+        setStep(2); // Jump directly to Booking Schedule step!
+        setTimeout(() => window.scrollTo({ top: 250, behavior: 'smooth' }), 100);
       }
     }
   }, [searchParams, doctorsList]);

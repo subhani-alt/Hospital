@@ -21,8 +21,8 @@ export default function EmergencyModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-[#122824] rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-red-500/30 relative">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="bg-white dark:bg-[#122824] rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-red-500/30 relative">
         
         {/* Top Emergency Red Header */}
         <div className="bg-gradient-to-r from-red-700 via-red-600 to-rose-700 text-white p-6 relative">

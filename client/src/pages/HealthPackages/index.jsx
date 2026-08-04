@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
-import { HEALTH_PACKAGES } from '../../services/data';
+import React, { useState, useEffect } from 'react';
+import { getLivePackages } from '../../services/data';
 import { Check, ShieldCheck, Calendar, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function HealthPackages() {
   const navigate = useNavigate();
+  const [packagesList, setPackagesList] = useState(() => getLivePackages());
+
+  useEffect(() => {
+    const handleUpdate = () => setPackagesList(getLivePackages());
+    window.addEventListener('apex_packages_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('apex_packages_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
 
   return (
     <div className="w-full bg-[#F8FCFB] dark:bg-[#0A1917] text-slate-900 dark:text-white py-12 space-y-12">
@@ -25,7 +36,7 @@ export default function HealthPackages() {
 
         {/* Packages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {HEALTH_PACKAGES.map((pkg) => (
+          {packagesList.map((pkg) => (
             <div
               key={pkg.id}
               className="bg-white dark:bg-[#122824] rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"

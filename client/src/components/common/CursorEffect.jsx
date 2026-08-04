@@ -36,7 +36,7 @@ export default function CursorEffect() {
       document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('mouseover', handleHoverStart);
     };
-  }, [isVisible]);
+  }, []);
 
   if (!isVisible) return null;
 

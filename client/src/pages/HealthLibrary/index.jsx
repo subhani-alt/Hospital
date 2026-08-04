@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
-import { BLOGS } from '../../services/data';
+import React, { useState, useEffect } from 'react';
+import { getLiveBlogs } from '../../services/data';
 import { Search, BookOpen, Clock, User, ArrowRight } from 'lucide-react';
 
 export default function HealthLibrary() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [blogsList, setBlogsList] = useState(() => getLiveBlogs());
 
-  const filteredBlogs = BLOGS.filter(b => 
+  useEffect(() => {
+    const handleUpdate = () => setBlogsList(getLiveBlogs());
+    window.addEventListener('apex_blogs_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('apex_blogs_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
+  const filteredBlogs = blogsList.filter(b => 
     b.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
     b.summary.toLowerCase().includes(searchTerm.toLowerCase())
   );

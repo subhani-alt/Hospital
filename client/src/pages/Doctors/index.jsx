@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DOCTORS, getLiveDoctors } from '../../services/data';
+import { DOCTORS, getLiveDoctors, getSupabaseDoctors } from '../../services/data';
 import { Search, Filter, Star, Calendar, Award, ChevronDown, Check } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../../config/supabase';
@@ -31,8 +31,13 @@ export default function Doctors() {
 
 
   useEffect(() => {
-    function refreshList() {
-      setDoctorsList(getLiveDoctors());
+    async function refreshList() {
+      const live = await getSupabaseDoctors();
+      if (live && live.length > 0) {
+        setDoctorsList(live);
+      } else {
+        setDoctorsList(getLiveDoctors());
+      }
     }
 
     refreshList();

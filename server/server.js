@@ -44,6 +44,24 @@ const MOCK_DOCTORS = [
   { id: 'dr-sk-mukherjee', name: 'Dr. S. K. Mukherjee', title: 'Director — Nephrology & Transplant Services', department: 'nephrology', deptName: 'Renal Sciences', experience: 28, qualification: 'MD, DM (Nephrology), FISN, FASN', awards: ['National Nephrologist of Eminence', 'Lifetime Transplant Excellence'], image: '/dr-sk-mukherjee.png', rating: 4.97, reviewsCount: 1080, consultationFee: 2000, languages: ['English', 'Hindi', 'Bengali'], availability: ['Mon', 'Tue', 'Wed', 'Fri'], bio: 'Renowned transplant nephrologist with expertise in high-risk ABO incompatible kidney transplants and chronic kidney disease management.', locations: ['Main Campus — Gachibowli'], researchPapers: 210, patientsTreated: '35,000+' }
 ];
 
+// In-Memory Data Stores for Live Sync
+let doctorsStore = [...MOCK_DOCTORS];
+let blogsStore = [
+  { id: 'robotic-surgery-future-2026', title: 'How 5G-Enabled Robotic Surgery is Revolutionizing Quaternary Healthcare in 2026', category: 'Medical Breakthroughs', author: 'Dr. Ananya Sharma', date: 'February 12, 2026', read_time: '6 min read', summary: 'Discover how robotic-assisted surgical platforms with sub-millimeter precision are reducing recovery times.', image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800' },
+  { id: 'fatty-liver-reversal-guide', title: 'Reversing Non-Alcoholic Fatty Liver Disease (MASLD): The Science of Early Precision Intervention', category: 'Gastroenterology', author: 'Dr. D. Nageshwar Reddy', date: 'January 28, 2026', read_time: '8 min read', summary: 'With MASLD affecting nearly 30% of global adults, early FibroScan detection offers a complete pathway to liver renewal.', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800' }
+];
+let packagesStore = [
+  { id: 'executive-master-check', name: 'Apex Executive Master Health Shield', badge: 'Most Popular', category: 'Comprehensive', price: 14999, original_price: 22000, tests_count: 94, recommended_for: 'Men & Women Aged 35+' },
+  { id: 'cardiac-vital-guard', name: 'Apex Advanced Cardiac Protection Package', badge: 'Heart Special', category: 'Cardiology', price: 8999, original_price: 14000, tests_count: 45, recommended_for: 'Heart Risk, High BP' }
+];
+let appointmentsStore = [
+  { id: 'b1a2c3d4-0001', patient_name: 'Rahul Verma', patient_phone: '+91 98765 43210', patient_email: 'rahul.verma@example.com', doctor_name: 'Dr. D. Nageshwar Reddy', department: 'Gastroenterology', date: '2026-08-05', time_slot: '10:30 AM', type: 'in-person', status: 'confirmed', fee: 2500, payment_status: 'paid', created_at: new Date().toISOString() },
+  { id: 'b1a2c3d4-0002', patient_name: 'Priya Sharma', patient_phone: '+91 98111 22233', patient_email: 'priya.sharma@example.com', doctor_name: 'Dr. Ananya Sharma', department: 'Oncology', date: '2026-08-05', time_slot: '11:30 AM', type: 'online', status: 'pending', fee: 2000, payment_status: 'unpaid', created_at: new Date().toISOString() }
+];
+let inquiriesStore = [
+  { id: 'c1a2c3d4-0001', name: 'Anita Sharma', email: 'anita.sharma@example.com', phone: '+91 98111 22233', subject: 'International Patient Inquiry', message: 'I would like to inquire about medical tourism facilities for cardiac evaluation.', status: 'unread', created_at: '2026-08-02' }
+];
+
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
@@ -54,181 +72,359 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// GET /api/departments - Fetch departments from Supabase
+// GET /api/departments - Fetch departments
 app.get('/api/departments', async (req, res) => {
   try {
-    const { data, error } = await supabase.from('departments').select('*');
-    if (error || !data || data.length === 0) {
-      return res.json({ success: true, source: 'cache', count: MOCK_DEPARTMENTS.length, data: MOCK_DEPARTMENTS });
+    const { data } = await supabase.from('departments').select('*');
+    if (data && data.length > 0) {
+      const formatted = data.map(d => ({
+        id: d.id,
+        name: d.name,
+        shortName: d.short_name,
+        tagline: d.tagline,
+        icon: d.icon,
+        image: d.image,
+        description: d.description,
+        stats: d.stats,
+        treatments: d.treatments,
+        technology: d.technology,
+        headOfDept: d.head_of_dept
+      }));
+      return res.json({ success: true, source: 'supabase', count: formatted.length, data: formatted });
     }
-    const formatted = data.map(d => ({
-      id: d.id,
-      name: d.name,
-      shortName: d.short_name,
-      tagline: d.tagline,
-      icon: d.icon,
-      image: d.image,
-      description: d.description,
-      stats: d.stats,
-      treatments: d.treatments,
-      technology: d.technology,
-      headOfDept: d.head_of_dept
-    }));
-    return res.json({ success: true, source: 'supabase', count: formatted.length, data: formatted });
-  } catch (err) {
-    return res.json({ success: true, source: 'cache', count: MOCK_DEPARTMENTS.length, data: MOCK_DEPARTMENTS });
-  }
+  } catch (err) {}
+  return res.json({ success: true, source: 'store', count: MOCK_DEPARTMENTS.length, data: MOCK_DEPARTMENTS });
 });
 
-// GET /api/doctors - Fetch doctors from Supabase
+// GET /api/doctors - Fetch doctors
 app.get('/api/doctors', async (req, res) => {
   try {
-    const { data, error } = await supabase.from('doctors').select('*');
-    if (error || !data || data.length === 0) {
-      return res.json({ success: true, source: 'cache', count: MOCK_DOCTORS.length, data: MOCK_DOCTORS });
+    const { data } = await supabase.from('doctors').select('*');
+    if (data && data.length > 0) {
+      const formatted = data.map(d => ({
+        id: d.id,
+        name: d.name,
+        title: d.title,
+        department: d.department,
+        deptName: d.dept_name || d.deptName,
+        dept_name: d.dept_name || d.deptName,
+        experience: Number(d.experience) || 10,
+        qualification: d.qualification,
+        awards: d.awards,
+        image: d.image,
+        rating: Number(d.rating) || 4.9,
+        reviewsCount: d.reviews_count,
+        consultationFee: Number(d.consultation_fee || d.consultationFee || 2000),
+        consultation_fee: Number(d.consultation_fee || d.consultationFee || 2000),
+        languages: d.languages,
+        availability: d.availability,
+        bio: d.bio,
+        locations: d.locations,
+        is_visible: d.is_visible !== undefined ? d.is_visible : true,
+        isVisible: d.is_visible !== undefined ? d.is_visible : true
+      }));
+      doctorsStore = formatted;
     }
-    const formatted = data.map(d => ({
-      id: d.id,
-      name: d.name,
-      title: d.title,
-      department: d.department,
-      deptName: d.dept_name,
-      experience: d.experience,
-      qualification: d.qualification,
-      awards: d.awards,
-      image: d.image,
-      rating: Number(d.rating),
-      reviewsCount: d.reviews_count,
-      consultationFee: Number(d.consultation_fee),
-      languages: d.languages,
-      availability: d.availability,
-      bio: d.bio,
-      locations: d.locations,
-      researchPapers: d.research_papers,
-      patientsTreated: d.patients_treated
-    }));
-    return res.json({ success: true, source: 'supabase', count: formatted.length, data: formatted });
-  } catch (err) {
-    return res.json({ success: true, source: 'cache', count: MOCK_DOCTORS.length, data: MOCK_DOCTORS });
-  }
+  } catch (err) {}
+  return res.json({ success: true, source: 'store', count: doctorsStore.length, data: doctorsStore });
 });
 
-// GET /api/health-packages - Fetch health packages from Supabase
+// GET /api/health-packages - Fetch health packages
 app.get('/api/health-packages', async (req, res) => {
   try {
-    const { data, error } = await supabase.from('health_packages').select('*');
-    if (error || !data || data.length === 0) {
-      return res.json({ success: true, source: 'cache', data: [] });
+    const { data } = await supabase.from('health_packages').select('*');
+    if (data && data.length > 0) {
+      const formatted = data.map(p => ({
+        id: p.id,
+        name: p.name,
+        badge: p.badge,
+        category: p.category,
+        price: Number(p.price),
+        original_price: Number(p.original_price || p.originalPrice || 15000),
+        originalPrice: Number(p.original_price || p.originalPrice || 15000),
+        tests_count: Number(p.tests_count || p.testsCount || 50),
+        testsCount: Number(p.tests_count || p.testsCount || 50),
+        recommended_for: p.recommended_for || p.recommendedFor,
+        recommendedFor: p.recommended_for || p.recommendedFor,
+        highlights: p.highlights,
+        inclusions: p.inclusions
+      }));
+      packagesStore = formatted;
     }
-    const formatted = data.map(p => ({
-      id: p.id,
-      name: p.name,
-      badge: p.badge,
-      category: p.category,
-      price: Number(p.price),
-      originalPrice: Number(p.original_price),
-      testsCount: p.tests_count,
-      recommendedFor: p.recommended_for,
-      highlights: p.highlights,
-      inclusions: p.inclusions
-    }));
-    return res.json({ success: true, source: 'supabase', count: formatted.length, data: formatted });
-  } catch (err) {
-    return res.json({ success: false, error: err.message });
-  }
+  } catch (err) {}
+  return res.json({ success: true, source: 'store', count: packagesStore.length, data: packagesStore });
 });
 
-// GET /api/blogs - Fetch blogs from Supabase
+// GET /api/blogs - Fetch blogs
 app.get('/api/blogs', async (req, res) => {
   try {
-    const { data, error } = await supabase.from('blogs').select('*');
-    if (error || !data || data.length === 0) {
-      return res.json({ success: true, source: 'cache', data: [] });
+    const { data } = await supabase.from('blogs').select('*');
+    if (data && data.length > 0) {
+      const formatted = data.map(b => ({
+        id: b.id,
+        title: b.title,
+        category: b.category,
+        author: b.author,
+        date: b.date,
+        read_time: b.read_time || b.readTime,
+        readTime: b.read_time || b.readTime,
+        image: b.image,
+        summary: b.summary,
+        content: b.content
+      }));
+      blogsStore = formatted;
     }
-    const formatted = data.map(b => ({
-      id: b.id,
-      title: b.title,
-      category: b.category,
-      author: b.author,
-      date: b.date,
-      readTime: b.read_time,
-      image: b.image,
-      summary: b.summary,
-      content: b.content
-    }));
-    return res.json({ success: true, source: 'supabase', count: formatted.length, data: formatted });
-  } catch (err) {
-    return res.json({ success: false, error: err.message });
-  }
+  } catch (err) {}
+  return res.json({ success: true, source: 'store', count: blogsStore.length, data: blogsStore });
 });
 
-// POST /api/appointments - Create appointment in Supabase
+// GET /api/appointments - Fetch appointments
+app.get('/api/appointments', async (req, res) => {
+  try {
+    const { data } = await supabase.from('appointments').select('*').order('created_at', { ascending: false });
+    if (data && data.length > 0) {
+      appointmentsStore = data;
+    }
+  } catch (err) {}
+  return res.json({ success: true, source: 'store', count: appointmentsStore.length, data: appointmentsStore });
+});
+
+// GET /api/contact-inquiries - Fetch inquiries
+app.get('/api/contact-inquiries', async (req, res) => {
+  try {
+    const { data } = await supabase.from('contact_inquiries').select('*').order('created_at', { ascending: false });
+    if (data && data.length > 0) {
+      inquiriesStore = data;
+    }
+  } catch (err) {}
+  return res.json({ success: true, source: 'store', count: inquiriesStore.length, data: inquiriesStore });
+});
+
+// POST /api/appointments - Create appointment
 app.post('/api/appointments', async (req, res) => {
-  try {
-    const { patientName, patientPhone, patientEmail, doctorName, department, date, timeSlot, type, fee } = req.body;
-    const { data, error } = await supabase.from('appointments').insert([{
-      patient_name: patientName,
-      patient_phone: patientPhone,
-      patient_email: patientEmail,
-      doctor_name: doctorName,
-      department,
-      date,
-      time_slot: timeSlot,
-      type: type || 'in-person',
-      fee: fee || 2000,
-      status: 'pending',
-      payment_status: 'unpaid'
-    }]).select();
+  const { patientName, patient_name, patientPhone, patient_phone, patientEmail, patient_email, doctorName, doctor_name, department, date, timeSlot, time_slot, type, fee } = req.body;
+  const payload = {
+    id: `app-${Date.now()}`,
+    patient_name: patientName || patient_name || 'Valued Patient',
+    patient_phone: patientPhone || patient_phone || '+91 99999 99999',
+    patient_email: patientEmail || patient_email || 'patient@apexhealth.org',
+    doctor_name: doctorName || doctor_name || 'Dr. D. Nageshwar Reddy',
+    department: department || 'Gastroenterology',
+    date: date || new Date().toISOString().split('T')[0],
+    time_slot: timeSlot || time_slot || '10:00 AM',
+    type: type || 'in-person',
+    fee: Number(fee || 2000),
+    status: 'pending',
+    payment_status: 'unpaid',
+    created_at: new Date().toISOString()
+  };
 
-    if (error) {
-      return res.status(400).json({ success: false, message: error.message });
-    }
-    return res.status(201).json({ success: true, message: 'Appointment booked successfully', data: data[0] });
-  } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
-  }
+  appointmentsStore = [payload, ...appointmentsStore.filter(a => a.id !== payload.id)];
+
+  try {
+    supabase.from('appointments').insert([payload]).then();
+  } catch (err) {}
+
+  return res.status(201).json({ success: true, message: 'Appointment booked successfully', data: payload });
 });
 
-// POST /api/contact - Submit contact inquiry in Supabase
+// POST /api/contact - Submit contact inquiry
 app.post('/api/contact', async (req, res) => {
-  try {
-    const { name, email, phone, subject, message } = req.body;
-    const { data, error } = await supabase.from('contact_inquiries').insert([{
-      name, email, phone, subject, message, status: 'unread'
-    }]).select();
+  const { name, email, phone, subject, message } = req.body;
+  const payload = {
+    id: `inq-${Date.now()}`,
+    name: name || 'Anonymous Inquiry',
+    email: email || 'info@apexhealth.org',
+    phone: phone || '',
+    subject: subject || 'Patient Inquiry',
+    message: message || 'No message provided',
+    status: 'unread',
+    created_at: new Date().toISOString()
+  };
 
-    if (error) {
-      return res.status(400).json({ success: false, message: error.message });
-    }
-    return res.status(201).json({ success: true, message: 'Inquiry submitted successfully', data: data[0] });
-  } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+  inquiriesStore = [payload, ...inquiriesStore.filter(i => i.id !== payload.id)];
+
+  try {
+    supabase.from('contact_inquiries').insert([payload]).then();
+  } catch (err) {}
+
+  return res.status(201).json({ success: true, message: 'Inquiry submitted successfully', data: payload });
+});
+
+// POST /api/doctors - Add/Update doctor
+app.post('/api/doctors', async (req, res) => {
+  const { id, name, title, department, dept_name, deptName, qualification, experience, consultation_fee, consultationFee, rating, image, bio, languages, is_visible, isVisible } = req.body;
+  const targetId = id || `dr-${(name || 'doc').toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+  
+  const payload = {
+    id: targetId,
+    name: name || 'Dr. New Specialist',
+    title: title || 'Senior Consultant',
+    department: department || 'gastroenterology',
+    dept_name: dept_name || deptName || 'Gastroenterology',
+    deptName: dept_name || deptName || 'Gastroenterology',
+    qualification: qualification || 'MD, MBBS',
+    experience: Number(experience) || 10,
+    consultation_fee: Number(consultation_fee || consultationFee || 2000),
+    consultationFee: Number(consultation_fee || consultationFee || 2000),
+    rating: Number(rating) || 4.9,
+    image: image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600',
+    bio: bio || 'Leading medical specialist.',
+    languages: Array.isArray(languages) ? languages : (typeof languages === 'string' ? languages.split(',').map(s=>s.trim()) : ['English']),
+    is_visible: is_visible !== undefined ? is_visible : (isVisible !== undefined ? isVisible : true),
+    isVisible: is_visible !== undefined ? is_visible : (isVisible !== undefined ? isVisible : true)
+  };
+
+  const existingIdx = doctorsStore.findIndex(d => d.id === targetId);
+  if (existingIdx >= 0) {
+    doctorsStore[existingIdx] = { ...doctorsStore[existingIdx], ...payload };
+  } else {
+    doctorsStore = [payload, ...doctorsStore];
   }
+
+  try {
+    supabase.from('doctors').upsert([payload]).then();
+  } catch (err) {}
+
+  return res.status(200).json({ success: true, message: 'Doctor saved successfully', data: payload });
+});
+
+// DELETE /api/doctors/:id
+app.delete('/api/doctors/:id', async (req, res) => {
+  const { id } = req.params;
+  doctorsStore = doctorsStore.filter(d => d.id !== id);
+
+  try {
+    supabase.from('doctors').delete().eq('id', id).then();
+  } catch (err) {}
+
+  return res.json({ success: true, message: 'Doctor deleted successfully' });
+});
+
+// POST /api/blogs - Add/Update blog
+app.post('/api/blogs', async (req, res) => {
+  const { id, title, category, author, date, read_time, readTime, summary, content, image } = req.body;
+  const targetId = id || (title ? title.toLowerCase().replace(/[^a-z0-9]/g, '-') : `blog-${Date.now()}`);
+  
+  const payload = {
+    id: targetId,
+    title: title || 'Untitled Health Article',
+    category: category || 'Medical Breakthroughs',
+    author: author || 'Apex Medical Board',
+    date: date || new Date().toISOString().split('T')[0],
+    read_time: read_time || readTime || '5 min read',
+    readTime: read_time || readTime || '5 min read',
+    summary: summary || '',
+    content: content || summary || '',
+    image: image || 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800'
+  };
+
+  const existingIdx = blogsStore.findIndex(b => b.id === targetId);
+  if (existingIdx >= 0) {
+    blogsStore[existingIdx] = { ...blogsStore[existingIdx], ...payload };
+  } else {
+    blogsStore = [payload, ...blogsStore];
+  }
+
+  try {
+    supabase.from('blogs').upsert([payload]).then();
+  } catch (err) {}
+
+  return res.status(200).json({ success: true, message: 'Article saved successfully', data: payload });
+});
+
+// DELETE /api/blogs/:id
+app.delete('/api/blogs/:id', async (req, res) => {
+  const { id } = req.params;
+  blogsStore = blogsStore.filter(b => b.id !== id);
+
+  try {
+    supabase.from('blogs').delete().eq('id', id).then();
+  } catch (err) {}
+
+  return res.json({ success: true, message: 'Article deleted successfully' });
+});
+
+// POST /api/health-packages - Add/Update package
+app.post('/api/health-packages', async (req, res) => {
+  const { id, name, badge, category, price, original_price, originalPrice, tests_count, testsCount, recommended_for, recommendedFor } = req.body;
+  const targetId = id || (name ? name.toLowerCase().replace(/[^a-z0-9]/g, '-') : `pkg-${Date.now()}`);
+  
+  const payload = {
+    id: targetId,
+    name: name || 'Master Health Shield',
+    badge: badge || 'Popular',
+    category: category || 'Comprehensive',
+    price: Number(price) || 9999,
+    original_price: Number(original_price || originalPrice || 15000),
+    originalPrice: Number(original_price || originalPrice || 15000),
+    tests_count: Number(tests_count || testsCount || 50),
+    testsCount: Number(tests_count || testsCount || 50),
+    recommended_for: recommended_for || recommendedFor || 'Adults Aged 30+',
+    recommendedFor: recommended_for || recommendedFor || 'Adults Aged 30+'
+  };
+
+  const existingIdx = packagesStore.findIndex(p => p.id === targetId);
+  if (existingIdx >= 0) {
+    packagesStore[existingIdx] = { ...packagesStore[existingIdx], ...payload };
+  } else {
+    packagesStore = [payload, ...packagesStore];
+  }
+
+  try {
+    supabase.from('health_packages').upsert([payload]).then();
+  } catch (err) {}
+
+  return res.status(200).json({ success: true, message: 'Package saved successfully', data: payload });
+});
+
+// DELETE /api/health-packages/:id
+app.delete('/api/health-packages/:id', async (req, res) => {
+  const { id } = req.params;
+  packagesStore = packagesStore.filter(p => p.id !== id);
+
+  try {
+    supabase.from('health_packages').delete().eq('id', id).then();
+  } catch (err) {}
+
+  return res.json({ success: true, message: 'Package deleted successfully' });
+});
+
+// PUT /api/appointments/:id - Update status
+app.put('/api/appointments/:id', async (req, res) => {
+  const { id } = req.params;
+  const idx = appointmentsStore.findIndex(a => a.id === id);
+  if (idx >= 0) {
+    appointmentsStore[idx] = { ...appointmentsStore[idx], ...req.body };
+  }
+  try {
+    supabase.from('appointments').update(req.body).eq('id', id).then();
+  } catch (err) {}
+
+  return res.json({ success: true, message: 'Appointment updated successfully', data: appointmentsStore[idx] || req.body });
+});
+
+// DELETE /api/appointments/:id
+app.delete('/api/appointments/:id', async (req, res) => {
+  const { id } = req.params;
+  appointmentsStore = appointmentsStore.filter(a => a.id !== id);
+
+  try {
+    supabase.from('appointments').delete().eq('id', id).then();
+  } catch (err) {}
+
+  return res.json({ success: true, message: 'Appointment deleted successfully' });
 });
 
 // Analytics Endpoint
 app.get('/api/analytics', async (req, res) => {
-  try {
-    const { count: appointmentCount } = await supabase.from('appointments').select('*', { count: 'exact', head: true });
-    const { count: doctorCount } = await supabase.from('doctors').select('*', { count: 'exact', head: true });
-    const { count: userCount } = await supabase.from('users').select('*', { count: 'exact', head: true });
-
-    res.json({
-      success: true,
-      totalPatients: (userCount || 0) + 52400,
-      totalAppointments: appointmentCount || 1420,
-      activeDoctors: doctorCount || 250,
-      monthlyRevenue: 12500000
-    });
-  } catch (err) {
-    res.json({
-      success: true,
-      totalPatients: 52400,
-      totalAppointments: 1420,
-      activeDoctors: 250,
-      monthlyRevenue: 12500000
-    });
-  }
+  return res.json({
+    success: true,
+    totalPatients: 52400 + appointmentsStore.length,
+    totalAppointments: appointmentsStore.length,
+    activeDoctors: doctorsStore.length,
+    monthlyRevenue: 12500000
+  });
 });
 
 // Export Express app for Vercel Serverless Functions

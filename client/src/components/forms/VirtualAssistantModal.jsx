@@ -42,7 +42,7 @@ export default function VirtualAssistantModal() {
   };
 
   return (
-    <div className="fixed bottom-24 right-6 z-[9999] w-96 max-w-[calc(100vw-2rem)] bg-white dark:bg-[#122824] rounded-3xl shadow-2xl border border-[#00695C]/20 overflow-hidden flex flex-col h-[500px] animate-in slide-in-from-bottom-5 duration-200">
+    <div className="fixed bottom-16 sm:bottom-24 right-3 sm:right-6 z-[9999] w-96 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-[#122824] rounded-3xl shadow-2xl border border-[#00695C]/20 overflow-hidden flex flex-col h-[450px] sm:h-[500px] max-h-[75vh] animate-in slide-in-from-bottom-5 duration-200">
       
       {/* Top Header */}
       <div className="btn-emerald-gradient p-4 text-white flex items-center justify-between">

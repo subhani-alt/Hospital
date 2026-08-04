@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Users, Calendar, Activity, DollarSign, Stethoscope, FileText, 
   TrendingUp, CheckCircle2, Clock, AlertCircle, Plus, Search, Filter, 
-  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, ExternalLink, Image as ImageIcon
+  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, ExternalLink, Image as ImageIcon, Eye, EyeOff, Upload, Camera
 } from 'lucide-react';
 import { supabase } from '../../config/supabase';
 
@@ -23,13 +23,7 @@ const INITIAL_DOCTORS = [
   { id: 'dr-k-srinivas', name: 'Dr. K. Srinivas', title: 'Senior Director — Interventional Cardiology', department: 'cardiology', dept_name: 'Cardiac Sciences', experience: 26, qualification: 'MD, DM (Cardiology), FACC', consultation_fee: 2200, rating: 4.96, image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600', bio: 'Performed over 15,000 complex coronary angioplasties and pioneer in TAVI/TAVR.' },
   { id: 'dr-vikramaditya-rao', name: 'Dr. Vikramaditya Rao', title: 'Chief of Neurosurgery & Spine Surgery', department: 'neurosciences', dept_name: 'Neurosciences', experience: 24, qualification: 'MS, MCh (Neurosurgery)', consultation_fee: 2200, rating: 4.93, image: '/dr-vikramaditya-rao.png', bio: 'Expert in skull base surgery, awake brain tumor excision, and DBS.' },
   { id: 'dr-rajeshwar-patel', name: 'Dr. Rajeshwar Patel', title: 'Head — Robotic Joint Replacement', department: 'orthopedics', dept_name: 'Orthopedics', experience: 20, qualification: 'MS (Ortho), FRCS, MCh', consultation_fee: 1800, rating: 4.92, image: '/dr-rajeshwar-patel.png', bio: 'Pioneered robotic 3D precision knee and hip joint replacements in South Asia.' },
-  { id: 'dr-sk-mukherjee', name: 'Dr. S. K. Mukherjee', title: 'Director — Nephrology & Transplant Services', department: 'nephrology', dept_name: 'Renal Sciences', experience: 28, qualification: 'MD, DM (Nephrology), FISN', consultation_fee: 2000, rating: 4.97, image: '/dr-sk-mukherjee.png', bio: 'National Nephrologist of Eminence with extensive renal transplant experience.' },
-  { id: 'dr-preeti-deshmukh', name: 'Dr. Preeti Deshmukh', title: 'Senior Director — Gynecological Oncology & Fetal Care', department: 'oncology', dept_name: 'Oncology', experience: 19, qualification: 'MD, DNB (OBG), MRCOG (UK)', consultation_fee: 1900, rating: 4.94, image: 'https://images.unsplash.com/photo-1594824813566-78a93e364906?auto=format&fit=crop&q=80&w=600', bio: 'Specialist in robotic gynecological surgery and advanced high-risk maternal-fetal care.' },
-  { id: 'dr-arvind-swaminathan', name: 'Dr. Arvind Swaminathan', title: 'Director — Pulmonology & Interventional Lung Care', department: 'pulmonology', dept_name: 'Pulmonology', experience: 23, qualification: 'MD, DM (Pulmonary Medicine), FCCP', consultation_fee: 2000, rating: 4.91, image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=600', bio: 'Expert in interventional pulmonology, EBUS-guided biopsy, and severe asthma thermoplasty.' },
-  { id: 'dr-sunita-varma', name: 'Dr. Sunita Varma', title: 'Lead Consultant — Pediatric Surgery & Neonatology', department: 'pediatrics', dept_name: 'Child Health', experience: 18, qualification: 'MS, MCh (Pediatric Surgery), FRCS', consultation_fee: 1700, rating: 4.96, image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=600', bio: 'Renowned pediatric surgeon specializing in neonatal congenital anomaly reconstruction.' },
-  { id: 'dr-ranganathan-iyer', name: 'Dr. Ranganathan Iyer', title: 'Chief Endocrinologist — Diabetes & Metabolic Health', department: 'endocrinology', dept_name: 'Endocrinology', experience: 27, qualification: 'MD, DM (Endocrinology), FRCP', consultation_fee: 2100, rating: 4.95, image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600', bio: 'Pioneer in continuous glucose monitoring technology and insulin pump management.' },
-  { id: 'dr-meera-nambiar', name: 'Dr. Meera Nambiar', title: 'Senior Consultant — Clinical Dermatology & Aesthetics', department: 'dermatology', dept_name: 'Dermatology', experience: 16, qualification: 'MD (Dermatology, Venereology & Leprosy)', consultation_fee: 1600, rating: 4.93, image: 'https://images.unsplash.com/photo-1594824813566-78a93e364906?auto=format&fit=crop&q=80&w=600', bio: 'Specialist in biologic therapy for psoriasis/eczema and advanced laser scar revision.' },
-  { id: 'dr-farhan-qureshi', name: 'Dr. Farhan Qureshi', title: 'Director — ENT & Head-Neck Robotic Surgery', department: 'ent', dept_name: 'ENT Care', experience: 21, qualification: 'MS (ENT), DNB, Fellowship Robotic ENT', consultation_fee: 1800, rating: 4.92, image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600', bio: 'Expert in Transoral Robotic Surgery for throat tumors and cochlear implants.' }
+  { id: 'dr-sk-mukherjee', name: 'Dr. S. K. Mukherjee', title: 'Director — Nephrology & Transplant Services', department: 'nephrology', dept_name: 'Renal Sciences', experience: 28, qualification: 'MD, DM (Nephrology), FISN', consultation_fee: 2000, rating: 4.97, image: '/dr-sk-mukherjee.png', bio: 'National Nephrologist of Eminence with extensive renal transplant experience.' }
 ];
 
 
@@ -70,12 +64,23 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
 
+  const getInitial = (key, fallback) => {
+    try {
+      const cached = localStorage.getItem(key);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return fallback;
+  };
+
   // Database States
-  const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS);
-  const [doctors, setDoctors] = useState(INITIAL_DOCTORS);
-  const [blogs, setBlogs] = useState(INITIAL_BLOGS);
-  const [packages, setPackages] = useState(INITIAL_PACKAGES);
-  const [inquiries, setInquiries] = useState(INITIAL_INQUIRIES);
+  const [appointments, setAppointments] = useState(() => getInitial('apex_appointments', INITIAL_APPOINTMENTS));
+  const [doctors, setDoctors] = useState(() => getInitial('apex_doctors', INITIAL_DOCTORS));
+  const [blogs, setBlogs] = useState(() => getInitial('apex_blogs', INITIAL_BLOGS));
+  const [packages, setPackages] = useState(() => getInitial('apex_packages', INITIAL_PACKAGES));
+  const [inquiries, setInquiries] = useState(() => getInitial('apex_inquiries', INITIAL_INQUIRIES));
 
   // Filter States
   const [statusFilter, setStatusFilter] = useState('all');
@@ -88,7 +93,7 @@ export default function AdminDashboard() {
   // Form States
   const [docForm, setDocForm] = useState({ 
     id: '', name: '', title: '', department: 'gastroenterology', dept_name: 'Gastroenterology', 
-    qualification: '', experience: 10, consultation_fee: 2000, rating: 4.9, image: '', languages: 'English, Hindi', bio: '' 
+    qualification: '', experience: 10, consultation_fee: 2000, rating: 4.9, image: '', languages: 'English, Hindi', bio: '', is_visible: true 
   });
   
   const [blogForm, setBlogForm] = useState({ 
@@ -101,10 +106,6 @@ export default function AdminDashboard() {
     price: 9999, original_price: 15000, tests_count: 50, recommended_for: 'Adults Aged 30+' 
   });
 
-  useEffect(() => {
-    loadAllData();
-  }, []);
-
   const showNotification = (msg) => {
     setNotification(msg);
     setTimeout(() => setNotification(null), 3000);
@@ -113,30 +114,72 @@ export default function AdminDashboard() {
   const loadAllData = async () => {
     setIsLoading(true);
     try {
-      const [appRes, docRes, blogRes, pkgRes, inqRes] = await Promise.all([
-        supabase.from('appointments').select('*').order('created_at', { ascending: false }),
-        supabase.from('doctors').select('*').order('name'),
-        supabase.from('blogs').select('*').order('created_at', { ascending: false }),
-        supabase.from('health_packages').select('*').order('price'),
-        supabase.from('contact_inquiries').select('*').order('created_at', { ascending: false })
+      const [apptRes, docRes, blogRes, pkgRes, inqRes] = await Promise.all([
+        fetch('/api/appointments').then(r => r.json()).catch(() => null),
+        fetch('/api/doctors').then(r => r.json()).catch(() => null),
+        fetch('/api/blogs').then(r => r.json()).catch(() => null),
+        fetch('/api/health-packages').then(r => r.json()).catch(() => null),
+        fetch('/api/contact-inquiries').then(r => r.json()).catch(() => null)
       ]);
 
-      if (appRes.data && appRes.data.length > 0) setAppointments(appRes.data);
-      if (docRes.data && docRes.data.length > 0) setDoctors(docRes.data);
-      if (blogRes.data && blogRes.data.length > 0) setBlogs(blogRes.data);
-      if (pkgRes.data && pkgRes.data.length > 0) setPackages(pkgRes.data);
-      if (inqRes.data && inqRes.data.length > 0) setInquiries(inqRes.data);
+      if (apptRes?.data && apptRes.data.length > 0) {
+        setAppointments(apptRes.data);
+        localStorage.setItem('apex_appointments', JSON.stringify(apptRes.data));
+      }
+      if (docRes?.data && docRes.data.length > 0) {
+        const validDocs = docRes.data.filter(d => d.id !== 'dr-preeti-deshmukh' && d.id !== 'dr-arvind-swaminathan');
+        setDoctors(validDocs);
+        localStorage.setItem('apex_doctors', JSON.stringify(validDocs));
+        window.dispatchEvent(new Event('apex_doctors_updated'));
+      }
+      if (blogRes?.data && blogRes.data.length > 0) {
+        setBlogs(blogRes.data);
+        localStorage.setItem('apex_blogs', JSON.stringify(blogRes.data));
+        window.dispatchEvent(new Event('apex_blogs_updated'));
+      }
+      if (pkgRes?.data && pkgRes.data.length > 0) {
+        setPackages(pkgRes.data);
+        localStorage.setItem('apex_packages', JSON.stringify(pkgRes.data));
+        window.dispatchEvent(new Event('apex_packages_updated'));
+      }
+      if (inqRes?.data && inqRes.data.length > 0) {
+        setInquiries(inqRes.data);
+        localStorage.setItem('apex_inquiries', JSON.stringify(inqRes.data));
+      }
     } catch (err) {
-      console.warn('Failed to load from Supabase:', err);
+      console.warn('Failed to load from backend:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    loadAllData();
+
+    const handleUpdate = () => loadAllData();
+    window.addEventListener('apex_doctors_updated', handleUpdate);
+    window.addEventListener('apex_blogs_updated', handleUpdate);
+    window.addEventListener('apex_packages_updated', handleUpdate);
+    window.addEventListener('apex_appointments_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+
+    return () => {
+      window.removeEventListener('apex_doctors_updated', handleUpdate);
+      window.removeEventListener('apex_blogs_updated', handleUpdate);
+      window.removeEventListener('apex_packages_updated', handleUpdate);
+      window.removeEventListener('apex_appointments_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
   // --- CRUD ACTIONS FOR APPOINTMENTS ---
   const handleUpdateAppointmentStatus = async (id, newStatus) => {
     try {
-      await supabase.from('appointments').update({ status: newStatus }).eq('id', id);
+      await fetch(`/api/appointments/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
     } catch (e) {}
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
     showNotification(`Appointment marked as ${newStatus}`);
@@ -145,7 +188,7 @@ export default function AdminDashboard() {
   const handleDeleteAppointment = async (id) => {
     if (!window.confirm('Delete this appointment record?')) return;
     try {
-      await supabase.from('appointments').delete().eq('id', id);
+      await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
     } catch (e) {}
     setAppointments(prev => prev.filter(a => a.id !== id));
     showNotification('Appointment deleted');
@@ -160,14 +203,15 @@ export default function AdminDashboard() {
       cardiology: 'Cardiac Sciences',
       neurosciences: 'Neurosciences',
       orthopedics: 'Orthopedics',
-      nephrology: 'Renal Sciences'
+      nephrology: 'Renal Sciences',
+      pulmonology: 'Pulmonology'
     };
 
     const payload = {
       id: docForm.id || `doc-${Date.now()}`,
-      name: docForm.name,
-      title: docForm.title,
-      department: docForm.department,
+      name: docForm.name || 'Dr. New Specialist',
+      title: docForm.title || 'Senior Consultant',
+      department: docForm.department || 'gastroenterology',
       dept_name: deptMap[docForm.department] || docForm.dept_name || 'General Medicine',
       qualification: docForm.qualification || 'MD, MBBS',
       experience: Number(docForm.experience) || 10,
@@ -178,19 +222,22 @@ export default function AdminDashboard() {
       bio: docForm.bio || 'Leading medical specialist.'
     };
 
-    const { error } = await supabase.from('doctors').upsert([payload]);
-
-    if (error) {
-      console.error('Supabase Doctor Upsert Error:', error.message);
-      showNotification(`Saved locally (${error.message})`);
-    } else {
-      showNotification('Doctor profile saved to database!');
-    }
-
     setDoctors(prev => {
       const exists = prev.find(d => d.id === payload.id);
       return exists ? prev.map(d => d.id === payload.id ? payload : d) : [payload, ...prev];
     });
+
+    try {
+      const res = await fetch('/api/doctors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showNotification('Doctor profile saved to database!');
+      }
+    } catch (err) {}
 
     try {
       const savedDocs = JSON.parse(localStorage.getItem('apex_doctors') || '[]');
@@ -198,57 +245,113 @@ export default function AdminDashboard() {
         ? savedDocs.map(d => d.id === payload.id ? payload : d) 
         : [payload, ...savedDocs];
       localStorage.setItem('apex_doctors', JSON.stringify(updatedDocs));
+      window.dispatchEvent(new Event('apex_doctors_updated'));
     } catch (e) {}
 
     setActiveModal(null);
   };
 
-  const handleDeleteDoctor = async (id) => {
-    if (!window.confirm('Remove doctor from active roster?')) return;
-    const { error } = await supabase.from('doctors').delete().eq('id', id);
-    if (error) {
-      console.error('Supabase Delete Doctor Error:', error.message);
-    }
-    setDoctors(prev => prev.filter(d => d.id !== id));
-    showNotification('Doctor removed from roster');
+  const handleToggleDoctorVisibility = async (doc) => {
+    const currentVis = doc.is_visible !== undefined ? doc.is_visible : (doc.isVisible !== undefined ? doc.isVisible : true);
+    const newStatus = !currentVis;
+    const updatedDoc = { ...doc, is_visible: newStatus, isVisible: newStatus };
+
+    setDoctors(prev => prev.map(d => d.id === doc.id ? updatedDoc : d));
+
+    try {
+      await fetch('/api/doctors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedDoc)
+      });
+    } catch (e) {}
+
+    try {
+      const savedDocs = JSON.parse(localStorage.getItem('apex_doctors') || '[]');
+      const exists = savedDocs.some(d => d.id === doc.id);
+      const updatedDocs = exists
+        ? savedDocs.map(d => d.id === doc.id ? { ...d, is_visible: newStatus, isVisible: newStatus } : d)
+        : [...savedDocs, updatedDoc];
+      localStorage.setItem('apex_doctors', JSON.stringify(updatedDocs));
+      window.dispatchEvent(new Event('apex_doctors_updated'));
+    } catch (e) {}
+
+    showNotification(`${doc.name} is now ${newStatus ? 'Visible' : 'Hidden'} on website roster`);
   };
 
+  const handleDeleteDoctor = async (id) => {
+    if (!window.confirm('Remove doctor from active roster?')) return;
+    try {
+      await fetch(`/api/doctors/${id}`, { method: 'DELETE' });
+    } catch (e) {}
+    setDoctors(prev => prev.filter(d => d.id !== id));
+    try {
+      const savedDocs = JSON.parse(localStorage.getItem('apex_doctors') || '[]');
+      const updatedDocs = savedDocs.filter(d => d.id !== id);
+      localStorage.setItem('apex_doctors', JSON.stringify(updatedDocs));
+      window.dispatchEvent(new Event('apex_doctors_updated'));
+    } catch (e) {}
+    showNotification('Doctor removed from roster');
+  };
 
   // --- CRUD ACTIONS FOR BLOGS ---
   const handleSaveBlog = async (e) => {
     e.preventDefault();
     const payload = {
       id: blogForm.id || `blog-${Date.now()}`,
-      title: blogForm.title,
-      category: blogForm.category,
-      author: blogForm.author,
+      title: blogForm.title || 'Untitled Health Article',
+      category: blogForm.category || 'Medical Breakthroughs',
+      author: blogForm.author || 'Apex Medical Board',
       date: blogForm.date || '2026-08-02',
       read_time: blogForm.read_time || '5 min read',
-      summary: blogForm.summary,
-      content: blogForm.content || blogForm.summary,
+      summary: blogForm.summary || '',
+      content: blogForm.content || blogForm.summary || '',
       image: blogForm.image || 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800'
     };
-
-    try {
-      await supabase.from('blogs').upsert([payload]);
-      showNotification('Article published to Health Library!');
-    } catch (err) {
-      showNotification('Article saved locally');
-    }
 
     setBlogs(prev => {
       const exists = prev.find(b => b.id === payload.id);
       return exists ? prev.map(b => b.id === payload.id ? payload : b) : [payload, ...prev];
     });
+
+    try {
+      const res = await fetch('/api/blogs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showNotification('Article published to database!');
+      }
+    } catch (err) {}
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('apex_blogs') || '[]');
+      const updated = saved.some(b => b.id === payload.id)
+        ? saved.map(b => b.id === payload.id ? payload : b)
+        : [payload, ...saved];
+      localStorage.setItem('apex_blogs', JSON.stringify(updated));
+      window.dispatchEvent(new Event('apex_blogs_updated'));
+    } catch (e) {}
+
     setActiveModal(null);
   };
 
   const handleDeleteBlog = async (id) => {
     if (!window.confirm('Delete article from Health Library?')) return;
     try {
-      await supabase.from('blogs').delete().eq('id', id);
+      await fetch(`/api/blogs/${id}`, { method: 'DELETE' });
     } catch (e) {}
     setBlogs(prev => prev.filter(b => b.id !== id));
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('apex_blogs') || '[]');
+      const updated = saved.filter(b => b.id !== id);
+      localStorage.setItem('apex_blogs', JSON.stringify(updated));
+      window.dispatchEvent(new Event('apex_blogs_updated'));
+    } catch (e) {}
+
     showNotification('Article deleted');
   };
 
@@ -257,35 +360,58 @@ export default function AdminDashboard() {
     e.preventDefault();
     const payload = {
       id: pkgForm.id || `pkg-${Date.now()}`,
-      name: pkgForm.name,
+      name: pkgForm.name || 'Master Health Shield',
       badge: pkgForm.badge || 'Popular',
-      category: pkgForm.category,
-      price: Number(pkgForm.price),
-      original_price: Number(pkgForm.original_price),
-      tests_count: Number(pkgForm.tests_count),
-      recommended_for: pkgForm.recommended_for
+      category: pkgForm.category || 'Comprehensive',
+      price: Number(pkgForm.price) || 9999,
+      original_price: Number(pkgForm.original_price) || 15000,
+      tests_count: Number(pkgForm.tests_count) || 50,
+      recommended_for: pkgForm.recommended_for || 'Adults Aged 30+'
     };
-
-    try {
-      await supabase.from('health_packages').upsert([payload]);
-      showNotification('Health package saved!');
-    } catch (err) {
-      showNotification('Health package updated locally');
-    }
 
     setPackages(prev => {
       const exists = prev.find(p => p.id === payload.id);
       return exists ? prev.map(p => p.id === payload.id ? payload : p) : [payload, ...prev];
     });
+
+    try {
+      const res = await fetch('/api/health-packages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showNotification('Health package saved to database!');
+      }
+    } catch (err) {}
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('apex_packages') || '[]');
+      const updated = saved.some(p => p.id === payload.id)
+        ? saved.map(p => p.id === payload.id ? payload : p)
+        : [payload, ...saved];
+      localStorage.setItem('apex_packages', JSON.stringify(updated));
+      window.dispatchEvent(new Event('apex_packages_updated'));
+    } catch (e) {}
+
     setActiveModal(null);
   };
 
   const handleDeletePackage = async (id) => {
     if (!window.confirm('Delete package from catalog?')) return;
     try {
-      await supabase.from('health_packages').delete().eq('id', id);
+      await fetch(`/api/health-packages/${id}`, { method: 'DELETE' });
     } catch (e) {}
     setPackages(prev => prev.filter(p => p.id !== id));
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('apex_packages') || '[]');
+      const updated = saved.filter(p => p.id !== id);
+      localStorage.setItem('apex_packages', JSON.stringify(updated));
+      window.dispatchEvent(new Event('apex_packages_updated'));
+    } catch (e) {}
+
     showNotification('Package deleted');
   };
 
@@ -434,14 +560,6 @@ export default function AdminDashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button 
-              onClick={loadAllData}
-              disabled={isLoading}
-              className="bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-full flex items-center gap-2 border border-slate-300 shadow-sm transition"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Refresh Data
-            </button>
-
             {activeTab === 'doctors' && (
               <button 
                 onClick={() => {
@@ -690,48 +808,80 @@ export default function AdminDashboard() {
         {/* DOCTORS */}
         {activeTab === 'doctors' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {doctors.map(doc => (
-              <div key={doc.id} className="bg-white p-6 rounded-3xl border border-slate-200/80 space-y-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-4">
-                    <img src={doc.image || '/dr-ananya-sharma.png'} alt={doc.name} className="w-16 h-16 rounded-2xl object-cover border-2 border-[#00695C] shrink-0" />
-                    <div>
-                      <h3 className="font-bold text-slate-900 text-base">{doc.name}</h3>
-                      <p className="text-xs text-[#00695C] font-semibold">{doc.title}</p>
-                      <span className="inline-block bg-slate-100 text-slate-700 text-[10px] font-semibold px-2 py-0.5 rounded mt-1">{doc.dept_name || doc.department}</span>
+            {doctors.map(doc => {
+              const isVisible = doc.is_visible !== undefined ? doc.is_visible : (doc.isVisible !== undefined ? doc.isVisible : true);
+              return (
+                <div key={doc.id} className={`bg-white p-6 rounded-3xl border ${isVisible ? 'border-slate-200/80' : 'border-amber-200 bg-amber-50/20'} space-y-4 shadow-sm hover:shadow-md transition flex flex-col justify-between relative`}>
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <img src={doc.image || '/dr-ananya-sharma.png'} alt={doc.name} className="w-16 h-16 rounded-2xl object-cover border-2 border-[#00695C] shrink-0" />
+                        <div>
+                          <h3 className="font-bold text-slate-900 text-base">{doc.name}</h3>
+                          <p className="text-xs text-[#00695C] font-semibold">{doc.title}</p>
+                          <span className="inline-block bg-slate-100 text-slate-700 text-[10px] font-semibold px-2 py-0.5 rounded mt-1">{doc.dept_name || doc.department}</span>
+                        </div>
+                      </div>
+
+                      {/* Visibility Status Badge */}
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 shrink-0 ${
+                        isVisible 
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                          : 'bg-amber-100 text-amber-800 border border-amber-300'
+                      }`}>
+                        {isVisible ? <Eye className="w-3 h-3 text-emerald-600" /> : <EyeOff className="w-3 h-3 text-amber-700" />}
+                        {isVisible ? 'Visible' : 'Hidden'}
+                      </span>
+                    </div>
+
+                    <div className="text-xs text-slate-600 space-y-1 pt-2 border-t border-slate-100">
+                      <div><strong>Qualification:</strong> {doc.qualification}</div>
+                      <div><strong>Experience:</strong> {doc.experience} Years</div>
+                      <div><strong>Consultation Fee:</strong> <span className="text-emerald-700 font-bold">₹{doc.consultation_fee}</span></div>
+                      {doc.bio && <div className="text-[11px] text-slate-500 pt-1 line-clamp-2">{doc.bio}</div>}
                     </div>
                   </div>
-                  <div className="text-xs text-slate-600 space-y-1 pt-2 border-t border-slate-100">
-                    <div><strong>Qualification:</strong> {doc.qualification}</div>
-                    <div><strong>Experience:</strong> {doc.experience} Years</div>
-                    <div><strong>Consultation Fee:</strong> <span className="text-emerald-700 font-bold">₹{doc.consultation_fee}</span></div>
-                    {doc.bio && <div className="text-[11px] text-slate-500 pt-1 line-clamp-2">{doc.bio}</div>}
+
+                  <div className="flex items-center justify-between pt-4 border-t border-slate-100 text-xs font-semibold">
+                    <button 
+                      onClick={() => handleToggleDoctorVisibility(doc)}
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-full transition ${
+                        isVisible 
+                          ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' 
+                          : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm'
+                      }`}
+                    >
+                      {isVisible ? <EyeOff className="w-3.5 h-3.5 text-amber-600" /> : <Eye className="w-3.5 h-3.5" />}
+                      <span>{isVisible ? 'Hide from Roster' : 'Make Visible'}</span>
+                    </button>
+
+                    <div className="flex items-center gap-3">
+                      <button onClick={() => { 
+                        setEditItem(doc); 
+                        setDocForm({
+                          id: doc.id,
+                          name: doc.name || '',
+                          title: doc.title || '',
+                          department: doc.department || 'gastroenterology',
+                          dept_name: doc.dept_name || 'Gastroenterology',
+                          qualification: doc.qualification || '',
+                          experience: doc.experience || 10,
+                          consultation_fee: doc.consultation_fee || 2000,
+                          rating: doc.rating || 4.9,
+                          image: doc.image || '',
+                          languages: Array.isArray(doc.languages) ? doc.languages.join(', ') : (doc.languages || 'English'),
+                          bio: doc.bio || '',
+                          is_visible: doc.is_visible !== undefined ? doc.is_visible : (doc.isVisible !== undefined ? doc.isVisible : true)
+                        }); 
+                        setActiveModal('doctor'); 
+                      }} className="text-[#00695C] hover:underline flex items-center gap-1"><Edit className="w-3.5 h-3.5" /> Edit</button>
+                      
+                      <button onClick={() => handleDeleteDoctor(doc.id)} className="text-rose-600 hover:underline flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> Delete</button>
+                    </div>
                   </div>
                 </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <button onClick={() => { 
-                    setEditItem(doc); 
-                    setDocForm({
-                      id: doc.id,
-                      name: doc.name || '',
-                      title: doc.title || '',
-                      department: doc.department || 'gastroenterology',
-                      dept_name: doc.dept_name || 'Gastroenterology',
-                      qualification: doc.qualification || '',
-                      experience: doc.experience || 10,
-                      consultation_fee: doc.consultation_fee || 2000,
-                      rating: doc.rating || 4.9,
-                      image: doc.image || '',
-                      languages: Array.isArray(doc.languages) ? doc.languages.join(', ') : (doc.languages || 'English'),
-                      bio: doc.bio || ''
-                    }); 
-                    setActiveModal('doctor'); 
-                  }} className="text-xs font-semibold text-[#00695C] hover:underline flex items-center gap-1"><Edit className="w-3.5 h-3.5" /> Edit</button>
-                  <button onClick={() => handleDeleteDoctor(doc.id)} className="text-xs font-semibold text-rose-600 hover:underline flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> Remove</button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -858,16 +1008,93 @@ export default function AdminDashboard() {
                   <input type="number" required value={docForm.consultation_fee} onChange={e => setDocForm({...docForm, consultation_fee: e.target.value})} placeholder="e.g. 2000" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
                 </div>
 
-                <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Doctor Photo Image URL / Path</label>
-                  <div className="flex gap-2">
-                    <input type="text" value={docForm.image} onChange={e => setDocForm({...docForm, image: e.target.value})} placeholder="/dr-ananya-sharma.png or Unsplash URL" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="block text-slate-700 font-semibold mb-1">Doctor Photo Image</label>
+                  
+                  <div className="bg-slate-50 border border-slate-300 rounded-xl p-3 flex flex-col sm:flex-row items-center gap-3">
+                    {/* Rectangular Photo Card Preview */}
+                    <div className="relative group shrink-0 w-28 h-16 rounded-md overflow-hidden border border-slate-300 bg-white shadow-sm flex items-center justify-center">
+                      <img
+                        src={docForm.image || '/dr-ananya-sharma.png'}
+                        alt="Doctor Preview"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <label
+                        htmlFor="doctor-photo-upload-admin"
+                        className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center cursor-pointer text-white text-[10px] font-semibold gap-0.5"
+                        title="Click to upload photo"
+                      >
+                        <Camera className="w-4 h-4 text-emerald-400" />
+                        <span>Change</span>
+                      </label>
+                      {docForm.image && (
+                        <button
+                          type="button"
+                          onClick={() => setDocForm({ ...docForm, image: '' })}
+                          className="absolute top-1 right-1 bg-slate-900/90 hover:bg-red-600 text-white rounded p-0.5 transition"
+                          title="Remove photo"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Rectangular Action Controls */}
+                    <div className="flex-1 w-full flex flex-col sm:flex-row items-center gap-2">
+                      <input
+                        type="file"
+                        id="doctor-photo-upload-admin"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          if (!file.type.startsWith('image/')) {
+                            showNotification('Please select a valid image file');
+                            return;
+                          }
+                          const reader = new FileReader();
+                          reader.onload = (uploadEvent) => {
+                            setDocForm(prev => ({ ...prev, image: uploadEvent.target.result }));
+                            showNotification('Photo updated');
+                          };
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                      <label
+                        htmlFor="doctor-photo-upload-admin"
+                        className="w-full sm:w-auto cursor-pointer bg-[#00695C] hover:bg-[#004D40] text-white px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition text-xs shrink-0 shadow-sm"
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Browse Photo</span>
+                      </label>
+
+                      <input
+                        type="text"
+                        value={docForm.image}
+                        onChange={e => setDocForm({ ...docForm, image: e.target.value })}
+                        placeholder="/dr-ananya-sharma.png or Unsplash URL"
+                        className="w-full bg-white border border-slate-300 p-2.5 rounded-xl text-slate-900 focus:border-[#00695C] outline-none transition text-xs placeholder:text-slate-400"
+                      />
+                    </div>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-slate-700 font-semibold mb-1">Languages Spoken</label>
                   <input type="text" value={docForm.languages} onChange={e => setDocForm({...docForm, languages: e.target.value})} placeholder="English, Hindi, Telugu" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">Website Visibility Status</label>
+                  <select 
+                    value={docForm.is_visible !== false ? 'true' : 'false'}
+                    onChange={e => setDocForm({...docForm, is_visible: e.target.value === 'true'})}
+                    className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none font-semibold transition"
+                  >
+                    <option value="true">Visible on Website & Roster</option>
+                    <option value="false">Hidden from Website (Draft / Inactive)</option>
+                  </select>
                 </div>
               </div>
 

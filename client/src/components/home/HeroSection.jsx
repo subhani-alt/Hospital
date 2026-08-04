@@ -157,38 +157,37 @@ export default function HeroSection() {
       </button>
 
       {/* Main Hero Content Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-8 py-16 flex-1 flex flex-col justify-center items-center w-full">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 flex-1 flex flex-col justify-center items-center w-full">
         
-        <div className="max-w-4xl space-y-8 text-center flex flex-col items-center">
-
+        <div className="max-w-4xl space-y-6 sm:space-y-8 text-center flex flex-col items-center">
 
           {/* Main Heading */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white font-heading tracking-tight leading-[1.1] drop-shadow-md">
-            Where Science Meets <br />
-            <span className="text-white">Compassionate Care.</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold text-white font-heading tracking-tight leading-[1.15] sm:leading-[1.1] drop-shadow-md">
+            Where Science Meets <br className="hidden sm:inline" />
+            <span className="text-white"> Compassionate Care.</span>
           </h1>
 
           {/* Search Doctor & Specialty Form in the Middle */}
           <form onSubmit={handleSearchSubmit} className="relative z-30 pt-2 w-full flex justify-center" ref={searchContainerRef}>
-            <div className="glass-panel-dark p-2.5 rounded-full w-full max-w-2xl flex flex-col sm:flex-row items-center gap-2 shadow-2xl border border-white/20 text-left">
-              <div className="flex-1 flex items-center gap-3 px-4 w-full py-1">
-                <Search className="w-5 h-5 text-[#80CBC4]" />
+            <div className="glass-panel-dark p-2 sm:p-2.5 rounded-2xl sm:rounded-full w-full max-w-2xl flex flex-col sm:flex-row items-center gap-2 shadow-2xl border border-white/20 text-left">
+              <div className="flex-1 flex items-center gap-3 px-3 sm:px-4 w-full py-1">
+                <Search className="w-5 h-5 text-[#80CBC4] shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search doctor, procedure or condition (e.g. Dr. Reddy, Ananya, Liver)..."
+                  placeholder="Search doctor, procedure or condition..."
                   value={searchQuery}
                   onFocus={() => setShowDropdown(true)}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
                     setShowDropdown(true);
                   }}
-                  className="w-full bg-transparent text-white placeholder-slate-400 text-sm focus:outline-none py-2"
+                  className="w-full bg-transparent text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none py-2"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => navigate('/appointment')}
-                className="w-full sm:w-auto btn-emerald-gradient text-white font-semibold px-8 py-3.5 rounded-full text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-transform shrink-0 cursor-pointer"
+                className="w-full sm:w-auto btn-emerald-gradient text-white font-semibold px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl sm:rounded-full text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-transform shrink-0 cursor-pointer"
               >
                 <Calendar className="w-4 h-4" />
                 <span>Book Appointment</span>

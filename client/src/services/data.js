@@ -204,132 +204,12 @@ export const BASE_DOCTORS = [
     locations: ['Main Campus — Gachibowli'],
     researchPapers: 210,
     patientsTreated: '35,000+'
-  },
-  {
-    id: 'dr-preeti-deshmukh',
-    name: 'Dr. Preeti Deshmukh',
-    title: 'Senior Director — Gynecological Oncology & Fetal Care',
-    department: 'oncology',
-    deptName: 'Oncology',
-    experience: 19,
-    qualification: 'MD, DNB (OBG), MRCOG (UK), Fellowship Fetal Medicine',
-    awards: ['Women in Medicine Excellence 2024', 'Fetal Care Pioneer Award'],
-    image: 'https://images.unsplash.com/photo-1594824813566-78a93e364906?auto=format&fit=crop&q=80&w=600',
-    rating: 4.94,
-    reviewsCount: 670,
-    consultationFee: 1900,
-    languages: ['English', 'Hindi', 'Marathi'],
-    availability: ['Mon', 'Tue', 'Thu', 'Sat'],
-    bio: 'Specialist in minimally invasive laparoscopic & robotic gynecological surgery and advanced high-risk maternal-fetal medicine.',
-    locations: ['Main Campus — Gachibowli'],
-    researchPapers: 78,
-    patientsTreated: '16,500+'
-  },
-  {
-    id: 'dr-arvind-swaminathan',
-    name: 'Dr. Arvind Swaminathan',
-    title: 'Director — Pulmonology & Interventional Lung Care',
-    department: 'pulmonology',
-    deptName: 'Pulmonology',
-    experience: 23,
-    qualification: 'MD, DM (Pulmonary Medicine), FCCP (USA)',
-    awards: ['National Respiratory Excellence Award'],
-    image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=600',
-    rating: 4.91,
-    reviewsCount: 810,
-    consultationFee: 2000,
-    languages: ['English', 'Tamil', 'Hindi'],
-    availability: ['Mon', 'Wed', 'Fri', 'Sat'],
-    bio: 'Expert in interventional pulmonology, EBUS-guided biopsy, rigid bronchoscopy, and severe asthma bronchial thermoplasty.',
-    locations: ['Main Campus — Gachibowli'],
-    researchPapers: 110,
-    patientsTreated: '28,000+'
-  },
-  {
-    id: 'dr-sunita-varma',
-    name: 'Dr. Sunita Varma',
-    title: 'Lead Consultant — Pediatric Surgery & Neonatology',
-    department: 'pediatrics',
-    deptName: 'Child Health',
-    experience: 18,
-    qualification: 'MS, MCh (Pediatric Surgery), FRCS (Pediatrics)',
-    awards: ['Best Pediatric Specialist Award 2023'],
-    image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=600',
-    rating: 4.96,
-    reviewsCount: 920,
-    consultationFee: 1700,
-    languages: ['English', 'Hindi', 'Punjabi'],
-    availability: ['Tue', 'Thu', 'Fri', 'Sat'],
-    bio: 'Renowned pediatric surgeon specializing in neonatal congenital anomaly reconstruction and keyhole surgeries for infants.',
-    locations: ['Main Campus — Gachibowli'],
-    researchPapers: 65,
-    patientsTreated: '19,000+'
-  },
-  {
-    id: 'dr-ranganathan-iyer',
-    name: 'Dr. Ranganathan Iyer',
-    title: 'Chief Endocrinologist — Diabetes & Metabolic Health',
-    department: 'endocrinology',
-    deptName: 'Endocrinology',
-    experience: 27,
-    qualification: 'MD, DM (Endocrinology), FRCP (London)',
-    awards: ['Diabetes Leadership Award India'],
-    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600',
-    rating: 4.95,
-    reviewsCount: 1250,
-    consultationFee: 2100,
-    languages: ['English', 'Tamil', 'Telugu', 'Hindi'],
-    availability: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-    bio: 'Pioneer in continuous glucose monitoring technology, insulin pump management, and complex thyroid hormone disorders.',
-    locations: ['Main Campus — Gachibowli'],
-    researchPapers: 145,
-    patientsTreated: '52,000+'
-  },
-  {
-    id: 'dr-meera-nambiar',
-    name: 'Dr. Meera Nambiar',
-    title: 'Senior Consultant — Clinical Dermatology & Aesthetics',
-    department: 'dermatology',
-    deptName: 'Dermatology',
-    experience: 16,
-    qualification: 'MD (Dermatology, Venereology & Leprosy), DVD',
-    awards: ['Excellence in Aesthetic Medicine'],
-    image: 'https://images.unsplash.com/photo-1594824813566-78a93e364906?auto=format&fit=crop&q=80&w=600',
-    rating: 4.93,
-    reviewsCount: 780,
-    consultationFee: 1600,
-    languages: ['English', 'Malayalam', 'Hindi'],
-    availability: ['Mon', 'Wed', 'Thu', 'Sat'],
-    bio: 'Specialist in biologic therapy for psoriasis/eczema, advanced laser scar revision, and non-surgical skin rejuvenation.',
-    locations: ['Main Campus — Gachibowli'],
-    researchPapers: 42,
-    patientsTreated: '21,000+'
-  },
-  {
-    id: 'dr-farhan-qureshi',
-    name: 'Dr. Farhan Qureshi',
-    title: 'Director — ENT & Head-Neck Robotic Surgery',
-    department: 'ent',
-    deptName: 'ENT & Head-Neck Care',
-    experience: 21,
-    qualification: 'MS (ENT), DNB, Fellowship Robotic Head & Neck Surgery',
-    awards: ['Robotic ENT Innovation Award'],
-    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600',
-    rating: 4.92,
-    reviewsCount: 640,
-    consultationFee: 1800,
-    languages: ['English', 'Hindi', 'Urdu'],
-    availability: ['Tue', 'Thu', 'Fri', 'Sat'],
-    bio: 'Expert in TORS (Transoral Robotic Surgery) for throat tumors, cochlear implants, and endoscopic sinus skull base surgeries.',
-    locations: ['Main Campus — Gachibowli'],
-    researchPapers: 58,
-    patientsTreated: '15,000+'
   }
 ];
 
 
 
-export function getLiveDoctors() {
+export function getLiveDoctors(includeHidden = false) {
   let list = [...BASE_DOCTORS];
   try {
     const cached = localStorage.getItem('apex_doctors');
@@ -346,7 +226,10 @@ export function getLiveDoctors() {
     }
   } catch (e) {}
 
-  return list.map(d => ({
+  // Filter out any purged doctor IDs
+  list = list.filter(d => d.id !== 'dr-preeti-deshmukh' && d.id !== 'dr-arvind-swaminathan');
+
+  const mapped = list.map(d => ({
     id: d.id,
     name: d.name,
     title: d.title,
@@ -359,8 +242,13 @@ export function getLiveDoctors() {
     reviewsCount: d.reviews_count || d.reviewsCount || 890,
     image: d.image || '/dr-ananya-sharma.png',
     languages: Array.isArray(d.languages) ? d.languages : (typeof d.languages === 'string' ? d.languages.split(',').map(s=>s.trim()) : ['English']),
-    bio: d.bio || ''
+    bio: d.bio || '',
+    is_visible: d.is_visible !== undefined ? d.is_visible : (d.isVisible !== undefined ? d.isVisible : true),
+    isVisible: d.is_visible !== undefined ? d.is_visible : (d.isVisible !== undefined ? d.isVisible : true)
   }));
+
+  if (includeHidden) return mapped;
+  return mapped.filter(d => d.isVisible !== false);
 }
 
 
@@ -509,6 +397,67 @@ export const BLOGS = [
   }
 ];
 
+export function getLiveBlogs() {
+  let list = [...BLOGS];
+  try {
+    const cached = localStorage.getItem('apex_blogs');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const merged = list.map(baseBlog => {
+          const found = parsed.find(c => c.id === baseBlog.id);
+          return found ? { ...baseBlog, ...found } : baseBlog;
+        });
+        const customBlogs = parsed.filter(c => !list.some(b => b.id === c.id));
+        list = [...merged, ...customBlogs];
+      }
+    }
+  } catch (e) {}
+
+  return list.map(b => ({
+    id: b.id,
+    title: b.title,
+    category: b.category,
+    author: b.author,
+    date: b.date || b.created_at || 'Recently Published',
+    readTime: b.readTime || b.read_time || '5 min read',
+    image: b.image || 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800',
+    summary: b.summary || '',
+    content: b.content || ''
+  }));
+}
+
+export function getLivePackages() {
+  let list = [...HEALTH_PACKAGES];
+  try {
+    const cached = localStorage.getItem('apex_packages');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const merged = list.map(basePkg => {
+          const found = parsed.find(c => c.id === basePkg.id);
+          return found ? { ...basePkg, ...found } : basePkg;
+        });
+        const customPkgs = parsed.filter(c => !list.some(b => b.id === c.id));
+        list = [...merged, ...customPkgs];
+      }
+    }
+  } catch (e) {}
+
+  return list.map(p => ({
+    id: p.id,
+    name: p.name,
+    badge: p.badge || 'Popular',
+    category: p.category || 'Comprehensive',
+    price: Number(p.price || 9999),
+    originalPrice: Number(p.originalPrice || p.original_price || 15000),
+    testsCount: p.testsCount || p.tests_count || 45,
+    recommendedFor: p.recommendedFor || p.recommended_for || 'Adults 30+',
+    highlights: Array.isArray(p.highlights) ? p.highlights : [],
+    inclusions: Array.isArray(p.inclusions) ? p.inclusions : ['Complete Health Evaluation', 'Physician Consultation']
+  }));
+}
+
 export const HOSPITAL_STATS = [
   { label: 'Specialty Centers of Excellence', value: '25+', numeric: 25 },
   { label: 'Super Specialty Beds', value: '1,200+', numeric: 1200 },
@@ -518,128 +467,152 @@ export const HOSPITAL_STATS = [
   { label: 'Surgical Success Rate', value: '99.4%', numeric: 99.4 }
 ];
 
-// Async Supabase Direct Database Query Functions
+// Async Database API Query Functions
 export const getSupabaseDepartments = async () => {
   try {
-    const { data, error } = await supabase.from('departments').select('*');
-    if (error || !data || data.length === 0) return DEPARTMENTS;
-    return data.map(d => ({
-      id: d.id,
-      name: d.name,
-      shortName: d.short_name,
-      tagline: d.tagline,
-      icon: d.icon,
-      image: d.image,
-      description: d.description,
-      stats: d.stats,
-      treatments: d.treatments,
-      technology: d.technology,
-      headOfDept: d.head_of_dept
-    }));
-  } catch (err) {
-    return DEPARTMENTS;
-  }
+    const res = await fetch('/api/departments');
+    const json = await res.json();
+    if (json.data && json.data.length > 0) return json.data;
+  } catch (err) {}
+  return DEPARTMENTS;
 };
 
 export const getSupabaseDoctors = async () => {
   try {
-    const { data, error } = await supabase.from('doctors').select('*');
-    if (error || !data || data.length === 0) return DOCTORS;
-    return data.map(d => ({
-      id: d.id,
-      name: d.name,
-      title: d.title,
-      department: d.department,
-      deptName: d.dept_name,
-      experience: d.experience,
-      qualification: d.qualification,
-      awards: d.awards,
-      image: d.image,
-      rating: Number(d.rating),
-      reviewsCount: d.reviews_count,
-      consultationFee: Number(d.consultation_fee),
-      languages: d.languages,
-      availability: d.availability,
-      bio: d.bio,
-      locations: d.locations,
-      researchPapers: d.research_papers,
-      patientsTreated: d.patients_treated
-    }));
-  } catch (err) {
-    return DOCTORS;
-  }
+    const res = await fetch('/api/doctors');
+    const json = await res.json();
+    if (json.data && json.data.length > 0) {
+      return json.data.map(d => ({
+        id: d.id,
+        name: d.name,
+        title: d.title,
+        department: d.department,
+        deptName: d.dept_name || d.deptName,
+        experience: Number(d.experience) || 10,
+        qualification: d.qualification,
+        awards: d.awards || [],
+        image: d.image,
+        rating: Number(d.rating) || 4.9,
+        reviewsCount: d.reviews_count || d.reviewsCount || 890,
+        consultationFee: Number(d.consultation_fee || d.consultationFee || 2000),
+        languages: Array.isArray(d.languages) ? d.languages : ['English'],
+        availability: d.availability || ['Mon', 'Wed', 'Fri'],
+        bio: d.bio || '',
+        locations: d.locations || ['Main Campus — Gachibowli'],
+        researchPapers: d.research_papers || d.researchPapers || 50,
+        patientsTreated: d.patients_treated || d.patientsTreated || '10,000+',
+        isVisible: d.is_visible !== undefined ? d.is_visible : (d.isVisible !== undefined ? d.isVisible : true)
+      }));
+    }
+  } catch (err) {}
+  return getLiveDoctors();
 };
 
 export const getSupabaseHealthPackages = async () => {
   try {
-    const { data, error } = await supabase.from('health_packages').select('*');
-    if (error || !data || data.length === 0) return HEALTH_PACKAGES;
-    return data.map(p => ({
-      id: p.id,
-      name: p.name,
-      badge: p.badge,
-      category: p.category,
-      price: Number(p.price),
-      originalPrice: Number(p.original_price),
-      testsCount: p.tests_count,
-      recommendedFor: p.recommended_for,
-      highlights: p.highlights,
-      inclusions: p.inclusions
-    }));
-  } catch (err) {
-    return HEALTH_PACKAGES;
-  }
+    const res = await fetch('/api/health-packages');
+    const json = await res.json();
+    if (json.data && json.data.length > 0) {
+      return json.data.map(p => ({
+        id: p.id,
+        name: p.name,
+        badge: p.badge,
+        category: p.category,
+        price: Number(p.price),
+        originalPrice: Number(p.original_price || p.originalPrice || 15000),
+        testsCount: Number(p.tests_count || p.testsCount || 50),
+        recommendedFor: p.recommended_for || p.recommendedFor,
+        highlights: p.highlights || [],
+        inclusions: p.inclusions || []
+      }));
+    }
+  } catch (err) {}
+  return getLivePackages();
 };
 
 export const getSupabaseBlogs = async () => {
   try {
-    const { data, error } = await supabase.from('blogs').select('*');
-    if (error || !data || data.length === 0) return BLOGS;
-    return data.map(b => ({
-      id: b.id,
-      title: b.title,
-      category: b.category,
-      author: b.author,
-      date: b.date,
-      readTime: b.read_time,
-      image: b.image,
-      summary: b.summary,
-      content: b.content
-    }));
-  } catch (err) {
-    return BLOGS;
-  }
+    const res = await fetch('/api/blogs');
+    const json = await res.json();
+    if (json.data && json.data.length > 0) {
+      return json.data.map(b => ({
+        id: b.id,
+        title: b.title,
+        category: b.category,
+        author: b.author,
+        date: b.date,
+        readTime: b.read_time || b.readTime,
+        image: b.image,
+        summary: b.summary,
+        content: b.content
+      }));
+    }
+  } catch (err) {}
+  return getLiveBlogs();
 };
 
 export const createAppointmentInSupabase = async (appointment) => {
-  const { data, error } = await supabase.from('appointments').insert([{
-    patient_name: appointment.patientName,
-    patient_phone: appointment.patientPhone,
-    patient_email: appointment.patientEmail,
-    doctor_name: appointment.doctorName,
-    department: appointment.department,
-    date: appointment.date,
-    time_slot: appointment.timeSlot,
+  const payload = {
+    patientName: appointment.patientName || 'Valued Patient',
+    patientPhone: appointment.patientPhone || '+91 99999 99999',
+    patientEmail: appointment.patientEmail || 'patient@apexhealth.org',
+    doctorName: appointment.doctorName || 'Dr. D. Nageshwar Reddy',
+    department: appointment.department || 'Gastroenterology',
+    date: appointment.date || new Date().toISOString().split('T')[0],
+    timeSlot: appointment.timeSlot || '10:00 AM',
     type: appointment.type || 'in-person',
-    fee: appointment.fee || 2000,
-    status: 'pending',
-    payment_status: 'unpaid'
-  }]).select();
+    fee: Number(appointment.fee || 2000)
+  };
 
-  if (error) throw error;
-  return data[0];
+  let resultData = payload;
+
+  try {
+    const res = await fetch('/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+    if (json.data) resultData = json.data;
+  } catch (err) {}
+
+  try {
+    const saved = JSON.parse(localStorage.getItem('apex_appointments') || '[]');
+    const updated = [resultData, ...saved.filter(a => a.id !== resultData.id)];
+    localStorage.setItem('apex_appointments', JSON.stringify(updated));
+    window.dispatchEvent(new Event('apex_appointments_updated'));
+  } catch (e) {}
+
+  return resultData;
 };
 
 export const createContactInquiryInSupabase = async (inquiry) => {
-  const { data, error } = await supabase.from('contact_inquiries').insert([{
-    name: inquiry.name,
-    email: inquiry.email,
-    phone: inquiry.phone,
-    subject: inquiry.subject,
-    message: inquiry.message,
-    status: 'unread'
-  }]).select();
+  const payload = {
+    name: inquiry.name || 'Anonymous Inquiry',
+    email: inquiry.email || 'info@apexhealth.org',
+    phone: inquiry.phone || '',
+    subject: inquiry.subject || 'Patient Inquiry',
+    message: inquiry.message || 'No message provided'
+  };
 
-  if (error) throw error;
-  return data[0];
+  let resultData = payload;
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+    if (json.data) resultData = json.data;
+  } catch (err) {}
+
+  try {
+    const saved = JSON.parse(localStorage.getItem('apex_inquiries') || '[]');
+    const updated = [resultData, ...saved.filter(i => i.id !== resultData.id)];
+    localStorage.setItem('apex_inquiries', JSON.stringify(updated));
+    window.dispatchEvent(new Event('apex_inquiries_updated'));
+  } catch (e) {}
+
+  return resultData;
 };

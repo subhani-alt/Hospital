@@ -280,126 +280,6 @@ const DOCTORS = [
     locations: ['Main Campus — Gachibowli'],
     research_papers: 210,
     patients_treated: '35,000+'
-  },
-  {
-    id: 'dr-preeti-deshmukh',
-    name: 'Dr. Preeti Deshmukh',
-    title: 'Senior Director — Gynecological Oncology & Fetal Care',
-    department: 'oncology',
-    dept_name: 'Oncology',
-    experience: 19,
-    qualification: 'MD, DNB (OBG), MRCOG (UK), Fellowship Fetal Medicine',
-    awards: ['Women in Medicine Excellence 2024', 'Fetal Care Pioneer Award'],
-    image: 'https://images.unsplash.com/photo-1594824813566-78a93e364906?auto=format&fit=crop&q=80&w=600',
-    rating: 4.94,
-    reviews_count: 670,
-    consultation_fee: 1900,
-    languages: ['English', 'Hindi', 'Marathi'],
-    availability: ['Mon', 'Tue', 'Thu', 'Sat'],
-    bio: 'Specialist in minimally invasive laparoscopic & robotic gynecological surgery and advanced high-risk maternal-fetal medicine.',
-    locations: ['Main Campus — Gachibowli'],
-    research_papers: 78,
-    patients_treated: '16,500+'
-  },
-  {
-    id: 'dr-arvind-swaminathan',
-    name: 'Dr. Arvind Swaminathan',
-    title: 'Director — Pulmonology & Interventional Lung Care',
-    department: 'pulmonology',
-    dept_name: 'Pulmonology',
-    experience: 23,
-    qualification: 'MD, DM (Pulmonary Medicine), FCCP (USA)',
-    awards: ['National Respiratory Excellence Award'],
-    image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=600',
-    rating: 4.91,
-    reviews_count: 810,
-    consultation_fee: 2000,
-    languages: ['English', 'Tamil', 'Hindi'],
-    availability: ['Mon', 'Wed', 'Fri', 'Sat'],
-    bio: 'Expert in interventional pulmonology, EBUS-guided biopsy, rigid bronchoscopy, and severe asthma bronchial thermoplasty.',
-    locations: ['Main Campus — Gachibowli'],
-    research_papers: 110,
-    patients_treated: '28,000+'
-  },
-  {
-    id: 'dr-sunita-varma',
-    name: 'Dr. Sunita Varma',
-    title: 'Lead Consultant — Pediatric Surgery & Neonatology',
-    department: 'pediatrics',
-    dept_name: 'Child Health',
-    experience: 18,
-    qualification: 'MS, MCh (Pediatric Surgery), FRCS (Pediatrics)',
-    awards: ['Best Pediatric Specialist Award 2023'],
-    image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=600',
-    rating: 4.96,
-    reviews_count: 920,
-    consultation_fee: 1700,
-    languages: ['English', 'Hindi', 'Punjabi'],
-    availability: ['Tue', 'Thu', 'Fri', 'Sat'],
-    bio: 'Renowned pediatric surgeon specializing in neonatal congenital anomaly reconstruction and keyhole surgeries for infants.',
-    locations: ['Main Campus — Gachibowli'],
-    research_papers: 65,
-    patients_treated: '19,000+'
-  },
-  {
-    id: 'dr-ranganathan-iyer',
-    name: 'Dr. Ranganathan Iyer',
-    title: 'Chief Endocrinologist — Diabetes & Metabolic Health',
-    department: 'endocrinology',
-    dept_name: 'Endocrinology',
-    experience: 27,
-    qualification: 'MD, DM (Endocrinology), FRCP (London)',
-    awards: ['Diabetes Leadership Award India'],
-    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600',
-    rating: 4.95,
-    reviews_count: 1250,
-    consultation_fee: 2100,
-    languages: ['English', 'Tamil', 'Telugu', 'Hindi'],
-    availability: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-    bio: 'Pioneer in continuous glucose monitoring technology, insulin pump management, and complex thyroid hormone disorders.',
-    locations: ['Main Campus — Gachibowli'],
-    research_papers: 145,
-    patients_treated: '52,000+'
-  },
-  {
-    id: 'dr-meera-nambiar',
-    name: 'Dr. Meera Nambiar',
-    title: 'Senior Consultant — Clinical Dermatology & Aesthetics',
-    department: 'dermatology',
-    dept_name: 'Dermatology',
-    experience: 16,
-    qualification: 'MD (Dermatology, Venereology & Leprosy), DVD',
-    awards: ['Excellence in Aesthetic Medicine'],
-    image: 'https://images.unsplash.com/photo-1594824813566-78a93e364906?auto=format&fit=crop&q=80&w=600',
-    rating: 4.93,
-    reviews_count: 780,
-    consultation_fee: 1600,
-    languages: ['English', 'Malayalam', 'Hindi'],
-    availability: ['Mon', 'Wed', 'Thu', 'Sat'],
-    bio: 'Specialist in biologic therapy for psoriasis/eczema, advanced laser scar revision, and non-surgical skin rejuvenation.',
-    locations: ['Main Campus — Gachibowli'],
-    research_papers: 42,
-    patients_treated: '21,000+'
-  },
-  {
-    id: 'dr-farhan-qureshi',
-    name: 'Dr. Farhan Qureshi',
-    title: 'Director — ENT & Head-Neck Robotic Surgery',
-    department: 'ent',
-    dept_name: 'ENT & Head-Neck Care',
-    experience: 21,
-    qualification: 'MS (ENT), DNB, Fellowship Robotic Head & Neck Surgery',
-    awards: ['Robotic ENT Innovation Award'],
-    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600',
-    rating: 4.92,
-    reviews_count: 640,
-    consultation_fee: 1800,
-    languages: ['English', 'Hindi', 'Urdu'],
-    availability: ['Tue', 'Thu', 'Fri', 'Sat'],
-    bio: 'Expert in TORS (Transoral Robotic Surgery) for throat tumors, cochlear implants, and endoscopic sinus skull base surgeries.',
-    locations: ['Main Campus — Gachibowli'],
-    research_papers: 58,
-    patients_treated: '15,000+'
   }
 ];
 
@@ -415,12 +295,15 @@ async function seedData() {
     console.log('Successfully seeded Departments table!');
   }
 
+  // Delete removed doctors from database
+  await supabase.from('doctors').delete().in('id', ['dr-preeti-deshmukh', 'dr-arvind-swaminathan']);
+
   // Seed Doctors
   const { error: docErr } = await supabase.from('doctors').upsert(DOCTORS);
   if (docErr) {
     console.error('Error seeding doctors:', docErr.message);
   } else {
-    console.log('Successfully seeded Doctors table with all 6 faculty doctors!');
+    console.log('Successfully seeded Doctors table with 6 faculty doctors!');
   }
 }
 

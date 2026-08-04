@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { HEALTH_PACKAGES } from '../../services/data';
+import { getLivePackages } from '../../services/data';
 import { Check, Calendar, ShieldCheck, ArrowRight } from 'lucide-react';
 
 export default function HealthPackagesSection() {
   const navigate = useNavigate();
+  const [packagesList, setPackagesList] = useState(() => getLivePackages());
+
+  useEffect(() => {
+    const handleUpdate = () => setPackagesList(getLivePackages());
+    window.addEventListener('apex_packages_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('apex_packages_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
 
   return (
     <section className="py-20 bg-[#F8FCFB] dark:bg-[#0A1917] relative">
@@ -15,7 +26,7 @@ export default function HealthPackagesSection() {
             <span className="text-xs font-semibold uppercase tracking-widest text-[#00695C] dark:text-[#80CBC4]">
               Preventive Healthcare
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold font-heading text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-bold font-heading text-slate-900 dark:text-[#80CBC4] tracking-tight">
               Master Health Shield Packages
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -34,7 +45,7 @@ export default function HealthPackagesSection() {
 
         {/* Packages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {HEALTH_PACKAGES.map((pkg) => (
+          {packagesList.map((pkg) => (
             <div
               key={pkg.id}
               className="bg-white dark:bg-[#122824] rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-md hover:shadow-2xl hover-glow transition-all duration-300 flex flex-col justify-between group relative"

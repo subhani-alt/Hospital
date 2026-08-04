@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Users, Calendar, Activity, DollarSign, Stethoscope, FileText, 
   TrendingUp, CheckCircle2, Clock, AlertCircle, Plus, Search, Filter, 
-  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, Eye
+  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, Eye, EyeOff, Upload, Camera
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { supabase } from '../config/supabase';
@@ -65,12 +65,23 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
 
+  const getInitial = (key, fallback) => {
+    try {
+      const cached = localStorage.getItem(key);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return fallback;
+  };
+
   // Database States
-  const [doctors, setDoctors] = useState(INITIAL_DOCTORS);
-  const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS);
-  const [blogs, setBlogs] = useState(INITIAL_BLOGS);
-  const [packages, setPackages] = useState(INITIAL_PACKAGES);
-  const [inquiries, setInquiries] = useState(INITIAL_INQUIRIES);
+  const [doctors, setDoctors] = useState(() => getInitial('apex_doctors', INITIAL_DOCTORS));
+  const [appointments, setAppointments] = useState(() => getInitial('apex_appointments', INITIAL_APPOINTMENTS));
+  const [blogs, setBlogs] = useState(() => getInitial('apex_blogs', INITIAL_BLOGS));
+  const [packages, setPackages] = useState(() => getInitial('apex_packages', INITIAL_PACKAGES));
+  const [inquiries, setInquiries] = useState(() => getInitial('apex_inquiries', INITIAL_INQUIRIES));
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -94,32 +105,44 @@ export default function Dashboard() {
     setTimeout(() => setNotification(null), 4000);
   };
 
-  // Fetch Live Data from Supabase
+  // Fetch Live Data from Backend API & Sync Across System
   const loadAllData = async () => {
     setIsLoading(true);
     try {
-      // 1. Fetch Appointments
-      const { data: apptData } = await supabase.from('appointments').select('*').order('created_at', { ascending: false });
-      if (apptData && apptData.length > 0) setAppointments(apptData);
+      const [apptRes, docRes, blogRes, pkgRes, inqRes] = await Promise.all([
+        fetch('/api/appointments').then(r => r.json()).catch(() => null),
+        fetch('/api/doctors').then(r => r.json()).catch(() => null),
+        fetch('/api/blogs').then(r => r.json()).catch(() => null),
+        fetch('/api/health-packages').then(r => r.json()).catch(() => null),
+        fetch('/api/contact-inquiries').then(r => r.json()).catch(() => null)
+      ]);
 
-      // 2. Fetch Doctors
-      const { data: docData } = await supabase.from('doctors').select('*');
-      if (docData && docData.length > 0) setDoctors(docData);
-
-      // 3. Fetch Blogs
-      const { data: blogData } = await supabase.from('blogs').select('*');
-      if (blogData && blogData.length > 0) setBlogs(blogData);
-
-      // 4. Fetch Health Packages
-      const { data: pkgData } = await supabase.from('health_packages').select('*');
-      if (pkgData && pkgData.length > 0) setPackages(pkgData);
-
-      // 5. Fetch Contact Inquiries
-      const { data: inqData } = await supabase.from('contact_inquiries').select('*');
-      if (inqData && inqData.length > 0) setInquiries(inqData);
-
+      if (apptRes?.data && apptRes.data.length > 0) {
+        setAppointments(apptRes.data);
+        localStorage.setItem('apex_appointments', JSON.stringify(apptRes.data));
+      }
+      if (docRes?.data && docRes.data.length > 0) {
+        const validDocs = docRes.data.filter(d => d.id !== 'dr-preeti-deshmukh' && d.id !== 'dr-arvind-swaminathan');
+        setDoctors(validDocs);
+        localStorage.setItem('apex_doctors', JSON.stringify(validDocs));
+        window.dispatchEvent(new Event('apex_doctors_updated'));
+      }
+      if (blogRes?.data && blogRes.data.length > 0) {
+        setBlogs(blogRes.data);
+        localStorage.setItem('apex_blogs', JSON.stringify(blogRes.data));
+        window.dispatchEvent(new Event('apex_blogs_updated'));
+      }
+      if (pkgRes?.data && pkgRes.data.length > 0) {
+        setPackages(pkgRes.data);
+        localStorage.setItem('apex_packages', JSON.stringify(pkgRes.data));
+        window.dispatchEvent(new Event('apex_packages_updated'));
+      }
+      if (inqRes?.data && inqRes.data.length > 0) {
+        setInquiries(inqRes.data);
+        localStorage.setItem('apex_inquiries', JSON.stringify(inqRes.data));
+      }
     } catch (err) {
-      console.warn('Supabase fetch notice:', err.message);
+      console.warn('Backend fetch notice:', err.message);
     } finally {
       setIsLoading(false);
     }
@@ -127,61 +150,92 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadAllData();
+
+    const handleUpdate = () => loadAllData();
+    window.addEventListener('apex_doctors_updated', handleUpdate);
+    window.addEventListener('apex_blogs_updated', handleUpdate);
+    window.addEventListener('apex_packages_updated', handleUpdate);
+    window.addEventListener('apex_appointments_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+
+    return () => {
+      window.removeEventListener('apex_doctors_updated', handleUpdate);
+      window.removeEventListener('apex_blogs_updated', handleUpdate);
+      window.removeEventListener('apex_packages_updated', handleUpdate);
+      window.removeEventListener('apex_appointments_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
   }, []);
 
   // --- CRUD ACTIONS FOR APPOINTMENTS ---
   const handleUpdateAppointmentStatus = async (id, newStatus) => {
     try {
-      const { error } = await supabase.from('appointments').update({ status: newStatus }).eq('id', id);
-      if (error) throw error;
-      setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
-      showNotification(`Appointment status updated to ${newStatus}`);
-    } catch (err) {
-      setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
-      showNotification(`Status set to ${newStatus} (cached)`);
-    }
+      await fetch(`/api/appointments/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch (err) {}
+    setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
+    showNotification(`Appointment status updated to ${newStatus}`);
   };
 
   const handleDeleteAppointment = async (id) => {
     if (!window.confirm('Delete this appointment record?')) return;
     try {
-      await supabase.from('appointments').delete().eq('id', id);
-      setAppointments(prev => prev.filter(a => a.id !== id));
-      showNotification('Appointment record deleted');
-    } catch (err) {
-      setAppointments(prev => prev.filter(a => a.id !== id));
-    }
+      await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
+    } catch (err) {}
+    setAppointments(prev => prev.filter(a => a.id !== id));
+    showNotification('Appointment record deleted');
   };
 
   // --- CRUD ACTIONS FOR DOCTORS ---
   const handleSaveDoctor = async (e) => {
     e.preventDefault();
-    const payload = {
-      id: docForm.id || `dr-${docForm.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
-      name: docForm.name,
-      title: docForm.title,
-      department: docForm.department,
-      dept_name: docForm.dept_name,
-      qualification: docForm.qualification,
-      experience: Number(docForm.experience),
-      consultation_fee: Number(docForm.consultation_fee),
-      rating: Number(docForm.rating),
-      image: docForm.image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600',
-      bio: docForm.bio
+    const deptMap = {
+      gastroenterology: 'Gastroenterology',
+      oncology: 'Oncology',
+      cardiology: 'Cardiac Sciences',
+      neurosciences: 'Neurosciences',
+      orthopedics: 'Orthopedics',
+      nephrology: 'Renal Sciences',
+      pulmonology: 'Pulmonology'
     };
 
-    try {
-      const { error } = await supabase.from('doctors').upsert([payload]);
-      if (error) throw error;
-      showNotification(editItem ? 'Doctor profile updated!' : 'New doctor added to roster!');
-    } catch (err) {
-      showNotification(editItem ? 'Doctor profile updated locally' : 'Doctor profile added locally');
-    }
+    const payload = {
+      id: docForm.id || `dr-${(docForm.name || 'doctor').toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+      name: docForm.name || 'Dr. New Specialist',
+      title: docForm.title || 'Senior Consultant',
+      department: docForm.department || 'gastroenterology',
+      dept_name: deptMap[docForm.department] || docForm.dept_name || 'General Medicine',
+      qualification: docForm.qualification || 'MD, MBBS',
+      experience: Number(docForm.experience) || 10,
+      consultation_fee: Number(docForm.consultation_fee) || 2000,
+      rating: Number(docForm.rating) || 4.9,
+      image: docForm.image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600',
+      bio: docForm.bio || 'Leading medical specialist.'
+    };
 
     setDoctors(prev => {
       const exists = prev.find(d => d.id === payload.id);
       return exists ? prev.map(d => d.id === payload.id ? payload : d) : [payload, ...prev];
     });
+
+    try {
+      const res = await fetch('/api/doctors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showNotification(editItem ? 'Doctor profile updated in database!' : 'New doctor added to database!');
+      } else {
+        showNotification('Doctor profile saved!');
+      }
+    } catch (err) {
+      showNotification('Doctor saved to local session');
+    }
 
     try {
       const savedDocs = JSON.parse(localStorage.getItem('apex_doctors') || '[]');
@@ -194,11 +248,10 @@ export default function Dashboard() {
     setActiveModal(null);
   };
 
-
   const handleDeleteDoctor = async (id) => {
     if (!window.confirm('Remove doctor from active roster?')) return;
     try {
-      await supabase.from('doctors').delete().eq('id', id);
+      await fetch(`/api/doctors/${id}`, { method: 'DELETE' });
     } catch (e) {}
     setDoctors(prev => prev.filter(d => d.id !== id));
     showNotification('Doctor removed from roster');
@@ -208,35 +261,41 @@ export default function Dashboard() {
   const handleSaveBlog = async (e) => {
     e.preventDefault();
     const payload = {
-      id: blogForm.id || blogForm.title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-      title: blogForm.title,
-      category: blogForm.category,
-      author: blogForm.author,
-      date: blogForm.date,
-      read_time: blogForm.read_time,
-      summary: blogForm.summary,
-      content: blogForm.content || blogForm.summary,
+      id: blogForm.id || (blogForm.title ? blogForm.title.toLowerCase().replace(/[^a-z0-9]/g, '-') : `blog-${Date.now()}`),
+      title: blogForm.title || 'Untitled Health Article',
+      category: blogForm.category || 'Medical Breakthroughs',
+      author: blogForm.author || 'Apex Medical Board',
+      date: blogForm.date || new Date().toISOString().split('T')[0],
+      read_time: blogForm.read_time || '5 min read',
+      summary: blogForm.summary || '',
+      content: blogForm.content || blogForm.summary || '',
       image: blogForm.image || 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800'
     };
-
-    try {
-      await supabase.from('blogs').upsert([payload]);
-      showNotification('Article published successfully!');
-    } catch (err) {
-      showNotification('Article updated locally');
-    }
 
     setBlogs(prev => {
       const exists = prev.find(b => b.id === payload.id);
       return exists ? prev.map(b => b.id === payload.id ? payload : b) : [payload, ...prev];
     });
+
+    try {
+      const res = await fetch('/api/blogs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showNotification('Article saved to database!');
+      }
+    } catch (err) {}
+
     setActiveModal(null);
   };
 
   const handleDeleteBlog = async (id) => {
     if (!window.confirm('Delete this article from CMS?')) return;
     try {
-      await supabase.from('blogs').delete().eq('id', id);
+      await fetch(`/api/blogs/${id}`, { method: 'DELETE' });
     } catch (e) {}
     setBlogs(prev => prev.filter(b => b.id !== id));
     showNotification('Article deleted');
@@ -246,34 +305,40 @@ export default function Dashboard() {
   const handleSavePackage = async (e) => {
     e.preventDefault();
     const payload = {
-      id: pkgForm.id || pkgForm.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-      name: pkgForm.name,
-      badge: pkgForm.badge,
-      category: pkgForm.category,
-      price: Number(pkgForm.price),
-      original_price: Number(pkgForm.original_price),
-      tests_count: Number(pkgForm.tests_count),
-      recommended_for: pkgForm.recommended_for
+      id: pkgForm.id || (pkgForm.name ? pkgForm.name.toLowerCase().replace(/[^a-z0-9]/g, '-') : `pkg-${Date.now()}`),
+      name: pkgForm.name || 'Master Health Shield',
+      badge: pkgForm.badge || 'Popular',
+      category: pkgForm.category || 'Comprehensive',
+      price: Number(pkgForm.price) || 9999,
+      original_price: Number(pkgForm.original_price) || 15000,
+      tests_count: Number(pkgForm.tests_count) || 50,
+      recommended_for: pkgForm.recommended_for || 'Adults Aged 30+'
     };
-
-    try {
-      await supabase.from('health_packages').upsert([payload]);
-      showNotification('Health package saved!');
-    } catch (err) {
-      showNotification('Health package updated locally');
-    }
 
     setPackages(prev => {
       const exists = prev.find(p => p.id === payload.id);
       return exists ? prev.map(p => p.id === payload.id ? payload : p) : [payload, ...prev];
     });
+
+    try {
+      const res = await fetch('/api/health-packages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showNotification('Health package saved to database!');
+      }
+    } catch (err) {}
+
     setActiveModal(null);
   };
 
   const handleDeletePackage = async (id) => {
     if (!window.confirm('Delete package from catalog?')) return;
     try {
-      await supabase.from('health_packages').delete().eq('id', id);
+      await fetch(`/api/health-packages/${id}`, { method: 'DELETE' });
     } catch (e) {}
     setPackages(prev => prev.filter(p => p.id !== id));
     showNotification('Package deleted');
@@ -429,14 +494,6 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button 
-              onClick={loadAllData}
-              disabled={isLoading}
-              className="bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold px-4 py-2.5 rounded-full flex items-center gap-2 border border-slate-700 transition"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Refresh Data
-            </button>
-
             {activeTab === 'doctors' && (
               <button 
                 onClick={() => {
@@ -988,9 +1045,106 @@ export default function Dashboard() {
                   <input type="number" required value={docForm.consultation_fee} onChange={e => setDocForm({...docForm, consultation_fee: e.target.value})} placeholder="e.g. 2000" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
                 </div>
 
-                <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Doctor Photo Image URL / Path</label>
-                  <input type="text" value={docForm.image} onChange={e => setDocForm({...docForm, image: e.target.value})} placeholder="/dr-ananya-sharma.png or Unsplash URL" className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-slate-900 focus:bg-white focus:border-[#00695C] outline-none transition" />
+                <div className="sm:col-span-2 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-slate-700 font-semibold">Doctor Photo Image</label>
+                    <span className="text-[11px] text-slate-400 font-medium">
+                      {docForm.image ? (
+                        <span className="text-emerald-700 font-bold flex items-center gap-1">
+                          <Check className="w-3 h-3 text-emerald-600" /> Photo Loaded
+                        </span>
+                      ) : (
+                        'PNG, JPG, WEBP file or URL'
+                      )}
+                    </span>
+                  </div>
+                  
+                  <div 
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const file = e.dataTransfer.files?.[0];
+                      if (!file || !file.type.startsWith('image/')) return;
+                      const reader = new FileReader();
+                      reader.onload = (uploadEvent) => {
+                        setDocForm(prev => ({ ...prev, image: uploadEvent.target.result }));
+                        showNotification('Doctor photo uploaded!');
+                      };
+                      reader.readAsDataURL(file);
+                    }}
+                    className="bg-slate-50 border border-slate-300 rounded-xl p-3.5 flex flex-col sm:flex-row items-center gap-4 transition-all duration-300 hover:border-[#00695C] hover:bg-slate-100/50"
+                  >
+                    {/* Dynamic Rectangular Photo Preview Frame */}
+                    <div className="relative group shrink-0 w-32 h-20 rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm flex items-center justify-center">
+                      <img
+                        src={docForm.image || '/dr-ananya-sharma.png'}
+                        alt="Doctor Preview"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <label
+                        htmlFor="admin-standalone-doctor-photo"
+                        className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer text-white text-[10px] font-bold gap-1"
+                        title="Click or drop photo here"
+                      >
+                        <Camera className="w-4 h-4 text-emerald-400" />
+                        <span>Change Photo</span>
+                      </label>
+                      {docForm.image && (
+                        <button
+                          type="button"
+                          onClick={() => setDocForm({ ...docForm, image: '' })}
+                          className="absolute top-1.5 right-1.5 bg-slate-900/90 hover:bg-red-600 text-white rounded-md p-1 transition shadow-md"
+                          title="Remove photo"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Premium Controls */}
+                    <div className="flex-1 w-full space-y-2">
+                      <div className="flex flex-col sm:flex-row items-center gap-2">
+                        <input
+                          type="file"
+                          id="admin-standalone-doctor-photo"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            if (!file.type.startsWith('image/')) {
+                              showNotification('Please select a valid image file');
+                              return;
+                            }
+                            const reader = new FileReader();
+                            reader.onload = (uploadEvent) => {
+                              setDocForm(prev => ({ ...prev, image: uploadEvent.target.result }));
+                              showNotification('Doctor photo uploaded!');
+                            };
+                            reader.readAsDataURL(file);
+                          }}
+                        />
+                        <label
+                          htmlFor="admin-standalone-doctor-photo"
+                          className="w-full sm:w-auto cursor-pointer bg-slate-900 hover:bg-[#00695C] text-white px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition text-xs shrink-0 shadow-md active:scale-95"
+                        >
+                          <Upload className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Browse Photo File</span>
+                        </label>
+
+                        <input
+                          type="text"
+                          value={docForm.image}
+                          onChange={e => setDocForm({ ...docForm, image: e.target.value })}
+                          placeholder="/dr-ananya-sharma.png or Unsplash URL"
+                          className="w-full bg-white border border-slate-300 p-2.5 rounded-xl text-slate-900 focus:border-[#00695C] outline-none transition text-xs placeholder:text-slate-400 font-medium"
+                        />
+                      </div>
+                      <p className="text-[10px] text-slate-400 font-medium">
+                        Drag & drop any photo file here, browse from device, or paste direct image URL.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div>

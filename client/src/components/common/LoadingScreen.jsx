@@ -11,7 +11,7 @@ export default function LoadingScreen({ onComplete }) {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [onComplete]);
+  }, []);
 
   return (
     <div
