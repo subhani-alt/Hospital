@@ -34,8 +34,8 @@ export default function ChairmanSection() {
                   <p className="text-xs text-[#80CBC4]">{chairman.title}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <span className="text-sm font-bold text-[#80CBC4] block leading-none">38+ Yrs</span>
-                  <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block mt-0.5">Experience</span>
+                  <span className="text-base font-extrabold text-white block leading-none font-heading">{chairman.experience}+ Yrs</span>
+                  <span className="text-[10px] text-white/80 font-semibold uppercase tracking-wider block mt-1">Experience</span>
                 </div>
               </div>
             </div>
