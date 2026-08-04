@@ -466,13 +466,11 @@ export default function AdminDashboard() {
         <div className="space-y-8">
           
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#00695C] to-[#00897B] flex items-center justify-center text-white shadow-md">
-              <Activity className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold tracking-tight text-slate-900">APEX ADMIN</h2>
-              <span className="text-[10px] text-[#00695C] uppercase tracking-widest font-bold block">Hospital CMS & Command</span>
-            </div>
+            <img
+              src="/prestige-logo-dark.png"
+              alt="Prestige Hospitals Admin"
+              className="h-10 sm:h-12 w-auto object-contain"
+            />
           </div>
 
           <nav className="space-y-1.5 text-xs font-semibold">
