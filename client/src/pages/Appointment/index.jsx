@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DEPARTMENTS, getLiveDoctors, createAppointmentInSupabase } from '../../services/data';
+import { DEPARTMENTS, getLiveDoctors, getSupabaseDoctors, createAppointmentInSupabase } from '../../services/data';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle2, ShieldCheck, CreditCard, Sparkles, ChevronDown, Check, Building2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useSearchParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ export default function Appointment() {
   const [deptSearchQuery, setDeptSearchQuery] = useState('');
   const [doctorsList, setDoctorsList] = useState(() => getLiveDoctors());
   const deptDropdownRef = useRef(null);
+  const doctorSectionRef = useRef(null);
 
   // Custom Calendar State
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -24,7 +25,17 @@ export default function Appointment() {
   const calendarRef = useRef(null);
 
   useEffect(() => {
-    const handleUpdate = () => setDoctorsList(getLiveDoctors());
+    async function loadDocs() {
+      const live = await getSupabaseDoctors();
+      if (live && live.length > 0) {
+        setDoctorsList(live);
+      } else {
+        setDoctorsList(getLiveDoctors());
+      }
+    }
+    loadDocs();
+
+    const handleUpdate = () => loadDocs();
     window.addEventListener('apex_doctors_updated', handleUpdate);
     window.addEventListener('storage', handleUpdate);
     return () => {
@@ -243,14 +254,29 @@ export default function Appointment() {
                                   key={dept.id}
                                   onClick={() => {
                                     setSelectedDept(dept.id);
-                                    const docs = DOCTORS.filter((doc) => doc.department === dept.id);
+                                    const docs = doctorsList.filter((doc) => doc.department === dept.id || (doc.deptName && doc.deptName.toLowerCase().includes(dept.id.toLowerCase())) || (doc.dept_name && doc.dept_name.toLowerCase().includes(dept.id.toLowerCase())));
                                     if (docs.length) {
                                       setSelectedDoctor(docs[0]);
                                     } else {
-                                      setSelectedDoctor(null);
+                                      setSelectedDoctor({
+                                        id: `oncall-${dept.id}`,
+                                        name: `Senior Consultant (${dept.shortName})`,
+                                        title: 'Senior Faculty & On-Call Specialist',
+                                        department: dept.id,
+                                        deptName: dept.shortName,
+                                        consultationFee: 2000,
+                                        rating: 4.9,
+                                        experience: 15,
+                                        image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600'
+                                      });
                                     }
                                     setIsDeptDropdownOpen(false);
                                     setDeptSearchQuery('');
+                                    setTimeout(() => {
+                                      if (doctorSectionRef.current) {
+                                        doctorSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                      }
+                                    }, 100);
                                   }}
                                   className={`p-3 rounded-xl cursor-pointer transition-all duration-200 flex items-center justify-between group ${
                                     isSelected
@@ -291,10 +317,10 @@ export default function Appointment() {
 
                   {/* Show Doctors after Department Selection */}
                   {selectedDept !== '' && (
-                    <div className="space-y-4 animate-in fade-in duration-200 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <div ref={doctorSectionRef} className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 pt-4 border-t border-slate-100 dark:border-slate-800">
                       <div className="flex items-center justify-between">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
-                          Specialist Doctors in {DEPARTMENTS.find((d) => d.id === selectedDept)?.shortName} ({availableDoctors.length})
+                          Specialist Doctors in {DEPARTMENTS.find((d) => d.id === selectedDept)?.shortName || 'Specialty'} ({availableDoctors.length})
                         </label>
                         <span className="text-xs text-[#00695C] dark:text-[#80CBC4] font-medium">
                           Select doctor to proceed
@@ -302,40 +328,73 @@ export default function Appointment() {
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {availableDoctors.map((doc) => (
-                          <div
-                            key={doc.id}
-                            onClick={() => setSelectedDoctor(doc)}
-                            className={`p-4 rounded-2xl border cursor-pointer transition flex items-center gap-4 ${
-                              selectedDoctor?.id === doc.id
-                                ? 'border-[#00695C] bg-[#E0F2F1] dark:bg-[#00695C]/20 shadow-md ring-2 ring-[#00695C]'
-                                : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5'
-                            }`}
-                          >
-                            <img
-                              src={doc.image}
-                              alt={doc.name}
-                              className="w-14 h-14 rounded-full object-cover border-2 border-[#00695C] shrink-0"
-                            />
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between">
-                                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                                  {doc.name}
-                                </h4>
-                                <span className="text-xs text-amber-500 font-bold shrink-0 ml-1">
-                                  ★ {doc.rating}
-                                </span>
+                        {availableDoctors.length > 0 ? (
+                          availableDoctors.map((doc) => (
+                            <div
+                              key={doc.id}
+                              onClick={() => setSelectedDoctor(doc)}
+                              className={`p-4 rounded-2xl border cursor-pointer transition flex items-center gap-4 ${
+                                selectedDoctor?.id === doc.id
+                                  ? 'border-[#00695C] bg-[#E0F2F1] dark:bg-[#00695C]/20 shadow-md ring-2 ring-[#00695C]'
+                                  : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5'
+                              }`}
+                            >
+                              <img
+                                src={doc.image}
+                                alt={doc.name}
+                                className="w-14 h-14 rounded-full object-cover border-2 border-[#00695C] shrink-0"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                                    {doc.name}
+                                  </h4>
+                                  <span className="text-xs text-amber-500 font-bold shrink-0 ml-1">
+                                    ★ {doc.rating || 4.9}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-medium">
+                                  {doc.title}
+                                </p>
+                                <div className="flex items-center gap-3 mt-1.5 text-xs text-[#00695C] dark:text-[#80CBC4] font-semibold">
+                                  <span>{doc.experience || 10} Yrs Exp</span>
+                                  <span>• Fee: ₹{doc.consultationFee || 2000}</span>
+                                </div>
                               </div>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-medium">
-                                {doc.title}
+                            </div>
+                          ))
+                        ) : (
+                          <div
+                            onClick={() => setSelectedDoctor({
+                              id: `oncall-${selectedDept}`,
+                              name: `Senior Faculty Specialist`,
+                              title: `On-Call Specialist (${DEPARTMENTS.find((d) => d.id === selectedDept)?.shortName})`,
+                              department: selectedDept,
+                              deptName: DEPARTMENTS.find((d) => d.id === selectedDept)?.shortName,
+                              consultationFee: 2000,
+                              rating: 4.9,
+                              experience: 15,
+                              image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600'
+                            })}
+                            className="sm:col-span-2 p-4 rounded-2xl border border-[#00695C] bg-[#E0F2F1] dark:bg-[#00695C]/20 shadow-md ring-2 ring-[#00695C] flex items-center gap-4 cursor-pointer"
+                          >
+                            <div className="w-14 h-14 rounded-full bg-[#00695C] text-white flex items-center justify-center font-bold text-lg shrink-0">
+                              APEX
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                                Senior Faculty Specialist ({DEPARTMENTS.find((d) => d.id === selectedDept)?.shortName})
+                              </h4>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                                Available for Priority Consultation
                               </p>
-                              <div className="flex items-center gap-3 mt-1.5 text-xs text-[#00695C] dark:text-[#80CBC4] font-semibold">
-                                <span>{doc.experience} Yrs Exp</span>
-                                <span>• Fee: ₹{doc.consultationFee}</span>
+                              <div className="flex items-center gap-3 mt-1 text-xs text-[#00695C] dark:text-[#80CBC4] font-semibold">
+                                <span>15+ Yrs Exp</span>
+                                <span>• Fee: ₹2000</span>
                               </div>
                             </div>
                           </div>
-                        ))}
+                        )}
                       </div>
                     </div>
                   )}
