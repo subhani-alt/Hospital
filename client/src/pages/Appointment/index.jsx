@@ -6,6 +6,14 @@ import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
 import { submitAppointmentToSheet } from '../../services/googleSheets';
 
+const getTodayDateStr = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export default function Appointment() {
   const { bookingDraft, updateBookingDraft, resetBookingDraft } = useStore();
   const [searchParams] = useSearchParams();
@@ -21,7 +29,7 @@ export default function Appointment() {
 
   // Custom Calendar State
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [calendarViewDate, setCalendarViewDate] = useState(new Date(2026, 6, 1)); // July 2026
+  const [calendarViewDate, setCalendarViewDate] = useState(() => new Date());
   const calendarRef = useRef(null);
 
   useEffect(() => {
@@ -56,7 +64,7 @@ export default function Appointment() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-  const [bookingDate, setBookingDate] = useState('2026-07-30');
+  const [bookingDate, setBookingDate] = useState(() => getTodayDateStr());
   const [timeSlot, setTimeSlot] = useState('10:30 AM');
   const [patientName, setPatientName] = useState('');
   const [patientPhone, setPatientPhone] = useState('');
@@ -549,7 +557,7 @@ export default function Appointment() {
                                 const month = calendarViewDate.getMonth();
                                 const firstDayIndex = new Date(year, month, 1).getDay();
                                 const daysInMonth = new Date(year, month + 1, 0).getDate();
-                                const todayStr = '2026-07-30';
+                                const todayStr = getTodayDateStr();
 
                                 const cells = [];
                                 // Empty slots for previous month offset
@@ -597,13 +605,13 @@ export default function Appointment() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setBookingDate('2026-07-30');
-                                  setCalendarViewDate(new Date(2026, 6, 1));
+                                  setBookingDate(getTodayDateStr());
+                                  setCalendarViewDate(new Date());
                                   setIsCalendarOpen(false);
                                 }}
                                 className="text-[#00695C] dark:text-[#80CBC4] font-bold hover:underline cursor-pointer"
                               >
-                                Select Today (July 30)
+                                Select Today ({new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})
                               </button>
                               <button
                                 type="button"
@@ -622,7 +630,8 @@ export default function Appointment() {
                     <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
                       {(() => {
                         const quickDays = [];
-                        const baseDate = new Date(2026, 6, 30); // July 30, 2026
+                        const baseDate = new Date();
+                        baseDate.setHours(0, 0, 0, 0);
                         for (let i = 0; i < 6; i++) {
                           const d = new Date(baseDate);
                           d.setDate(baseDate.getDate() + i);
