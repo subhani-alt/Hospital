@@ -29,12 +29,11 @@ export default function Footer() {
           {/* Col 1: Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" onClick={handleHomeClick} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl btn-emerald-gradient flex items-center justify-center text-white shadow-md">
-                <Activity className="w-6 h-6" />
-              </div>
-              <span className="text-2xl font-bold text-white font-heading tracking-tight">
-                APEX <span className="text-[#80CBC4]">HEALTH</span>
-              </span>
+              <img
+                src="/prestige-logo.png"
+                alt="Prestige Hospitals"
+                className="h-12 sm:h-14 object-contain brightness-110"
+              />
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
               Apex Health Institute & Research Center is South Asia’s premier quaternary medical center. Built across 1.6 million sq.ft, combining precision robotics, scientific innovation, and compassionate care.

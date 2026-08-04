@@ -56,17 +56,11 @@ export default function Navbar() {
           
           {/* Brand Logo */}
           <Link to="/" onClick={handleHomeClick} className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl btn-emerald-gradient flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-              <Activity className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-xl font-bold tracking-tight text-[#1C1C1C] dark:text-white font-heading block leading-none">
-                APEX <span className="text-[#00695C] dark:text-[#80CBC4]">HEALTH</span>
-              </span>
-              <span className="text-[10px] tracking-widest text-[#5F6368] dark:text-slate-400 font-semibold uppercase block mt-0.5">
-                Institute & Research
-              </span>
-            </div>
+            <img
+              src="/prestige-logo.png"
+              alt="Prestige Hospitals"
+              className="h-10 sm:h-12 object-contain group-hover:scale-105 transition-transform"
+            />
           </Link>
 
           {/* Desktop Navigation Links & Mega Menu */}

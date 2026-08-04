@@ -20,18 +20,14 @@ export default function LoadingScreen({ onComplete }) {
       }`}
     >
       <div className="relative flex flex-col items-center">
-        {/* Glowing Logo Circle */}
-        <div className="relative flex items-center justify-center w-24 h-24 rounded-full bg-[#00695C]/20 border border-[#00897B]/40 shadow-[0_0_50px_rgba(0,137,123,0.3)] animate-pulse">
-          <Activity className="w-12 h-12 text-[#80CBC4] animate-spin" style={{ animationDuration: '3s' }} />
-          <div className="absolute inset-0 rounded-full border-2 border-t-[#00897B] border-r-transparent border-b-[#80CBC4] border-l-transparent animate-spin" />
-        </div>
-
-        {/* Brand Name */}
-        <h1 className="mt-6 text-2xl font-bold tracking-widest text-white uppercase font-heading">
-          Apex Health <span className="text-[#80CBC4]">Institute</span>
-        </h1>
-        <p className="mt-2 text-xs tracking-widest text-[#80CBC4]/80 uppercase">
-          Precision Medicine &bull; Global Excellence
+        {/* Brand Logo */}
+        <img
+          src="/prestige-logo.png"
+          alt="Prestige Hospitals"
+          className="h-16 sm:h-20 object-contain animate-pulse mb-2"
+        />
+        <p className="text-xs tracking-widest text-[#80CBC4]/80 uppercase font-semibold">
+          Care That Matters &bull; Global Excellence
         </p>
 
         {/* Progress Bar */}
