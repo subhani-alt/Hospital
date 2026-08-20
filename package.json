@@ -8,8 +8,8 @@
     "server"
   ],
   "scripts": {
-    "build": "npm run build --prefix client",
-    "vercel-build": "npm run build --prefix client"
+    "build": "node scripts/build.js",
+    "vercel-build": "node scripts/build.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
@@ -20,7 +20,10 @@
     "helmet": "^8.0.0"
   },
   "optionalDependencies": {
+    "@esbuild/linux-x64": "*",
     "@rollup/rollup-linux-x64-gnu": "*",
-    "@rollup/rollup-linux-x64-musl": "*"
+    "@rollup/rollup-linux-x64-musl": "*",
+    "lightningcss-linux-x64-gnu": "*",
+    "lightningcss-linux-x64-musl": "*"
   }
 }
