@@ -11,12 +11,12 @@ const clientDir = isClientSubdir ? cwd : (fs.existsSync(path.join(cwd, 'client')
 
 console.log('[Build] Target Client Directory:', clientDir);
 
-// On Linux / Vercel, ensure native binaries for Rollup, LightningCSS and Esbuild are installed
+// On Linux / Vercel, ensure native binaries for Tailwind Oxide, Rollup, LightningCSS and Esbuild are installed
 if (process.platform === 'linux') {
-  console.log('[Build] Linux environment detected. Ensuring Linux native binaries (Rollup, LightningCSS, Esbuild)...');
+  console.log('[Build] Linux environment detected. Ensuring Linux native binaries (Tailwind Oxide, LightningCSS, Rollup, Esbuild)...');
   try {
     execSync(
-      'npm install --no-save --force --legacy-peer-deps --no-audit --no-fund @rollup/rollup-linux-x64-gnu@4.34.8 @rollup/rollup-linux-x64-musl@4.34.8 lightningcss-linux-x64-gnu@1.32.0 lightningcss-linux-x64-musl@1.32.0 @esbuild/linux-x64',
+      'npm install --no-save --force --legacy-peer-deps --no-audit --no-fund @tailwindcss/oxide-linux-x64-gnu @tailwindcss/oxide-linux-x64-musl @tailwindcss/oxide-wasm32-wasi lightningcss-linux-x64-gnu@1.32.0 lightningcss-linux-x64-musl@1.32.0 @rollup/rollup-linux-x64-gnu@4.34.8 @rollup/rollup-linux-x64-musl@4.34.8 @esbuild/linux-x64',
       { cwd: clientDir, stdio: 'inherit' }
     );
   } catch (err) {
