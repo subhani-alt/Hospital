@@ -36,7 +36,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
-              Apex Health Institute & Research Center is South Asia’s premier quaternary medical center. Built across 1.6 million sq.ft, combining precision robotics, scientific innovation, and compassionate care.
+              Prestige Hospitals & Research Center is South Asia’s premier quaternary medical center. Built across 1.6 million sq.ft, combining precision robotics, scientific innovation, and compassionate care.
             </p>
             
             {/* Accreditation Badges */}
@@ -115,7 +115,7 @@ export default function Footer() {
 
         {/* Bottom Copyright & Disclaimer */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-          <p>© {new Date().getFullYear()} Apex Health Institute & Research Center. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} Prestige Hospitals & Research Center. All Rights Reserved.</p>
           <div className="flex flex-wrap gap-6">
             <Link to="/privacy-policy" className="hover:text-white transition">Privacy Policy</Link>
             <Link to="/terms-of-service" className="hover:text-white transition">Terms of Service</Link>

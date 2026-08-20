@@ -20,7 +20,7 @@ export default function About() {
         <div className="btn-emerald-gradient text-white rounded-3xl p-10 sm:p-16 shadow-2xl relative overflow-hidden">
           <div className="max-w-2xl space-y-4 relative z-10">
             <span className="text-xs font-bold uppercase tracking-widest text-[#80CBC4]">
-              About Apex Health Institute
+              About Prestige Hospitals
             </span>
             <h1 className="text-4xl sm:text-6xl font-extrabold font-heading tracking-tight leading-tight">
               Science. Innovation. Compassion.

@@ -1,0 +1,388 @@
+{
+  "doctorsStore": [
+    {
+      "id": "dr-ananya-sharma",
+      "name": "Dr. Ananya Sharma",
+      "title": "Senior Chief of Robotic Surgical Oncology",
+      "department": "gastroenterology",
+      "deptName": "Gastroenterology",
+      "dept_name": "Gastroenterology",
+      "experience": 6,
+      "qualification": "MD, MBBS",
+      "awards": [
+        "Global Cancer Care Excellence 2024",
+        "Presidential Gold Medal in Surgery"
+      ],
+      "image": "/dr-ananya-sharma.png",
+      "rating": 4.9,
+      "reviewsCount": 890,
+      "consultationFee": 2200,
+      "consultation_fee": 2200,
+      "languages": [
+        "English"
+      ],
+      "availability": [
+        "Mon",
+        "Wed",
+        "Fri",
+        "Sat"
+      ],
+      "bio": "Leading medical specialist.",
+      "locations": [
+        "Main Campus — Gachibowli"
+      ],
+      "is_visible": true,
+      "isVisible": true
+    },
+    {
+      "id": "dr-vikramaditya-rao",
+      "name": "Dr. Vikramaditya Rao",
+      "title": "Chief of Neurosurgery & Spine Surgery",
+      "department": "neurosciences",
+      "deptName": "Neurosciences",
+      "dept_name": "Neurosciences",
+      "experience": 17,
+      "qualification": "MS, MCh (Neurosurgery), Fellow Mayo Clinic",
+      "awards": [
+        "Neuro Innovation Leadership Award",
+        "Gold Medalist Neurosurgery"
+      ],
+      "image": "/dr-vikramaditya-rao.png",
+      "rating": 4.93,
+      "reviewsCount": 760,
+      "consultationFee": 2200,
+      "consultation_fee": 2200,
+      "languages": [
+        "English",
+        "Telugu",
+        "Hindi"
+      ],
+      "availability": [
+        "Mon",
+        "Tue",
+        "Thu",
+        "Sat"
+      ],
+      "bio": "Expert in skull base surgery, awake brain tumor excision, deep brain stimulation for Parkinson’s, and endoscopic spine surgery.",
+      "locations": [
+        "Main Campus — Gachibowli"
+      ],
+      "is_visible": true,
+      "isVisible": true
+    },
+    {
+      "id": "dr-k-srinivas",
+      "name": "Dr. K. Srinivas",
+      "title": "Senior Director — Interventional Cardiology",
+      "department": "cardiology",
+      "deptName": "Cardiac Sciences",
+      "dept_name": "Cardiac Sciences",
+      "experience": 13,
+      "qualification": "MD, DM (Cardiology), FACC, FSCAI (USA)",
+      "awards": [
+        "Best Interventional Cardiologist India 2023",
+        "TAVI Pioneer Award"
+      ],
+      "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.96,
+      "reviewsCount": 1150,
+      "consultationFee": 2200,
+      "consultation_fee": 2200,
+      "languages": [
+        "English",
+        "Telugu",
+        "Hindi",
+        "Tamil"
+      ],
+      "availability": [
+        "Tue",
+        "Thu",
+        "Fri",
+        "Sat"
+      ],
+      "bio": "Performed over 15,000 complex coronary angioplasties and pioneer in TAVI/TAVR nonsurgical valve replacements.",
+      "locations": [
+        "Main Campus — Gachibowli",
+        "Banjara Hills Center"
+      ],
+      "is_visible": true,
+      "isVisible": true
+    },
+    {
+      "id": "dr-rajeshwar-patel",
+      "name": "Dr. Rajeshwar Patel",
+      "title": "Head — Robotic Joint Replacement",
+      "department": "orthopedics",
+      "deptName": "Orthopedics",
+      "dept_name": "Orthopedics",
+      "experience": 18,
+      "qualification": "MS (Ortho), FRCS (Edin), MCh (UK)",
+      "awards": [
+        "Mako Robotic Surgical Luminary",
+        "Best Orthopedic Surgeon 2024"
+      ],
+      "image": "/dr-rajeshwar-patel.png",
+      "rating": 4.92,
+      "reviewsCount": 940,
+      "consultationFee": 1800,
+      "consultation_fee": 1800,
+      "languages": [
+        "English",
+        "Hindi",
+        "Gujarati"
+      ],
+      "availability": [
+        "Mon",
+        "Wed",
+        "Thu",
+        "Fri"
+      ],
+      "bio": "Pioneered robotic 3D precision knee and hip joint replacements in South Asia.",
+      "locations": [
+        "Main Campus — Gachibowli",
+        "Banjara Hills Center"
+      ],
+      "is_visible": true,
+      "isVisible": true
+    },
+    {
+      "id": "dr-nageshwar-reddy",
+      "name": "Dr. D. Nageshwar Reddy",
+      "title": "Chairman",
+      "department": "gastroenterology",
+      "deptName": "Gastroenterology",
+      "dept_name": "Gastroenterology",
+      "experience": 14,
+      "qualification": "MD",
+      "awards": [
+        "Padma Bhushan",
+        "Padma Shri",
+        "Rudolf Schindler Award (ASGE)",
+        "World Gastroenterology Lifetime Achievement"
+      ],
+      "image": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600",
+      "rating": 4.98,
+      "reviewsCount": 1420,
+      "consultationFee": 2500,
+      "consultation_fee": 2500,
+      "languages": [
+        "English",
+        "Telugu",
+        "Hindi"
+      ],
+      "availability": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri"
+      ],
+      "bio": "Pioneer in Therapeutic Endoscopy, credited with introducing several novel procedures globally. Published over 600 research papers.",
+      "locations": [
+        "Main Campus — Gachibowli",
+        "Executive Suite"
+      ],
+      "is_visible": true,
+      "isVisible": true
+    },
+    {
+      "id": "dr-sk-mukherjee",
+      "name": "Dr. S. K. Mukherjee",
+      "title": "Director — Nephrology & Transplant Services",
+      "department": "nephrology",
+      "deptName": "Renal Sciences",
+      "dept_name": "Renal Sciences",
+      "experience": 16,
+      "qualification": "MD, DM (Nephrology), FISN, FASN",
+      "awards": [
+        "National Nephrologist of Eminence",
+        "Lifetime Transplant Excellence"
+      ],
+      "image": "/dr-sk-mukherjee.png",
+      "rating": 4.97,
+      "reviewsCount": 1080,
+      "consultationFee": 2000,
+      "consultation_fee": 2000,
+      "languages": [
+        "English",
+        "Hindi",
+        "Bengali"
+      ],
+      "availability": [
+        "Mon",
+        "Wed",
+        "Thu",
+        "Fri"
+      ],
+      "bio": "National Nephrologist of Eminence with extensive renal transplant experience.",
+      "locations": [
+        "Main Campus — Gachibowli"
+      ],
+      "is_visible": true,
+      "isVisible": true
+    }
+  ],
+  "blogsStore": [
+    {
+      "id": "robotic-surgery-future-2026",
+      "title": "How 5G-Enabled Robotic Surgery is Revolutionizing Quaternary Healthcare in 2026",
+      "category": "Medical Breakthroughs",
+      "author": "Dr. Ananya Sharma",
+      "date": "February 12, 2026",
+      "read_time": "6 min read",
+      "readTime": "6 min read",
+      "image": "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800",
+      "summary": "Discover how robotic-assisted surgical platforms with sub-millimeter precision are reducing recovery times.",
+      "content": "Robotic surgery has transitioned from an advanced luxury into the standard of care for complex oncological, cardiac, and urological procedures..."
+    },
+    {
+      "id": "fatty-liver-reversal-guide",
+      "title": "Reversing Non-Alcoholic Fatty Liver Disease (MASLD): The Science of Early Precision Intervention",
+      "category": "Gastroenterology",
+      "author": "Dr. D. Nageshwar Reddy",
+      "date": "January 28, 2026",
+      "read_time": "8 min read",
+      "readTime": "8 min read",
+      "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800",
+      "summary": "With MASLD affecting nearly 30% of global adults, early FibroScan detection offers a complete pathway to liver renewal.",
+      "content": "Fatty liver disease is often termed a silent epidemic because it progresses without noticeable symptoms until significant fibrosis occurs..."
+    },
+    {
+      "id": "tavi-tavr-non-surgical-heart-valve",
+      "title": "TAVI / TAVR: Replacing Heart Valves Without Open-Heart Surgery",
+      "category": "Cardiology",
+      "author": "Dr. K. Srinivas",
+      "date": "January 15, 2026",
+      "read_time": "5 min read",
+      "readTime": "5 min read",
+      "image": "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&q=80&w=800",
+      "summary": "Transcatheter Aortic Valve Implantation allows high-risk cardiac patients to receive new heart valves through a tiny catheter.",
+      "content": "For decades, severe aortic stenosis left elderly patients with limited treatment options. Today, TAVI offers a revolutionary non-surgical alternative..."
+    }
+  ],
+  "packagesStore": [
+    {
+      "id": "executive-master-check",
+      "name": "Prestige Executive Master Health Shield",
+      "badge": "Most Popular",
+      "category": "Comprehensive",
+      "price": 14999,
+      "original_price": 22000,
+      "originalPrice": 22000,
+      "tests_count": 94,
+      "testsCount": 94,
+      "recommended_for": "Men & Women Aged 35+",
+      "recommendedFor": "Men & Women Aged 35+",
+      "highlights": [
+        "Whole Body MRI Screening",
+        "3D Echo & Stress Test",
+        "Comprehensive Cardiac Marker Panel",
+        "Full Body Tumor Markers"
+      ],
+      "inclusions": [
+        "Cardiology: TMT, 3D Echocardiogram, ECG",
+        "Radiology: Ultra-sensitive USG Whole Abdomen",
+        "Pathology: Complete Hemogram, Lipid Profile"
+      ]
+    },
+    {
+      "id": "cardiac-vital-guard",
+      "name": "Prestige Advanced Cardiac Protection Package",
+      "badge": "Heart Special",
+      "category": "Cardiology",
+      "price": 8999,
+      "original_price": 14000,
+      "originalPrice": 14000,
+      "tests_count": 45,
+      "testsCount": 45,
+      "recommended_for": "Heart Risk, High BP",
+      "recommendedFor": "Heart Risk, High BP, Family Cardiac History",
+      "highlights": [
+        "CT Coronary Angiography (Zero-Calcium Scan)",
+        "High Sensitivity CRP (hs-CRP)",
+        "Lipoprotein (a)"
+      ],
+      "inclusions": [
+        "Cardiology: CT Coronary Angio, Treadmill Stress Test",
+        "Pathology: hs-CRP, Lipid Sub-fractions",
+        "Consultation: Senior Interventional Cardiologist"
+      ]
+    },
+    {
+      "id": "wellness-women-vital",
+      "name": "Apex Empress Women’s Wellness Shield",
+      "badge": "Women Health",
+      "category": "Women",
+      "price": 11499,
+      "original_price": 18000,
+      "originalPrice": 18000,
+      "tests_count": 78,
+      "testsCount": 78,
+      "recommended_for": "Women of All Ages, Hormonal Health",
+      "recommendedFor": "Women of All Ages, Hormonal Health",
+      "highlights": [
+        "Digital Mammography / Breast USG",
+        "Liquid-based Pap Smear",
+        "DEXA Bone Density Scan"
+      ],
+      "inclusions": [
+        "Gynecology: Pap Smear, Pelvic USG",
+        "Bone Health: DEXA Scan",
+        "Consultation: Senior Consultant Gynecologist"
+      ]
+    },
+    {
+      "id": "gut-digestive-screen",
+      "name": "Apex Comprehensive Gut & Liver Shield",
+      "badge": "GI Premier",
+      "category": "Gastroenterology",
+      "price": 12999,
+      "original_price": 19500,
+      "originalPrice": 19500,
+      "tests_count": 52,
+      "testsCount": 52,
+      "recommended_for": "Digestive Issues, Fatty Liver, Acidity",
+      "recommendedFor": "Digestive Issues, Fatty Liver, Acidity",
+      "highlights": [
+        "FibroScan (Liver Stiffness Assessment)",
+        "Diagnostic Upper GI Endoscopy",
+        "H. Pylori Antigen Test"
+      ],
+      "inclusions": [
+        "Gastro: Video Endoscopy, FibroScan",
+        "Liver Panel: LFT, Hepatitis B & C",
+        "Consultation: Senior Gastroenterologist"
+      ]
+    }
+  ],
+  "appointmentsStore": [
+    {
+      "id": "361c9f1c-5c5e-4cc6-96ef-512603e875c2",
+      "patient_name": "Rahul Verma",
+      "patient_phone": "+91 98765 43210",
+      "patient_email": "rahul.verma@example.com",
+      "doctor_name": "Dr. D. Nageshwar Reddy",
+      "department": "Gastroenterology",
+      "date": "2026-08-04",
+      "time_slot": "10:30 AM",
+      "type": "in-person",
+      "status": "confirmed",
+      "fee": 2500,
+      "payment_status": "paid",
+      "created_at": "2026-08-02T10:57:01.170001+00:00",
+      "updated_at": "2026-08-02T10:57:01.170001+00:00"
+    }
+  ],
+  "inquiriesStore": [
+    {
+      "id": "ac6edc59-4474-4274-982e-f565f03051be",
+      "name": "Anita Sharma",
+      "email": "anita.sharma@example.com",
+      "phone": "+91 98111 22233",
+      "subject": "International Patient Inquiry",
+      "message": "I would like to inquire about medical tourism facilities for cardiac evaluation.",
+      "status": "unread",
+      "created_at": "2026-08-02T10:57:01.170001+00:00"
+    }
+  ]
+}

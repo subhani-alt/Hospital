@@ -38,7 +38,7 @@ export default function PatientJourneySection() {
             Seamless Care Delivery
           </span>
           <h2 className="text-3xl sm:text-5xl font-bold font-heading text-slate-900 dark:text-white tracking-tight">
-            Your Care Journey at Apex Health
+            Your Care Journey at Prestige Hospitals
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
             From initial symptom assessment to post-operative recovery, experience a frictionless, stress-free clinical environment.

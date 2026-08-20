@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Award, Quote, CheckCircle } from 'lucide-react';
-import { DOCTORS } from '../../services/data';
+import { getLiveDoctors } from '../../services/data';
 
 export default function ChairmanSection() {
-  const chairman = DOCTORS[0];
+  const [doctorsList, setDoctorsList] = useState(() => getLiveDoctors());
+
+  useEffect(() => {
+    const handleUpdate = () => setDoctorsList(getLiveDoctors());
+    window.addEventListener('apex_doctors_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('apex_doctors_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
+  const chairman = doctorsList.find(
+    d => d.id === 'dr-nageshwar-reddy' || d.name?.includes('Nageshwar') || d.title?.includes('Chairman')
+  ) || doctorsList[0];
 
   return (
     <section className="py-20 bg-[#051224] text-white relative overflow-hidden">
@@ -59,7 +73,7 @@ export default function ChairmanSection() {
                 Healthcare is not merely about treating sickness; it is about combining ruthless scientific precision, groundbreaking clinical research, and deep human empathy to elevate quality of life.
               </p>
               <p>
-                At Apex Health Institute, we have forged an ecosystem where patient care, academic research, and robotic medical technology work seamlessly together. Every clinical decision is evidence-based; every outcome is patient-centered.
+                At Prestige Hospitals, we have forged an ecosystem where patient care, academic research, and robotic medical technology work seamlessly together. Every clinical decision is evidence-based; every outcome is patient-centered.
               </p>
             </div>
 

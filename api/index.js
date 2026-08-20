@@ -42,7 +42,7 @@ const MOCK_DOCTORS = [
 
 
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'online', hospital: 'Apex Health Institute', timestamp: new Date().toISOString() });
+  res.status(200).json({ status: 'online', hospital: 'Prestige Hospitals', timestamp: new Date().toISOString() });
 });
 
 app.get('/api/departments', async (req, res) => {

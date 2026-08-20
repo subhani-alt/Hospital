@@ -24,13 +24,13 @@ export default function VirtualAssistantModal() {
 
     // Simulate AI response
     setTimeout(() => {
-      let botResponse = 'Thank you for contacting Apex Health Institute. Our patient relations desk is available 24/7. Would you like to schedule an OP appointment or speak with an international patient coordinator?';
+      let botResponse = 'Thank you for contacting Prestige Hospitals. Our patient relations desk is available 24/7. Would you like to schedule an OP appointment or speak with an international patient coordinator?';
 
       const lower = userText.toLowerCase();
       if (lower.includes('doctor') || lower.includes('specialist')) {
         botResponse = 'We have 250+ world-renowned clinicians across Gastroenterology, Cardiology, Oncology, Neurosciences, and Orthopedics. You can filter and book doctors via our "Our Doctors" tab.';
       } else if (lower.includes('package') || lower.includes('checkup')) {
-        botResponse = 'Our Apex Master Health Shield includes 94 vital tests + 3D Echo + Whole Body USG. You can view and compare plans in our "Health Packages" section.';
+        botResponse = 'Our Prestige Master Health Shield includes 94 vital tests + 3D Echo + Whole Body USG. You can view and compare plans in our "Health Packages" section.';
       } else if (lower.includes('insurance') || lower.includes('cashless')) {
         botResponse = 'We partner with over 45 major health insurance providers and TPAs including Star Health, Max Bupa, HDFC Ergo, and ICICI Lombard for 100% cashless treatment.';
       } else if (lower.includes('address') || lower.includes('location')) {

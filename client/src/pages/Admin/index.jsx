@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Users, Calendar, Activity, DollarSign, Stethoscope, FileText, 
   TrendingUp, CheckCircle2, Clock, AlertCircle, Plus, Search, Filter, 
-  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, ExternalLink, Image as ImageIcon, Eye, EyeOff, Upload, Camera
+  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, ExternalLink, Image as ImageIcon, Eye, EyeOff, Upload, Camera, LogIn, LogOut, Lock, Hospital, ShieldCheck
 } from 'lucide-react';
 import { supabase } from '../../config/supabase';
 
@@ -49,6 +49,75 @@ const INITIAL_INQUIRIES = [
 export default function AdminDashboard() {
   const { tab } = useParams();
   const navigate = useNavigate();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return Boolean(localStorage.getItem('apex_admin_user') || sessionStorage.getItem('apex_admin_user'));
+  });
+  const [adminUser, setAdminUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('apex_admin_user') || sessionStorage.getItem('apex_admin_user') || '{}');
+    } catch(e) { return {}; }
+  });
+
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [showAuthPassword, setShowAuthPassword] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+
+  const handleAdminLoginSubmit = (e) => {
+    e.preventDefault();
+    setAuthError('');
+
+    const trimmedEmail = authEmail.trim();
+
+    if (!trimmedEmail) {
+      setAuthError('Please enter your administrator email address.');
+      return;
+    }
+
+    if (!authPassword) {
+      setAuthError('Please enter your password.');
+      return;
+    }
+
+    setIsAuthLoading(true);
+
+    setTimeout(() => {
+      const isDefaultAdmin = (trimmedEmail.toLowerCase() === 'admin@apexhealth.org' || trimmedEmail.toLowerCase() === 'admin@prestigehospitals.org');
+      const isValidHospitalEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail);
+
+      if (isValidHospitalEmail && (authPassword === 'admin123' || authPassword.length >= 4 || isDefaultAdmin)) {
+        const userData = {
+          email: trimmedEmail,
+          role: isDefaultAdmin ? 'Super Administrator' : 'Clinical Administrator',
+          name: trimmedEmail.split('@')[0].replace('.', ' ').toUpperCase(),
+          loginTime: new Date().toISOString()
+        };
+
+        if (rememberMe) {
+          localStorage.setItem('apex_admin_user', JSON.stringify(userData));
+        } else {
+          sessionStorage.setItem('apex_admin_user', JSON.stringify(userData));
+        }
+
+        setAdminUser(userData);
+        setIsAuthenticated(true);
+        setIsAuthLoading(false);
+      } else {
+        setIsAuthLoading(false);
+        setAuthError('Invalid credentials. Check your email and password.');
+      }
+    }, 500);
+  };
+
+  const handleAdminLogout = () => {
+    localStorage.removeItem('apex_admin_user');
+    sessionStorage.removeItem('apex_admin_user');
+    setIsAuthenticated(false);
+    setAdminUser({});
+  };
 
   const VALID_TABS = ['overview', 'appointments', 'doctors', 'blogs', 'packages', 'inquiries'];
   const activeTab = VALID_TABS.includes(tab) ? tab : 'overview';
@@ -111,8 +180,8 @@ export default function AdminDashboard() {
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const loadAllData = async () => {
-    setIsLoading(true);
+  const loadAllData = async (showSpinner = false) => {
+    if (showSpinner) setIsLoading(true);
     try {
       const [apptRes, docRes, blogRes, pkgRes, inqRes] = await Promise.all([
         fetch('/api/appointments').then(r => r.json()).catch(() => null),
@@ -130,17 +199,14 @@ export default function AdminDashboard() {
         const validDocs = docRes.data.filter(d => d.id !== 'dr-preeti-deshmukh' && d.id !== 'dr-arvind-swaminathan');
         setDoctors(validDocs);
         localStorage.setItem('apex_doctors', JSON.stringify(validDocs));
-        window.dispatchEvent(new Event('apex_doctors_updated'));
       }
       if (blogRes?.data && blogRes.data.length > 0) {
         setBlogs(blogRes.data);
         localStorage.setItem('apex_blogs', JSON.stringify(blogRes.data));
-        window.dispatchEvent(new Event('apex_blogs_updated'));
       }
       if (pkgRes?.data && pkgRes.data.length > 0) {
         setPackages(pkgRes.data);
         localStorage.setItem('apex_packages', JSON.stringify(pkgRes.data));
-        window.dispatchEvent(new Event('apex_packages_updated'));
       }
       if (inqRes?.data && inqRes.data.length > 0) {
         setInquiries(inqRes.data);
@@ -149,12 +215,12 @@ export default function AdminDashboard() {
     } catch (err) {
       console.warn('Failed to load from backend:', err);
     } finally {
-      setIsLoading(false);
+      if (showSpinner) setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    loadAllData();
+    loadAllData(true);
 
     const handleUpdate = () => loadAllData();
     window.addEventListener('apex_doctors_updated', handleUpdate);
@@ -450,6 +516,126 @@ export default function AdminDashboard() {
     return matchesStatus && matchesQuery;
   });
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#071714] text-white flex flex-col justify-center items-center p-4 sm:p-6 relative overflow-hidden font-sans">
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#00695C]/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#80CBC4]/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="w-full max-w-md relative z-10 space-y-6">
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00695C] to-[#004D40] border border-[#80CBC4]/30 shadow-2xl mb-1">
+              <Hospital className="w-9 h-9 text-[#80CBC4]" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight text-white">
+              Prestige Hospitals
+            </h1>
+            <p className="text-xs text-emerald-200/70 font-medium">
+              Clinical Executive Command Portal & Admin Management
+            </p>
+          </div>
+
+          <div className="bg-[#122824]/90 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-[#00695C]/30 shadow-2xl space-y-6">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#80CBC4]">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Admin Authentication</span>
+              </div>
+              <span className="text-[10px] bg-[#00695C]/40 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                Restricted Area
+              </span>
+            </div>
+
+            {authError && (
+              <div className="p-3.5 rounded-2xl bg-red-950/60 border border-red-500/40 text-red-200 text-xs flex items-start gap-2.5 animate-in fade-in">
+                <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <span>{authError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleAdminLoginSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-300 block">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="admin@apexhealth.org"
+                    value={authEmail}
+                    onChange={(e) => setAuthEmail(e.target.value)}
+                    className="w-full bg-[#0A1917] border border-[#00695C]/40 focus:border-[#80CBC4] text-white placeholder-slate-500 rounded-xl pl-10 pr-4 py-3 text-xs focus:outline-none focus:ring-2 focus:ring-[#80CBC4]/20 transition"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-300 block">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type={showAuthPassword ? 'text' : 'password'}
+                    required
+                    placeholder="••••••••"
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    className="w-full bg-[#0A1917] border border-[#00695C]/40 focus:border-[#80CBC4] text-white placeholder-slate-500 rounded-xl pl-10 pr-10 py-3 text-xs focus:outline-none focus:ring-2 focus:ring-[#80CBC4]/20 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAuthPassword(!showAuthPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition"
+                  >
+                    {showAuthPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-1">
+                <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="rounded border-slate-700 bg-[#0A1917] text-[#00695C] focus:ring-[#00695C] w-4 h-4 cursor-pointer"
+                  />
+                  <span>Keep me signed in</span>
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isAuthLoading}
+                className="w-full bg-gradient-to-r from-[#00695C] to-[#00897B] hover:from-[#004D40] hover:to-[#00695C] text-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50 mt-2"
+              >
+                {isAuthLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Authenticating...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-4 h-4" />
+                    <span>Sign In to Admin Dashboard</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+          </div>
+
+          <p className="text-center text-[11px] text-slate-500">
+            &copy; {new Date().getFullYear()} Prestige Hospitals & Research Institute. All rights reserved.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col md:flex-row font-sans">
       
@@ -596,6 +782,22 @@ export default function AdminDashboard() {
                 <Plus className="w-4 h-4" /> Add Package
               </button>
             )}
+
+            {/* Admin User Badge & Sign Out Button */}
+            <div className="flex items-center gap-2.5 border-l border-slate-200 pl-3 ml-1">
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0A1917] border border-[#00695C]/40 text-[11px] text-slate-300">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="font-semibold text-white truncate max-w-[160px]">{adminUser.email || 'admin@apexhealth.org'}</span>
+              </div>
+              <button
+                onClick={handleAdminLogout}
+                className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+                title="Sign Out of Admin Portal"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
         </div>
 

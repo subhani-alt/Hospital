@@ -30,7 +30,7 @@ export default function HealthLibrary() {
             Clinical Research & Education
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold font-heading tracking-tight">
-            Apex Health Insights Library
+            Prestige Hospitals Insights Library
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400">
             Authored by senior clinical directors and research fellows.

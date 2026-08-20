@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Users, Calendar, Activity, DollarSign, Stethoscope, FileText, 
   TrendingUp, CheckCircle2, Clock, AlertCircle, Plus, Search, Filter, 
-  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, Eye, EyeOff, Upload, Camera
+  Trash2, Edit, X, RefreshCw, Layers, Mail, Check, AlertTriangle, Eye, EyeOff, Upload, Camera, LogOut
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { supabase } from '../config/supabase';
@@ -50,6 +50,16 @@ const INITIAL_INQUIRIES = [
 export default function Dashboard() {
   const { tab } = useParams();
   const navigate = useNavigate();
+
+  const adminUser = JSON.parse(
+    localStorage.getItem('apex_admin_user') || sessionStorage.getItem('apex_admin_user') || '{}'
+  );
+
+  const handleLogout = () => {
+    localStorage.removeItem('apex_admin_user');
+    sessionStorage.removeItem('apex_admin_user');
+    navigate('/login');
+  };
 
   const VALID_TABS = ['overview', 'appointments', 'doctors', 'blogs', 'packages', 'inquiries'];
   const activeTab = VALID_TABS.includes(tab) ? tab : 'overview';
@@ -530,6 +540,22 @@ export default function Dashboard() {
                 <Plus className="w-4 h-4" /> Add Package
               </button>
             )}
+
+            {/* Admin User Badge & Sign Out Button */}
+            <div className="flex items-center gap-2.5 border-l border-slate-800 pl-3 ml-1">
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0A1917] border border-[#00695C]/40 text-[11px] text-slate-300">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="font-semibold text-white truncate max-w-[160px]">{adminUser.email || 'admin@apexhealth.org'}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="bg-red-950/60 hover:bg-red-900/80 text-red-200 border border-red-800/50 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 transition shadow cursor-pointer"
+                title="Sign Out of Admin Portal"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
         </div>
 

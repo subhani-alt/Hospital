@@ -34,7 +34,7 @@ export default function WhyChooseUsSection() {
             Uncompromising Standards
           </span>
           <h2 className="text-3xl sm:text-5xl font-bold font-heading text-slate-900 dark:text-white tracking-tight">
-            Why Patients Choose Apex Health
+            Why Patients Choose Prestige Hospitals
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
             Engineered to deliver Mayo Clinic & Cleveland Clinic benchmark clinical outcomes in South Asia.

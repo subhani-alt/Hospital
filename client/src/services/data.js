@@ -216,12 +216,7 @@ export function getLiveDoctors(includeHidden = false) {
     if (cached) {
       const parsed = JSON.parse(cached);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        const merged = list.map(baseDoc => {
-          const found = parsed.find(c => c.id === baseDoc.id);
-          return found ? { ...baseDoc, ...found } : baseDoc;
-        });
-        const customDocs = parsed.filter(c => !list.some(b => b.id === c.id));
-        list = [...merged, ...customDocs];
+        list = parsed;
       }
     }
   } catch (e) {}
@@ -252,13 +247,15 @@ export function getLiveDoctors(includeHidden = false) {
 }
 
 
+// Supabase Database Data Provider & Website Model Cache for Prestige Hospitals
+
 export const DOCTORS = getLiveDoctors();
 
 export const HEALTH_PACKAGES = [
 
   {
     id: 'executive-master-check',
-    name: 'Apex Executive Master Health Shield',
+    name: 'Prestige Executive Master Health Shield',
     badge: 'Most Popular',
     category: 'Comprehensive',
     price: 14999,
@@ -277,7 +274,7 @@ export const HEALTH_PACKAGES = [
   },
   {
     id: 'cardiac-vital-guard',
-    name: 'Apex Advanced Cardiac Protection Package',
+    name: 'Prestige Advanced Cardiac Protection Package',
     badge: 'Heart Special',
     category: 'Cardiology',
     price: 8999,
@@ -294,7 +291,7 @@ export const HEALTH_PACKAGES = [
   },
   {
     id: 'wellness-women-vital',
-    name: 'Apex Empress Women’s Wellness Shield',
+    name: 'Prestige Empress Women’s Wellness Shield',
     badge: 'Women Health',
     category: 'Women',
     price: 11499,
@@ -311,7 +308,7 @@ export const HEALTH_PACKAGES = [
   },
   {
     id: 'gut-digestive-screen',
-    name: 'Apex Comprehensive Gut & Liver Shield',
+    name: 'Prestige Comprehensive Gut & Liver Shield',
     badge: 'GI Premier',
     category: 'Gastroenterology',
     price: 12999,
@@ -335,7 +332,7 @@ export const TESTIMONIALS = [
     country: 'United Kingdom',
     procedure: 'Living Donor Liver Transplant',
     rating: 5,
-    quote: 'The surgical mastery at Apex Health is unparalleled globally. From my flight arrival in Hyderabad to my discharge after a complex liver transplant, I experienced Mayo-Clinic level care at a fraction of the cost.',
+    quote: 'The surgical mastery at Prestige Hospitals is unparalleled globally. From my flight arrival in Hyderabad to my discharge after a complex liver transplant, I experienced Mayo-Clinic level care at a fraction of the cost.',
     doctor: 'Dr. D. Nageshwar Reddy',
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300'
   },
@@ -345,7 +342,7 @@ export const TESTIMONIALS = [
     country: 'Hyderabad, India',
     procedure: 'Robotic Cardiac Bypass & Valve Replacement',
     rating: 5,
-    quote: 'When my father needed urgent cardiac surgery, Apex Health provided 24/7 robotic precision. He was walking on day 2. The nursing staff and ICU care set a gold standard for healthcare.',
+    quote: 'When my father needed urgent cardiac surgery, Prestige Hospitals provided 24/7 robotic precision. He was walking on day 2. The nursing staff and ICU care set a gold standard for healthcare.',
     doctor: 'Dr. K. Srinivas',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300'
   },
@@ -355,7 +352,7 @@ export const TESTIMONIALS = [
     country: 'United States',
     procedure: 'Advanced Endoscopic ESD Removal',
     rating: 5,
-    quote: 'As a surgeon myself in Boston, I chose Apex Health for my complex GI procedure because their endoscopic research leads the world. Phenomenal infrastructure and deeply humane care.',
+    quote: 'As a surgeon myself in Boston, I chose Prestige Hospitals for my complex GI procedure because their endoscopic research leads the world. Phenomenal infrastructure and deeply humane care.',
     doctor: 'Dr. D. Nageshwar Reddy',
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300'
   }
@@ -482,12 +479,13 @@ export const getSupabaseDoctors = async () => {
     const res = await fetch('/api/doctors');
     const json = await res.json();
     if (json.data && json.data.length > 0) {
-      return json.data.map(d => ({
+      const formatted = json.data.map(d => ({
         id: d.id,
         name: d.name,
         title: d.title,
         department: d.department,
         deptName: d.dept_name || d.deptName,
+        dept_name: d.dept_name || d.deptName,
         experience: Number(d.experience) || 10,
         qualification: d.qualification,
         awards: d.awards || [],
@@ -495,14 +493,18 @@ export const getSupabaseDoctors = async () => {
         rating: Number(d.rating) || 4.9,
         reviewsCount: d.reviews_count || d.reviewsCount || 890,
         consultationFee: Number(d.consultation_fee || d.consultationFee || 2000),
+        consultation_fee: Number(d.consultation_fee || d.consultationFee || 2000),
         languages: Array.isArray(d.languages) ? d.languages : ['English'],
         availability: d.availability || ['Mon', 'Wed', 'Fri'],
         bio: d.bio || '',
         locations: d.locations || ['Main Campus — Gachibowli'],
         researchPapers: d.research_papers || d.researchPapers || 50,
         patientsTreated: d.patients_treated || d.patientsTreated || '10,000+',
+        is_visible: d.is_visible !== undefined ? d.is_visible : (d.isVisible !== undefined ? d.isVisible : true),
         isVisible: d.is_visible !== undefined ? d.is_visible : (d.isVisible !== undefined ? d.isVisible : true)
       }));
+      localStorage.setItem('apex_doctors', JSON.stringify(formatted));
+      return formatted;
     }
   } catch (err) {}
   return getLiveDoctors();

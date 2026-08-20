@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { PhoneCall, Calendar, MessageSquare, ArrowUp, Stethoscope, Bot } from 'lucide-react';
+import { PhoneCall, Calendar, ArrowUp, Stethoscope } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { useStore } from '../../store/useStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,16 +41,6 @@ export default function FloatingButtons() {
           <span className="hidden sm:inline">AI Symptom Checker</span>
         </button>
 
-        {/* AI Assistant Chat Button */}
-        <button
-          onClick={toggleVirtualAssistant}
-          className="group flex items-center gap-2 bg-white text-[#00695C] px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border border-[#00695C]/20 text-xs font-semibold"
-          title="Virtual Assistant"
-        >
-          <Bot className="w-4 h-4 text-[#00695C] shrink-0" />
-          <span className="hidden sm:inline">Virtual Concierge</span>
-        </button>
-
         {/* Emergency SOS Button */}
         <button
           onClick={toggleEmergencyModal}
@@ -61,13 +52,13 @@ export default function FloatingButtons() {
 
         {/* Quick WhatsApp Concierge */}
         <a
-          href="https://wa.me/919999999999?text=Hello%20Apex%20Health%20Institute%2C%20I%20need%20assistance."
+          href="https://wa.me/919959198252?text=Hello%20Prestige%20Hospitals%2C%20I%20need%20assistance."
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center w-11 h-11 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-lg hover:shadow-emerald-600/30 hover:scale-110 transition-all duration-300 border border-white/30"
-          title="Chat on WhatsApp"
+          className="flex items-center justify-center w-11 h-11 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-lg hover:shadow-emerald-600/40 hover:scale-110 transition-all duration-300 border border-white/30"
+          title="Chat on WhatsApp (+91 9959198252)"
         >
-          <MessageSquare className="w-5 h-5 fill-current" />
+          <FaWhatsapp className="w-6 h-6 fill-current text-white" />
         </a>
 
         {/* Quick Book Appointment */}

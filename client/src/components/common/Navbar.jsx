@@ -162,7 +162,7 @@ export default function Navbar() {
                   : 'text-slate-700 dark:text-slate-200 hover:text-[#00695C] dark:hover:text-[#80CBC4]'
               }`}
             >
-              About Apex
+              About Prestige
             </Link>
 
             <Link

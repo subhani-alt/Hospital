@@ -4,6 +4,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { connectDB } from './config/db.js';
 import { supabase } from './config/supabase.js';
 
@@ -17,10 +20,10 @@ app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(mongoSanitize());
 
-// Rate Limiter
+// Rate Limiter (Generous limit for local development & admin operations)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 200,
+  max: 5000,
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use('/api', limiter);
@@ -44,21 +47,54 @@ const MOCK_DOCTORS = [
   { id: 'dr-sk-mukherjee', name: 'Dr. S. K. Mukherjee', title: 'Director — Nephrology & Transplant Services', department: 'nephrology', deptName: 'Renal Sciences', experience: 28, qualification: 'MD, DM (Nephrology), FISN, FASN', awards: ['National Nephrologist of Eminence', 'Lifetime Transplant Excellence'], image: '/dr-sk-mukherjee.png', rating: 4.97, reviewsCount: 1080, consultationFee: 2000, languages: ['English', 'Hindi', 'Bengali'], availability: ['Mon', 'Tue', 'Wed', 'Fri'], bio: 'Renowned transplant nephrologist with expertise in high-risk ABO incompatible kidney transplants and chronic kidney disease management.', locations: ['Main Campus — Gachibowli'], researchPapers: 210, patientsTreated: '35,000+' }
 ];
 
-// In-Memory Data Stores for Live Sync
-let doctorsStore = [...MOCK_DOCTORS];
-let blogsStore = [
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const STORE_FILE = path.join(__dirname, 'store.json');
+
+const loadSavedStore = () => {
+  try {
+    if (fs.existsSync(STORE_FILE)) {
+      const content = fs.readFileSync(STORE_FILE, 'utf-8');
+      return JSON.parse(content);
+    }
+  } catch (e) {
+    console.error('[Server] Failed to load store.json:', e.message);
+  }
+  return null;
+};
+
+const persistStore = () => {
+  try {
+    const data = {
+      doctorsStore,
+      blogsStore,
+      packagesStore,
+      appointmentsStore,
+      inquiriesStore
+    };
+    fs.writeFileSync(STORE_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (e) {
+    console.error('[Server] Failed to persist store.json:', e.message);
+  }
+};
+
+const _saved = loadSavedStore();
+
+// In-Memory & Persistent Data Stores for Live Sync
+let doctorsStore = _saved?.doctorsStore || [...MOCK_DOCTORS];
+let blogsStore = _saved?.blogsStore || [
   { id: 'robotic-surgery-future-2026', title: 'How 5G-Enabled Robotic Surgery is Revolutionizing Quaternary Healthcare in 2026', category: 'Medical Breakthroughs', author: 'Dr. Ananya Sharma', date: 'February 12, 2026', read_time: '6 min read', summary: 'Discover how robotic-assisted surgical platforms with sub-millimeter precision are reducing recovery times.', image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800' },
   { id: 'fatty-liver-reversal-guide', title: 'Reversing Non-Alcoholic Fatty Liver Disease (MASLD): The Science of Early Precision Intervention', category: 'Gastroenterology', author: 'Dr. D. Nageshwar Reddy', date: 'January 28, 2026', read_time: '8 min read', summary: 'With MASLD affecting nearly 30% of global adults, early FibroScan detection offers a complete pathway to liver renewal.', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800' }
 ];
-let packagesStore = [
-  { id: 'executive-master-check', name: 'Apex Executive Master Health Shield', badge: 'Most Popular', category: 'Comprehensive', price: 14999, original_price: 22000, tests_count: 94, recommended_for: 'Men & Women Aged 35+' },
-  { id: 'cardiac-vital-guard', name: 'Apex Advanced Cardiac Protection Package', badge: 'Heart Special', category: 'Cardiology', price: 8999, original_price: 14000, tests_count: 45, recommended_for: 'Heart Risk, High BP' }
+let packagesStore = _saved?.packagesStore || [
+  { id: 'executive-master-check', name: 'Prestige Executive Master Health Shield', badge: 'Most Popular', category: 'Comprehensive', price: 14999, original_price: 22000, tests_count: 94, recommended_for: 'Men & Women Aged 35+' },
+  { id: 'cardiac-vital-guard', name: 'Prestige Advanced Cardiac Protection Package', badge: 'Heart Special', category: 'Cardiology', price: 8999, original_price: 14000, tests_count: 45, recommended_for: 'Heart Risk, High BP' }
 ];
-let appointmentsStore = [
+let appointmentsStore = _saved?.appointmentsStore || [
   { id: 'b1a2c3d4-0001', patient_name: 'Rahul Verma', patient_phone: '+91 98765 43210', patient_email: 'rahul.verma@example.com', doctor_name: 'Dr. D. Nageshwar Reddy', department: 'Gastroenterology', date: '2026-08-05', time_slot: '10:30 AM', type: 'in-person', status: 'confirmed', fee: 2500, payment_status: 'paid', created_at: new Date().toISOString() },
   { id: 'b1a2c3d4-0002', patient_name: 'Priya Sharma', patient_phone: '+91 98111 22233', patient_email: 'priya.sharma@example.com', doctor_name: 'Dr. Ananya Sharma', department: 'Oncology', date: '2026-08-05', time_slot: '11:30 AM', type: 'online', status: 'pending', fee: 2000, payment_status: 'unpaid', created_at: new Date().toISOString() }
 ];
-let inquiriesStore = [
+let inquiriesStore = _saved?.inquiriesStore || [
   { id: 'c1a2c3d4-0001', name: 'Anita Sharma', email: 'anita.sharma@example.com', phone: '+91 98111 22233', subject: 'International Patient Inquiry', message: 'I would like to inquire about medical tourism facilities for cardiac evaluation.', status: 'unread', created_at: '2026-08-02' }
 ];
 
@@ -66,7 +102,7 @@ let inquiriesStore = [
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'online',
-    hospital: 'Apex Health Institute & Research Center',
+    hospital: 'Prestige Hospitals & Research Center',
     version: '1.0.0',
     timestamp: new Date().toISOString()
   });
@@ -123,7 +159,13 @@ app.get('/api/doctors', async (req, res) => {
         is_visible: d.is_visible !== undefined ? d.is_visible : true,
         isVisible: d.is_visible !== undefined ? d.is_visible : true
       }));
-      doctorsStore = formatted;
+      const merged = doctorsStore.map(storeDoc => {
+        const foundSupa = formatted.find(s => s.id === storeDoc.id);
+        return { ...foundSupa, ...storeDoc };
+      });
+      const extraSupa = formatted.filter(s => !doctorsStore.some(d => d.id === s.id));
+      doctorsStore = [...merged, ...extraSupa];
+      persistStore();
     }
   } catch (err) {}
   return res.json({ success: true, source: 'store', count: doctorsStore.length, data: doctorsStore });
@@ -149,7 +191,13 @@ app.get('/api/health-packages', async (req, res) => {
         highlights: p.highlights,
         inclusions: p.inclusions
       }));
-      packagesStore = formatted;
+      const merged = packagesStore.map(storePkg => {
+        const foundSupa = formatted.find(s => s.id === storePkg.id);
+        return { ...foundSupa, ...storePkg };
+      });
+      const extraSupa = formatted.filter(s => !packagesStore.some(p => p.id === s.id));
+      packagesStore = [...merged, ...extraSupa];
+      persistStore();
     }
   } catch (err) {}
   return res.json({ success: true, source: 'store', count: packagesStore.length, data: packagesStore });
@@ -172,7 +220,13 @@ app.get('/api/blogs', async (req, res) => {
         summary: b.summary,
         content: b.content
       }));
-      blogsStore = formatted;
+      const merged = blogsStore.map(storeBlog => {
+        const foundSupa = formatted.find(s => s.id === storeBlog.id);
+        return { ...foundSupa, ...storeBlog };
+      });
+      const extraSupa = formatted.filter(s => !blogsStore.some(b => b.id === s.id));
+      blogsStore = [...merged, ...extraSupa];
+      persistStore();
     }
   } catch (err) {}
   return res.json({ success: true, source: 'store', count: blogsStore.length, data: blogsStore });
@@ -207,7 +261,7 @@ app.post('/api/appointments', async (req, res) => {
     id: `app-${Date.now()}`,
     patient_name: patientName || patient_name || 'Valued Patient',
     patient_phone: patientPhone || patient_phone || '+91 99999 99999',
-    patient_email: patientEmail || patient_email || 'patient@apexhealth.org',
+    patient_email: patientEmail || patient_email || 'patient@prestigehospitals.org',
     doctor_name: doctorName || doctor_name || 'Dr. D. Nageshwar Reddy',
     department: department || 'Gastroenterology',
     date: date || new Date().toISOString().split('T')[0],
@@ -220,6 +274,7 @@ app.post('/api/appointments', async (req, res) => {
   };
 
   appointmentsStore = [payload, ...appointmentsStore.filter(a => a.id !== payload.id)];
+  persistStore();
 
   try {
     supabase.from('appointments').insert([payload]).then();
@@ -234,7 +289,7 @@ app.post('/api/contact', async (req, res) => {
   const payload = {
     id: `inq-${Date.now()}`,
     name: name || 'Anonymous Inquiry',
-    email: email || 'info@apexhealth.org',
+    email: email || 'info@prestigehospitals.org',
     phone: phone || '',
     subject: subject || 'Patient Inquiry',
     message: message || 'No message provided',
@@ -243,6 +298,7 @@ app.post('/api/contact', async (req, res) => {
   };
 
   inquiriesStore = [payload, ...inquiriesStore.filter(i => i.id !== payload.id)];
+  persistStore();
 
   try {
     supabase.from('contact_inquiries').insert([payload]).then();
@@ -255,24 +311,25 @@ app.post('/api/contact', async (req, res) => {
 app.post('/api/doctors', async (req, res) => {
   const { id, name, title, department, dept_name, deptName, qualification, experience, consultation_fee, consultationFee, rating, image, bio, languages, is_visible, isVisible } = req.body;
   const targetId = id || `dr-${(name || 'doc').toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+  const existingDoc = doctorsStore.find(d => d.id === targetId);
   
   const payload = {
     id: targetId,
-    name: name || 'Dr. New Specialist',
-    title: title || 'Senior Consultant',
-    department: department || 'gastroenterology',
-    dept_name: dept_name || deptName || 'Gastroenterology',
-    deptName: dept_name || deptName || 'Gastroenterology',
-    qualification: qualification || 'MD, MBBS',
-    experience: Number(experience) || 10,
-    consultation_fee: Number(consultation_fee || consultationFee || 2000),
-    consultationFee: Number(consultation_fee || consultationFee || 2000),
-    rating: Number(rating) || 4.9,
-    image: image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600',
-    bio: bio || 'Leading medical specialist.',
-    languages: Array.isArray(languages) ? languages : (typeof languages === 'string' ? languages.split(',').map(s=>s.trim()) : ['English']),
-    is_visible: is_visible !== undefined ? is_visible : (isVisible !== undefined ? isVisible : true),
-    isVisible: is_visible !== undefined ? is_visible : (isVisible !== undefined ? isVisible : true)
+    name: name || existingDoc?.name || 'Dr. New Specialist',
+    title: title || existingDoc?.title || 'Senior Consultant',
+    department: department || existingDoc?.department || 'gastroenterology',
+    dept_name: dept_name || deptName || existingDoc?.dept_name || existingDoc?.deptName || 'Gastroenterology',
+    deptName: dept_name || deptName || existingDoc?.dept_name || existingDoc?.deptName || 'Gastroenterology',
+    qualification: qualification || existingDoc?.qualification || 'MD, MBBS',
+    experience: Number(experience || existingDoc?.experience || 10),
+    consultation_fee: Number(consultation_fee || consultationFee || existingDoc?.consultation_fee || existingDoc?.consultationFee || 2000),
+    consultationFee: Number(consultation_fee || consultationFee || existingDoc?.consultation_fee || existingDoc?.consultationFee || 2000),
+    rating: Number(rating || existingDoc?.rating || 4.9),
+    image: image || existingDoc?.image || '/dr-ananya-sharma.png',
+    bio: bio || existingDoc?.bio || 'Leading medical specialist.',
+    languages: Array.isArray(languages) ? languages : (typeof languages === 'string' ? languages.split(',').map(s=>s.trim()) : (existingDoc?.languages || ['English'])),
+    is_visible: is_visible !== undefined ? is_visible : (isVisible !== undefined ? isVisible : (existingDoc?.is_visible !== undefined ? existingDoc.is_visible : true)),
+    isVisible: is_visible !== undefined ? is_visible : (isVisible !== undefined ? isVisible : (existingDoc?.isVisible !== undefined ? existingDoc.isVisible : true))
   };
 
   const existingIdx = doctorsStore.findIndex(d => d.id === targetId);
@@ -281,6 +338,7 @@ app.post('/api/doctors', async (req, res) => {
   } else {
     doctorsStore = [payload, ...doctorsStore];
   }
+  persistStore();
 
   try {
     supabase.from('doctors').upsert([payload]).then();
@@ -293,6 +351,7 @@ app.post('/api/doctors', async (req, res) => {
 app.delete('/api/doctors/:id', async (req, res) => {
   const { id } = req.params;
   doctorsStore = doctorsStore.filter(d => d.id !== id);
+  persistStore();
 
   try {
     supabase.from('doctors').delete().eq('id', id).then();
@@ -310,7 +369,7 @@ app.post('/api/blogs', async (req, res) => {
     id: targetId,
     title: title || 'Untitled Health Article',
     category: category || 'Medical Breakthroughs',
-    author: author || 'Apex Medical Board',
+    author: author || 'Prestige Medical Board',
     date: date || new Date().toISOString().split('T')[0],
     read_time: read_time || readTime || '5 min read',
     readTime: read_time || readTime || '5 min read',
@@ -325,6 +384,7 @@ app.post('/api/blogs', async (req, res) => {
   } else {
     blogsStore = [payload, ...blogsStore];
   }
+  persistStore();
 
   try {
     supabase.from('blogs').upsert([payload]).then();
@@ -337,6 +397,7 @@ app.post('/api/blogs', async (req, res) => {
 app.delete('/api/blogs/:id', async (req, res) => {
   const { id } = req.params;
   blogsStore = blogsStore.filter(b => b.id !== id);
+  persistStore();
 
   try {
     supabase.from('blogs').delete().eq('id', id).then();
@@ -370,6 +431,7 @@ app.post('/api/health-packages', async (req, res) => {
   } else {
     packagesStore = [payload, ...packagesStore];
   }
+  persistStore();
 
   try {
     supabase.from('health_packages').upsert([payload]).then();
@@ -382,6 +444,7 @@ app.post('/api/health-packages', async (req, res) => {
 app.delete('/api/health-packages/:id', async (req, res) => {
   const { id } = req.params;
   packagesStore = packagesStore.filter(p => p.id !== id);
+  persistStore();
 
   try {
     supabase.from('health_packages').delete().eq('id', id).then();
@@ -433,7 +496,7 @@ export default app;
 if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
-    console.log(`[Server] Apex Health Backend API running on port ${PORT}`);
+    console.log(`[Server] Prestige Hospitals Backend API running on port ${PORT}`);
     connectDB();
   });
 }

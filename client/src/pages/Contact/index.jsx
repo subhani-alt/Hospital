@@ -47,7 +47,7 @@ export default function Contact() {
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
           <span className="text-xs font-semibold uppercase tracking-widest text-[#00695C] dark:text-[#80CBC4]">
-            Connect With Apex Health
+            Connect With Prestige Hospitals
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold font-heading tracking-tight">
             Campus Location & Directory
@@ -197,7 +197,7 @@ export default function Contact() {
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 h-96">
           <iframe
-            title="Apex Health Location Map"
+            title="Prestige Hospitals Location Map"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.275883838234!2d78.34631!3d17.4401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93a276e01a8b%3A0x4a9d70102b4d9342!2sAIG%20Hospitals!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
             width="100%"
             height="100%"

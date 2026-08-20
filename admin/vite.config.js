@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 5174,
+    watch: {
+      ignored: ['**/server/store.json', '**/server/**']
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',

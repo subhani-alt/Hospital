@@ -14,6 +14,9 @@ export default defineConfig({
   server: {
     port: 3001,
     strictPort: true,
+    watch: {
+      ignored: ['**/server/store.json', '**/server/**']
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
