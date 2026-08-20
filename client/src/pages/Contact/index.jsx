@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { PhoneCall, Mail, MapPin, Send, Clock, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { createContactInquiryInSupabase } from '../../services/data';
+import { submitContactToSheet } from '../../services/googleSheets';
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);

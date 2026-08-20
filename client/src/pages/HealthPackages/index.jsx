@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getLivePackages } from '../../services/data';
+import { getLivePackages, getSupabaseHealthPackages } from '../../services/data';
 import { Check, ShieldCheck, Calendar, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,16 @@ export default function HealthPackages() {
   const [packagesList, setPackagesList] = useState(() => getLivePackages());
 
   useEffect(() => {
-    const handleUpdate = () => setPackagesList(getLivePackages());
+    async function syncPackages() {
+      const live = await getSupabaseHealthPackages();
+      if (live && live.length > 0) setPackagesList(live);
+    }
+    syncPackages();
+
+    const handleUpdate = () => {
+      syncPackages();
+      setPackagesList(getLivePackages());
+    };
     window.addEventListener('apex_packages_updated', handleUpdate);
     window.addEventListener('storage', handleUpdate);
     return () => {

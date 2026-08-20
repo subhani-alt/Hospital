@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getLiveBlogs } from '../../services/data';
+import { getLiveBlogs, getSupabaseBlogs } from '../../services/data';
 import { Search, BookOpen, Clock, User, ArrowRight } from 'lucide-react';
 
 export default function HealthLibrary() {
@@ -7,7 +7,16 @@ export default function HealthLibrary() {
   const [blogsList, setBlogsList] = useState(() => getLiveBlogs());
 
   useEffect(() => {
-    const handleUpdate = () => setBlogsList(getLiveBlogs());
+    async function syncBlogs() {
+      const live = await getSupabaseBlogs();
+      if (live && live.length > 0) setBlogsList(live);
+    }
+    syncBlogs();
+
+    const handleUpdate = () => {
+      syncBlogs();
+      setBlogsList(getLiveBlogs());
+    };
     window.addEventListener('apex_blogs_updated', handleUpdate);
     window.addEventListener('storage', handleUpdate);
     return () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getLiveDoctors } from '../../services/data';
+import { getLiveDoctors, getSupabaseDoctors } from '../../services/data';
 import { Star, Award, Calendar, ChevronRight, ShieldCheck } from 'lucide-react';
 
 export default function FeaturedDoctorsSection() {
@@ -8,7 +8,16 @@ export default function FeaturedDoctorsSection() {
   const [doctorsList, setDoctorsList] = useState(() => getLiveDoctors());
 
   useEffect(() => {
-    const handleUpdate = () => setDoctorsList(getLiveDoctors());
+    async function syncDoctors() {
+      const live = await getSupabaseDoctors();
+      if (live && live.length > 0) setDoctorsList(live);
+    }
+    syncDoctors();
+
+    const handleUpdate = () => {
+      syncDoctors();
+      setDoctorsList(getLiveDoctors());
+    };
     window.addEventListener('apex_doctors_updated', handleUpdate);
     window.addEventListener('storage', handleUpdate);
     return () => {
