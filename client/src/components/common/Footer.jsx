@@ -94,18 +94,42 @@ export default function Footer() {
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-4 border-b border-white/10 pb-2">
               Campus Locations
             </h4>
-            <div className="space-y-3 text-xs">
-              <div>
-                <strong className="text-white block font-semibold">Gachibowli Main Campus</strong>
-                <p className="text-slate-400 mt-0.5">Mindspace Road, Gachibowli, Hyderabad, Telangana 500032</p>
-              </div>
-              <div>
-                <strong className="text-white block font-semibold">Banjara Hills Specialty Center</strong>
-                <p className="text-slate-400 mt-0.5">Road No. 1, Banjara Hills, Hyderabad – 500045</p>
-              </div>
-              <div className="pt-2">
-                <a href="mailto:info@apexhealth.org" className="text-[#80CBC4] hover:underline flex items-center gap-1 text-xs">
-                  <Mail className="w-3.5 h-3.5" /> info@apexhealth.org
+            <div className="space-y-3.5 text-xs">
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=Mindspace+Road,+Gachibowli,+Hyderabad,+Telangana+500032" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="group block p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-[#80CBC4]/30 transition-all duration-200"
+              >
+                <div className="flex items-center justify-between">
+                  <strong className="text-white group-hover:text-[#80CBC4] block font-semibold transition">Gachibowli Main Campus</strong>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#80CBC4] transition opacity-0 group-hover:opacity-100" />
+                </div>
+                <p className="text-slate-400 group-hover:text-slate-300 mt-0.5 transition">Mindspace Road, Gachibowli, Hyderabad, Telangana 500032</p>
+                <span className="text-[11px] text-[#80CBC4] font-medium mt-1 inline-flex items-center gap-1 group-hover:underline">
+                  <MapPin className="w-3 h-3" /> Open in Google Maps
+                </span>
+              </a>
+
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=Road+No.+1,+Banjara+Hills,+Hyderabad,+Telangana+500045" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="group block p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-[#80CBC4]/30 transition-all duration-200"
+              >
+                <div className="flex items-center justify-between">
+                  <strong className="text-white group-hover:text-[#80CBC4] block font-semibold transition">Banjara Hills Specialty Center</strong>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#80CBC4] transition opacity-0 group-hover:opacity-100" />
+                </div>
+                <p className="text-slate-400 group-hover:text-slate-300 mt-0.5 transition">Road No. 1, Banjara Hills, Hyderabad – 500045</p>
+                <span className="text-[11px] text-[#80CBC4] font-medium mt-1 inline-flex items-center gap-1 group-hover:underline">
+                  <MapPin className="w-3 h-3" /> Open in Google Maps
+                </span>
+              </a>
+
+              <div className="pt-1">
+                <a href="mailto:info@prestigehospitals.org" className="text-[#80CBC4] hover:underline flex items-center gap-1.5 text-xs">
+                  <Mail className="w-3.5 h-3.5" /> info@prestigehospitals.org
                 </a>
               </div>
             </div>

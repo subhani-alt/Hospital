@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { PhoneCall, Mail, MapPin, Send, Clock, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { PhoneCall, Mail, MapPin, Send, Clock, ShieldAlert, CheckCircle2, ExternalLink } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { createContactInquiryInSupabase } from '../../services/data';
 import { submitContactToSheet } from '../../services/googleSheets';
@@ -77,29 +77,51 @@ export default function Contact() {
 
             {/* Campuses */}
             <div className="bg-white dark:bg-[#122824] p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md space-y-4 text-xs">
-              <div className="flex items-start gap-3">
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=Mindspace+Road,+Gachibowli,+Hyderabad,+Telangana+500032"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-start gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition border border-transparent hover:border-[#00695C]/20"
+              >
                 <MapPin className="w-5 h-5 text-[#00695C] dark:text-[#80CBC4] shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-sm font-bold text-slate-900 dark:text-white block font-heading">
-                    Gachibowli Main Campus
-                  </strong>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <strong className="text-sm font-bold text-slate-900 dark:text-white block font-heading group-hover:text-[#00695C] dark:group-hover:text-[#80CBC4] transition">
+                      Gachibowli Main Campus
+                    </strong>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#00695C] dark:group-hover:text-[#80CBC4] transition" />
+                  </div>
                   <p className="text-slate-500 dark:text-slate-400 mt-0.5">
                     1-66/AIG/2 to 5, Mindspace Road, Gachibowli, Hyderabad, Telangana 500032
                   </p>
+                  <span className="text-[11px] text-[#00695C] dark:text-[#80CBC4] font-semibold mt-1 inline-flex items-center gap-1 group-hover:underline">
+                    View on Google Maps →
+                  </span>
                 </div>
-              </div>
+              </a>
 
-              <div className="flex items-start gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=Road+No.+1,+Banjara+Hills,+Hyderabad,+Telangana+500045"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-start gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition border border-transparent hover:border-[#00695C]/20 pt-3 border-t border-slate-100 dark:border-slate-800"
+              >
                 <MapPin className="w-5 h-5 text-[#00695C] dark:text-[#80CBC4] shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-sm font-bold text-slate-900 dark:text-white block font-heading">
-                    Banjara Hills Center of Excellence
-                  </strong>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <strong className="text-sm font-bold text-slate-900 dark:text-white block font-heading group-hover:text-[#00695C] dark:group-hover:text-[#80CBC4] transition">
+                      Banjara Hills Center of Excellence
+                    </strong>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#00695C] dark:group-hover:text-[#80CBC4] transition" />
+                  </div>
                   <p className="text-slate-500 dark:text-slate-400 mt-0.5">
                     Road No. 1, Banjara Hills, Beside City Center Mall, Hyderabad – 500045
                   </p>
+                  <span className="text-[11px] text-[#00695C] dark:text-[#80CBC4] font-semibold mt-1 inline-flex items-center gap-1 group-hover:underline">
+                    View on Google Maps →
+                  </span>
                 </div>
-              </div>
+              </a>
             </div>
 
           </div>
