@@ -12,9 +12,21 @@ const clientDir = isClientSubdir ? cwd : (fs.existsSync(path.join(cwd, 'client')
 
 console.log('[Build] Target Client Directory:', clientDir);
 
+// On Linux / Vercel, ensure native rollup binaries are present
+if (process.platform === 'linux') {
+  console.log('[Build] Linux environment detected. Ensuring Linux native rollup binaries...');
+  try {
+    execSync('npm install --no-save @rollup/rollup-linux-x64-gnu @rollup/rollup-linux-x64-musl', { cwd: clientDir, stdio: 'inherit' });
+  } catch (err) {
+    console.warn('[Build] Warning: Failed to pre-install Linux rollup binaries:', err.message);
+  }
+}
+
 try {
   console.log('[Build] Executing Vite compilation...');
-  execSync('npm run build', { cwd: clientDir, stdio: 'inherit' });
+  const viteBin = path.join(clientDir, 'node_modules', '.bin', process.platform === 'win32' ? 'vite.cmd' : 'vite');
+  const viteCmd = fs.existsSync(viteBin) ? `"${viteBin}" build` : 'npx vite build';
+  execSync(viteCmd, { cwd: clientDir, stdio: 'inherit' });
   
   const clientDist = path.join(clientDir, 'dist');
   const rootDir = isClientSubdir ? path.resolve(cwd, '..') : cwd;
