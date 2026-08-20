@@ -195,10 +195,45 @@ export default function AdminDashboard() {
         fetch('/api/contact-inquiries').then(r => r.json()).catch(() => null)
       ]);
 
-      if (apptRes?.data && apptRes.data.length > 0) {
-        setAppointments(apptRes.data);
-        localStorage.setItem('apex_appointments', JSON.stringify(apptRes.data));
+      // Direct Supabase query to guarantee cross-device mobile booking synchronization
+      try {
+        const { data: supaAppts } = await supabase.from('appointments').select('*').order('created_at', { ascending: false });
+        if (supaAppts && supaAppts.length > 0) {
+          const normalized = supaAppts.map(a => ({
+            ...a,
+            id: a.id,
+            patient_name: a.patient_name || a.patientName || a.name || 'Valued Patient',
+            patientName: a.patient_name || a.patientName || a.name || 'Valued Patient',
+            patient_phone: a.patient_phone || a.patientPhone || a.phone || 'Phone not provided',
+            patientPhone: a.patient_phone || a.patientPhone || a.phone || 'Phone not provided',
+            patient_email: a.patient_email || a.patientEmail || a.email || 'Email not provided',
+            patientEmail: a.patient_email || a.patientEmail || a.email || 'Email not provided',
+            doctor_name: a.doctor_name || a.doctorName || a.doctor || (a.department ? `Specialist (${a.department})` : 'Assigned Specialist'),
+            doctorName: a.doctor_name || a.doctorName || a.doctor || (a.department ? `Specialist (${a.department})` : 'Assigned Specialist'),
+            department: a.department || 'General Medicine',
+            date: a.date || a.bookingDate || 'Scheduled',
+            bookingDate: a.date || a.bookingDate || 'Scheduled',
+            time_slot: a.time_slot || a.timeSlot || a.slot || '10:00 AM',
+            timeSlot: a.time_slot || a.timeSlot || a.slot || '10:00 AM',
+            type: a.type || a.consultationType || 'in-person',
+            fee: Number(a.fee || 2000),
+            status: a.status || 'pending',
+            payment_status: a.payment_status || 'unpaid',
+            created_at: a.created_at || new Date().toISOString()
+          }));
+          setAppointments(normalized);
+          localStorage.setItem('apex_appointments', JSON.stringify(normalized));
+        } else if (apptRes?.data && apptRes.data.length > 0) {
+          setAppointments(apptRes.data);
+          localStorage.setItem('apex_appointments', JSON.stringify(apptRes.data));
+        }
+      } catch (err) {
+        if (apptRes?.data && apptRes.data.length > 0) {
+          setAppointments(apptRes.data);
+          localStorage.setItem('apex_appointments', JSON.stringify(apptRes.data));
+        }
       }
+
       if (docRes?.data && docRes.data.length > 0) {
         const validDocs = docRes.data.filter(d => d.id !== 'dr-preeti-deshmukh' && d.id !== 'dr-arvind-swaminathan');
         setDoctors(validDocs);
@@ -221,10 +256,24 @@ export default function AdminDashboard() {
         setPackages(INITIAL_PACKAGES);
         localStorage.setItem('apex_packages', JSON.stringify(INITIAL_PACKAGES));
       }
-      if (inqRes?.data && inqRes.data.length > 0) {
-        setInquiries(inqRes.data);
-        localStorage.setItem('apex_inquiries', JSON.stringify(inqRes.data));
+
+      // Direct Supabase query for contact inquiries
+      try {
+        const { data: supaInq } = await supabase.from('contact_inquiries').select('*').order('created_at', { ascending: false });
+        if (supaInq && supaInq.length > 0) {
+          setInquiries(supaInq);
+          localStorage.setItem('apex_inquiries', JSON.stringify(supaInq));
+        } else if (inqRes?.data && inqRes.data.length > 0) {
+          setInquiries(inqRes.data);
+          localStorage.setItem('apex_inquiries', JSON.stringify(inqRes.data));
+        }
+      } catch (err) {
+        if (inqRes?.data && inqRes.data.length > 0) {
+          setInquiries(inqRes.data);
+          localStorage.setItem('apex_inquiries', JSON.stringify(inqRes.data));
+        }
       }
+
     } catch (err) {
       console.warn('Failed to load from backend:', err);
     } finally {
@@ -241,6 +290,12 @@ export default function AdminDashboard() {
     window.addEventListener('apex_packages_updated', handleUpdate);
     window.addEventListener('apex_appointments_updated', handleUpdate);
     window.addEventListener('storage', handleUpdate);
+    window.addEventListener('focus', handleUpdate);
+
+    // Auto-poll every 5 seconds to instantly pick up mobile/remote bookings
+    const pollInterval = setInterval(() => {
+      loadAllData(false);
+    }, 5000);
 
     return () => {
       window.removeEventListener('apex_doctors_updated', handleUpdate);
@@ -248,6 +303,8 @@ export default function AdminDashboard() {
       window.removeEventListener('apex_packages_updated', handleUpdate);
       window.removeEventListener('apex_appointments_updated', handleUpdate);
       window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('focus', handleUpdate);
+      clearInterval(pollInterval);
     };
   }, []);
 

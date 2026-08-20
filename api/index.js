@@ -227,8 +227,7 @@ app.get('/api/appointments', async (req, res) => {
 
 app.post('/api/appointments', async (req, res) => {
   const { patientName, patient_name, patientPhone, patient_phone, patientEmail, patient_email, doctorName, doctor_name, department, date, timeSlot, time_slot, type, fee } = req.body;
-  const payload = {
-    id: `app-${Date.now()}`,
+  const dbPayload = {
     patient_name: patientName || patient_name || 'Valued Patient',
     patient_phone: patientPhone || patient_phone || '+91 99999 99999',
     patient_email: patientEmail || patient_email || 'patient@prestigehospitals.org',
@@ -239,20 +238,26 @@ app.post('/api/appointments', async (req, res) => {
     type: type || 'in-person',
     fee: Number(fee || 2000),
     status: 'pending',
-    payment_status: 'unpaid',
-    created_at: new Date().toISOString()
+    payment_status: 'unpaid'
   };
 
-  fallbackAppointments = [payload, ...fallbackAppointments.filter(a => a.id !== payload.id)];
-
+  let inserted = null;
   try {
-    const { data, error } = await supabase.from('appointments').insert([payload]).select();
+    const { data, error } = await supabase.from('appointments').insert([dbPayload]).select();
     if (!error && data && data.length > 0) {
-      return res.status(201).json({ success: true, source: 'supabase', data: data[0] });
+      inserted = data[0];
     }
   } catch (err) {}
 
-  return res.status(201).json({ success: true, source: 'cache', data: payload });
+  const finalRecord = inserted || {
+    id: `app-${Date.now()}`,
+    ...dbPayload,
+    created_at: new Date().toISOString()
+  };
+
+  fallbackAppointments = [finalRecord, ...fallbackAppointments.filter(a => a.id !== finalRecord.id)];
+
+  return res.status(201).json({ success: true, source: inserted ? 'supabase' : 'cache', data: finalRecord });
 });
 
 app.put('/api/appointments/:id', async (req, res) => {
@@ -292,27 +297,32 @@ app.get(['/api/contact-inquiries', '/api/inquiries'], async (req, res) => {
 
 app.post('/api/contact', async (req, res) => {
   const { name, email, phone, subject, message } = req.body;
-  const payload = {
-    id: `inq-${Date.now()}`,
+  const dbPayload = {
     name: name || 'Anonymous Inquiry',
     email: email || 'info@prestigehospitals.org',
     phone: phone || '',
     subject: subject || 'Patient Inquiry',
     message: message || 'No message provided',
-    status: 'unread',
-    created_at: new Date().toISOString()
+    status: 'unread'
   };
 
-  fallbackInquiries = [payload, ...fallbackInquiries.filter(i => i.id !== payload.id)];
-
+  let inserted = null;
   try {
-    const { data, error } = await supabase.from('contact_inquiries').insert([payload]).select();
+    const { data, error } = await supabase.from('contact_inquiries').insert([dbPayload]).select();
     if (!error && data && data.length > 0) {
-      return res.status(201).json({ success: true, source: 'supabase', data: data[0] });
+      inserted = data[0];
     }
   } catch (err) {}
 
-  return res.status(201).json({ success: true, source: 'cache', data: payload });
+  const finalRecord = inserted || {
+    id: `inq-${Date.now()}`,
+    ...dbPayload,
+    created_at: new Date().toISOString()
+  };
+
+  fallbackInquiries = [finalRecord, ...fallbackInquiries.filter(i => i.id !== finalRecord.id)];
+
+  return res.status(201).json({ success: true, source: inserted ? 'supabase' : 'cache', data: finalRecord });
 });
 
 app.put(['/api/contact-inquiries/:id', '/api/inquiries/:id'], async (req, res) => {
