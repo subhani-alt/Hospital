@@ -8,8 +8,8 @@
     "server"
   ],
   "scripts": {
-    "build": "node scripts/build.js",
-    "vercel-build": "node scripts/build.js"
+    "build": "npm run build --prefix client",
+    "vercel-build": "npm run build --prefix client"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
@@ -20,7 +20,7 @@
     "helmet": "^8.0.0"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.34.8",
-    "@rollup/rollup-linux-x64-musl": "^4.34.8"
+    "@rollup/rollup-linux-x64-gnu": "*",
+    "@rollup/rollup-linux-x64-musl": "*"
   }
 }

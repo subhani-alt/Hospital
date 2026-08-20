@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/build.js",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -40,7 +40,7 @@
     "zustand": "^5.0.3"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.34.8",
-    "@rollup/rollup-linux-x64-musl": "^4.34.8"
+    "@rollup/rollup-linux-x64-gnu": "*",
+    "@rollup/rollup-linux-x64-musl": "*"
   }
 }
