@@ -554,19 +554,44 @@ export const getSupabaseBlogs = async () => {
 };
 
 export const createAppointmentInSupabase = async (appointment) => {
+  const patient_name = appointment.patient_name || appointment.patientName || appointment.name || 'Valued Patient';
+  const patient_phone = appointment.patient_phone || appointment.patientPhone || appointment.phone || '+91 99999 99999';
+  const patient_email = appointment.patient_email || appointment.patientEmail || appointment.email || 'patient@prestigehospitals.org';
+  const doctor_name = appointment.doctor_name || appointment.doctorName || appointment.doctor || 'Dr. D. Nageshwar Reddy';
+  const department = appointment.department || 'Gastroenterology';
+  const date = appointment.date || appointment.bookingDate || new Date().toISOString().split('T')[0];
+  const time_slot = appointment.time_slot || appointment.timeSlot || appointment.slot || '10:00 AM';
+  const type = appointment.type || appointment.consultationType || 'in-person';
+  const fee = Number(appointment.fee || appointment.consultationFee || 2000);
+  const status = appointment.status || 'pending';
+  const payment_status = appointment.payment_status || appointment.paymentStatus || 'unpaid';
+
   const payload = {
-    patientName: appointment.patientName || 'Valued Patient',
-    patientPhone: appointment.patientPhone || '+91 99999 99999',
-    patientEmail: appointment.patientEmail || 'patient@apexhealth.org',
-    doctorName: appointment.doctorName || 'Dr. D. Nageshwar Reddy',
-    department: appointment.department || 'Gastroenterology',
-    date: appointment.date || new Date().toISOString().split('T')[0],
-    timeSlot: appointment.timeSlot || '10:00 AM',
-    type: appointment.type || 'in-person',
-    fee: Number(appointment.fee || 2000)
+    id: appointment.id || `app-${Date.now()}`,
+    patient_name,
+    patientName: patient_name,
+    patient_phone,
+    patientPhone: patient_phone,
+    patient_email,
+    patientEmail: patient_email,
+    doctor_name,
+    doctorName: doctor_name,
+    department,
+    date,
+    bookingDate: date,
+    time_slot,
+    timeSlot: time_slot,
+    type,
+    consultationType: type,
+    fee,
+    consultationFee: fee,
+    status,
+    payment_status,
+    paymentStatus: payment_status,
+    created_at: appointment.created_at || new Date().toISOString()
   };
 
-  let resultData = payload;
+  let resultData = { ...payload };
 
   try {
     const res = await fetch('/api/appointments', {
@@ -575,7 +600,25 @@ export const createAppointmentInSupabase = async (appointment) => {
       body: JSON.stringify(payload)
     });
     const json = await res.json();
-    if (json.data) resultData = json.data;
+    if (json.data) {
+      resultData = {
+        ...payload,
+        ...json.data,
+        patient_name: json.data.patient_name || json.data.patientName || patient_name,
+        patientName: json.data.patient_name || json.data.patientName || patient_name,
+        patient_phone: json.data.patient_phone || json.data.patientPhone || patient_phone,
+        patientPhone: json.data.patient_phone || json.data.patientPhone || patient_phone,
+        patient_email: json.data.patient_email || json.data.patientEmail || patient_email,
+        patientEmail: json.data.patient_email || json.data.patientEmail || patient_email,
+        doctor_name: json.data.doctor_name || json.data.doctorName || doctor_name,
+        doctorName: json.data.doctor_name || json.data.doctorName || doctor_name,
+        time_slot: json.data.time_slot || json.data.timeSlot || time_slot,
+        timeSlot: json.data.time_slot || json.data.timeSlot || time_slot,
+        fee: Number(json.data.fee || fee),
+        status: json.data.status || status,
+        payment_status: json.data.payment_status || payment_status
+      };
+    }
   } catch (err) {}
 
   try {
@@ -589,15 +632,25 @@ export const createAppointmentInSupabase = async (appointment) => {
 };
 
 export const createContactInquiryInSupabase = async (inquiry) => {
+  const name = inquiry.name || 'Anonymous Inquiry';
+  const email = inquiry.email || 'info@prestigehospitals.org';
+  const phone = inquiry.phone || '';
+  const subject = inquiry.subject || 'Patient Inquiry';
+  const message = inquiry.message || 'No message provided';
+  const status = inquiry.status || 'unread';
+
   const payload = {
-    name: inquiry.name || 'Anonymous Inquiry',
-    email: inquiry.email || 'info@apexhealth.org',
-    phone: inquiry.phone || '',
-    subject: inquiry.subject || 'Patient Inquiry',
-    message: inquiry.message || 'No message provided'
+    id: inquiry.id || `inq-${Date.now()}`,
+    name,
+    email,
+    phone,
+    subject,
+    message,
+    status,
+    created_at: inquiry.created_at || new Date().toISOString()
   };
 
-  let resultData = payload;
+  let resultData = { ...payload };
 
   try {
     const res = await fetch('/api/contact', {
@@ -606,7 +659,7 @@ export const createContactInquiryInSupabase = async (inquiry) => {
       body: JSON.stringify(payload)
     });
     const json = await res.json();
-    if (json.data) resultData = json.data;
+    if (json.data) resultData = { ...payload, ...json.data };
   } catch (err) {}
 
   try {

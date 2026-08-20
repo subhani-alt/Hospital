@@ -506,11 +506,28 @@ export default function AdminDashboard() {
     { month: 'Current', appointments: appointments.length }
   ];
 
-  // Filtering Logic
-  const filteredAppointments = appointments.filter(a => {
+  // Filtering Logic with comprehensive property normalization
+  const filteredAppointments = appointments.map(a => ({
+    ...a,
+    id: a.id || `app-${Math.random()}`,
+    patient_name: a.patient_name || a.patientName || a.name || 'Valued Patient',
+    patient_phone: a.patient_phone || a.patientPhone || a.phone || 'Phone not provided',
+    patient_email: a.patient_email || a.patientEmail || a.email || 'Email not provided',
+    doctor_name: a.doctor_name || a.doctorName || a.doctor || (a.department ? `Specialist (${a.department})` : 'Assigned Specialist'),
+    department: a.department || 'General Medicine',
+    date: a.date || a.bookingDate || new Date().toISOString().split('T')[0],
+    time_slot: a.time_slot || a.timeSlot || a.slot || '10:00 AM',
+    type: a.type || a.consultationType || 'in-person',
+    fee: Number(a.fee || a.consultationFee || 2000),
+    payment_status: a.payment_status || a.paymentStatus || 'unpaid',
+    status: a.status || 'pending',
+    created_at: a.created_at || a.createdAt || new Date().toISOString()
+  })).filter(a => {
     const matchesStatus = statusFilter === 'all' || a.status === statusFilter;
     const matchesQuery = !searchQuery || 
       (a.patient_name && a.patient_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (a.patient_phone && a.patient_phone.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (a.patient_email && a.patient_email.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (a.doctor_name && a.doctor_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (a.department && a.department.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesStatus && matchesQuery;
@@ -888,21 +905,32 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {appointments.slice(0, 5).map((app) => (
-                      <tr key={app.id} className="hover:bg-slate-50 transition">
-                        <td className="py-3.5 px-4 font-semibold text-slate-900">{app.patient_name}</td>
-                        <td className="py-3.5 px-4 text-slate-700">{app.doctor_name}</td>
-                        <td className="py-3.5 px-4 text-slate-700">{app.department}</td>
-                        <td className="py-3.5 px-4 text-slate-500">{app.date} ({app.time_slot})</td>
-                        <td className="py-3.5 px-4">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                            app.status === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
-                          }`}>
-                            {app.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                    {appointments.slice(0, 5).map((app) => {
+                      const pName = app.patient_name || app.patientName || app.name || 'Valued Patient';
+                      const dName = app.doctor_name || app.doctorName || app.doctor || (app.department ? `Specialist (${app.department})` : 'Assigned Specialist');
+                      const dept = app.department || 'General Medicine';
+                      const dt = app.date || app.bookingDate || 'Scheduled';
+                      const slt = app.time_slot || app.timeSlot || app.slot || '10:00 AM';
+                      const st = app.status || 'pending';
+                      return (
+                        <tr key={app.id} className="hover:bg-slate-50 transition">
+                          <td className="py-3.5 px-4 font-semibold text-slate-900">{pName}</td>
+                          <td className="py-3.5 px-4 text-slate-700">{dName}</td>
+                          <td className="py-3.5 px-4 text-slate-700">{dept}</td>
+                          <td className="py-3.5 px-4 text-slate-500">{dt} ({slt})</td>
+                          <td className="py-3.5 px-4">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase inline-block ${
+                              st === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 
+                              st === 'completed' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                              st === 'cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
+                              'bg-amber-50 text-amber-700 border border-amber-200'
+                            }`}>
+                              {st}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -954,37 +982,50 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filteredAppointments.map((app) => (
-                    <tr key={app.id} className="hover:bg-slate-50 transition">
-                      <td className="py-3.5 px-4">
-                        <strong className="text-slate-900 block text-sm font-semibold">{app.patient_name}</strong>
-                        <span className="text-slate-500 block">{app.patient_phone}</span>
-                        <span className="text-slate-400 text-[11px] block">{app.patient_email}</span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="text-slate-800 font-semibold block">{app.doctor_name}</span>
-                        <span className="text-slate-500 text-[11px]">{app.department}</span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="text-slate-700 block font-medium">{app.date}</span>
-                        <span className="text-[#00695C] font-mono text-[11px] font-semibold">{app.time_slot} ({app.type || 'in-person'})</span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="text-slate-900 font-bold block">₹{app.fee || 2000}</span>
-                        <span className={`text-[10px] font-bold uppercase ${app.payment_status === 'paid' ? 'text-emerald-600' : 'text-amber-600'}`}>
-                          {app.payment_status || 'unpaid'}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                          app.status === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 
-                          app.status === 'completed' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                          app.status === 'cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
-                          'bg-amber-50 text-amber-700 border border-amber-200'
-                        }`}>
-                          {app.status}
-                        </span>
-                      </td>
+                  {filteredAppointments.map((app) => {
+                    const pName = app.patient_name || app.patientName || app.name || 'Valued Patient';
+                    const pPhone = app.patient_phone || app.patientPhone || app.phone || 'Phone not provided';
+                    const pEmail = app.patient_email || app.patientEmail || app.email || 'Email not provided';
+                    const dName = app.doctor_name || app.doctorName || app.doctor || (app.department ? `Specialist (${app.department})` : 'Assigned Specialist');
+                    const dept = app.department || 'General Medicine';
+                    const dt = app.date || app.bookingDate || 'Scheduled';
+                    const slt = app.time_slot || app.timeSlot || app.slot || '10:00 AM';
+                    const cType = app.type || app.consultationType || 'in-person';
+                    const feeAmt = app.fee || app.consultationFee || 2000;
+                    const payStatus = app.payment_status || app.paymentStatus || 'unpaid';
+                    const st = app.status || 'pending';
+
+                    return (
+                      <tr key={app.id} className="hover:bg-slate-50 transition">
+                        <td className="py-3.5 px-4">
+                          <strong className="text-slate-900 block text-sm font-semibold">{pName}</strong>
+                          <span className="text-slate-500 block">{pPhone}</span>
+                          <span className="text-slate-400 text-[11px] block">{pEmail}</span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="text-slate-800 font-semibold block">{dName}</span>
+                          <span className="text-slate-500 text-[11px]">{dept}</span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="text-slate-700 block font-medium">{dt}</span>
+                          <span className="text-[#00695C] font-mono text-[11px] font-semibold">{slt} ({cType})</span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="text-slate-900 font-bold block">₹{feeAmt}</span>
+                          <span className={`text-[10px] font-bold uppercase ${payStatus === 'paid' ? 'text-emerald-600' : 'text-amber-600'}`}>
+                            {payStatus}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase inline-block ${
+                            st === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 
+                            st === 'completed' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                            st === 'cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
+                            'bg-amber-50 text-amber-700 border border-amber-200'
+                          }`}>
+                            {st}
+                          </span>
+                        </td>
                       <td className="py-3.5 px-4 text-right space-x-1">
                         {app.status !== 'confirmed' && (
                           <button onClick={() => handleUpdateAppointmentStatus(app.id, 'confirmed')} className="p-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg transition"><Check className="w-4 h-4" /></button>
@@ -998,7 +1039,8 @@ export default function AdminDashboard() {
                         <button onClick={() => handleDeleteAppointment(app.id)} className="p-1.5 bg-slate-100 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg ml-1 transition"><Trash2 className="w-4 h-4" /></button>
                       </td>
                     </tr>
-                  ))}
+                  );
+                })}
                 </tbody>
               </table>
             </div>

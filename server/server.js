@@ -237,7 +237,28 @@ app.get('/api/appointments', async (req, res) => {
   try {
     const { data } = await supabase.from('appointments').select('*').order('created_at', { ascending: false });
     if (data && data.length > 0) {
-      appointmentsStore = data;
+      appointmentsStore = data.map(a => ({
+        ...a,
+        id: a.id,
+        patient_name: a.patient_name || a.patientName || a.name || 'Valued Patient',
+        patientName: a.patient_name || a.patientName || a.name || 'Valued Patient',
+        patient_phone: a.patient_phone || a.patientPhone || a.phone || 'Phone not provided',
+        patientPhone: a.patient_phone || a.patientPhone || a.phone || 'Phone not provided',
+        patient_email: a.patient_email || a.patientEmail || a.email || 'Email not provided',
+        patientEmail: a.patient_email || a.patientEmail || a.email || 'Email not provided',
+        doctor_name: a.doctor_name || a.doctorName || a.doctor || (a.department ? `Specialist (${a.department})` : 'Assigned Specialist'),
+        doctorName: a.doctor_name || a.doctorName || a.doctor || (a.department ? `Specialist (${a.department})` : 'Assigned Specialist'),
+        department: a.department || 'General Medicine',
+        date: a.date || a.bookingDate || 'Scheduled',
+        bookingDate: a.date || a.bookingDate || 'Scheduled',
+        time_slot: a.time_slot || a.timeSlot || a.slot || '10:00 AM',
+        timeSlot: a.time_slot || a.timeSlot || a.slot || '10:00 AM',
+        type: a.type || a.consultationType || 'in-person',
+        fee: Number(a.fee || 2000),
+        status: a.status || 'pending',
+        payment_status: a.payment_status || 'unpaid',
+        created_at: a.created_at || new Date().toISOString()
+      }));
     }
   } catch (err) {}
   return res.json({ success: true, source: 'store', count: appointmentsStore.length, data: appointmentsStore });

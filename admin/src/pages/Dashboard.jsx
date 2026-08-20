@@ -379,11 +379,28 @@ export default function Dashboard() {
     { month: 'Current', appointments: appointments.length }
   ];
 
-  // Filtering Logic
-  const filteredAppointments = appointments.filter(a => {
+  // Filtering Logic with comprehensive property normalization
+  const filteredAppointments = appointments.map(a => ({
+    ...a,
+    id: a.id || `app-${Math.random()}`,
+    patient_name: a.patient_name || a.patientName || a.name || 'Valued Patient',
+    patient_phone: a.patient_phone || a.patientPhone || a.phone || 'Phone not provided',
+    patient_email: a.patient_email || a.patientEmail || a.email || 'Email not provided',
+    doctor_name: a.doctor_name || a.doctorName || a.doctor || (a.department ? `Specialist (${a.department})` : 'Assigned Specialist'),
+    department: a.department || 'General Medicine',
+    date: a.date || a.bookingDate || new Date().toISOString().split('T')[0],
+    time_slot: a.time_slot || a.timeSlot || a.slot || '10:00 AM',
+    type: a.type || a.consultationType || 'in-person',
+    fee: Number(a.fee || a.consultationFee || 2000),
+    payment_status: a.payment_status || a.paymentStatus || 'unpaid',
+    status: a.status || 'pending',
+    created_at: a.created_at || a.createdAt || new Date().toISOString()
+  })).filter(a => {
     const matchesStatus = statusFilter === 'all' || a.status === statusFilter;
     const matchesQuery = !searchQuery || 
       (a.patient_name && a.patient_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (a.patient_phone && a.patient_phone.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (a.patient_email && a.patient_email.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (a.doctor_name && a.doctor_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (a.department && a.department.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesStatus && matchesQuery;
@@ -659,24 +676,32 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
-                    {appointments.slice(0, 5).map((app) => (
-                      <tr key={app.id} className="hover:bg-white/5">
-                        <td className="py-3.5 px-4 font-semibold text-white">{app.patient_name}</td>
-                        <td className="py-3.5 px-4 text-slate-300">{app.doctor_name}</td>
-                        <td className="py-3.5 px-4 text-slate-300">{app.department}</td>
-                        <td className="py-3.5 px-4 text-slate-400">{app.date} ({app.time_slot})</td>
-                        <td className="py-3.5 px-4">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                            app.status === 'confirmed' ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/50' :
-                            app.status === 'completed' ? 'bg-blue-950 text-blue-400 border border-blue-700/50' :
-                            app.status === 'cancelled' ? 'bg-rose-950 text-rose-400 border border-rose-700/50' :
-                            'bg-amber-950 text-amber-400 border border-amber-700/50'
-                          }`}>
-                            {app.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                    {appointments.slice(0, 5).map((app) => {
+                      const pName = app.patient_name || app.patientName || app.name || 'Valued Patient';
+                      const dName = app.doctor_name || app.doctorName || app.doctor || (app.department ? `Specialist (${app.department})` : 'Assigned Specialist');
+                      const dept = app.department || 'General Medicine';
+                      const dt = app.date || app.bookingDate || 'Scheduled';
+                      const slt = app.time_slot || app.timeSlot || app.slot || '10:00 AM';
+                      const st = app.status || 'pending';
+                      return (
+                        <tr key={app.id} className="hover:bg-white/5">
+                          <td className="py-3.5 px-4 font-semibold text-white">{pName}</td>
+                          <td className="py-3.5 px-4 text-slate-300">{dName}</td>
+                          <td className="py-3.5 px-4 text-slate-300">{dept}</td>
+                          <td className="py-3.5 px-4 text-slate-400">{dt} ({slt})</td>
+                          <td className="py-3.5 px-4">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase inline-block ${
+                              st === 'confirmed' ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/50' :
+                              st === 'completed' ? 'bg-blue-950 text-blue-400 border border-blue-700/50' :
+                              st === 'cancelled' ? 'bg-rose-950 text-rose-400 border border-rose-700/50' :
+                              'bg-amber-950 text-amber-400 border border-amber-700/50'
+                            }`}>
+                              {st}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -688,8 +713,8 @@ export default function Dashboard() {
         {activeTab === 'appointments' && (
           <div className="space-y-6">
             
-            {/* Filter & Search Bar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#122824] p-4 rounded-2xl border border-slate-800">
+            {/* Search and Filters Bar */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#122824] p-4 rounded-2xl border border-slate-800 shadow-md">
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <Search className="w-4 h-4 text-slate-400 ml-2" />
                 <input 
@@ -697,7 +722,7 @@ export default function Dashboard() {
                   placeholder="Search by patient, doctor or department..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-transparent text-xs text-white outline-none w-full sm:w-64 placeholder-slate-500"
+                  className="bg-[#0A1917] text-xs text-white outline-none w-full sm:w-64 placeholder-slate-500 p-2 rounded-xl border border-slate-800 focus:border-[#00695C]"
                 />
               </div>
 
@@ -708,7 +733,9 @@ export default function Dashboard() {
                     key={st}
                     onClick={() => setStatusFilter(st)}
                     className={`px-3 py-1.5 rounded-full capitalize font-semibold transition ${
-                      statusFilter === st ? 'bg-[#00695C] text-white shadow' : 'bg-slate-800 text-slate-400 hover:text-white'
+                      statusFilter === st 
+                        ? 'bg-[#00695C] text-white' 
+                        : 'bg-[#0A1917] text-slate-400 hover:text-white border border-slate-800'
                     }`}
                   >
                     {st}
@@ -738,38 +765,51 @@ export default function Dashboard() {
                       </td>
                     </tr>
                   ) : (
-                    filteredAppointments.map((app) => (
-                      <tr key={app.id} className="hover:bg-white/5">
-                        <td className="py-3.5 px-4">
-                          <strong className="text-white block text-sm font-semibold">{app.patient_name}</strong>
-                          <span className="text-slate-400 block">{app.patient_phone}</span>
-                          <span className="text-slate-500 text-[11px] block">{app.patient_email}</span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="text-slate-200 font-semibold block">{app.doctor_name}</span>
-                          <span className="text-slate-400 text-[11px]">{app.department}</span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="text-slate-300 block">{app.date}</span>
-                          <span className="text-[#80CBC4] font-mono text-[11px]">{app.time_slot} ({app.type || 'in-person'})</span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="text-white font-bold block">₹{app.fee || 2000}</span>
-                          <span className={`text-[10px] font-bold uppercase ${app.payment_status === 'paid' ? 'text-emerald-400' : 'text-amber-400'}`}>
-                            {app.payment_status || 'unpaid'}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                            app.status === 'confirmed' ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/50' :
-                            app.status === 'completed' ? 'bg-blue-950 text-blue-400 border border-blue-700/50' :
-                            app.status === 'cancelled' ? 'bg-rose-950 text-rose-400 border border-rose-700/50' :
-                            'bg-amber-950 text-amber-400 border border-amber-700/50'
-                          }`}>
-                            {app.status}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-right space-x-1">
+                    filteredAppointments.map((app) => {
+                      const pName = app.patient_name || app.patientName || app.name || 'Valued Patient';
+                      const pPhone = app.patient_phone || app.patientPhone || app.phone || 'Phone not provided';
+                      const pEmail = app.patient_email || app.patientEmail || app.email || 'Email not provided';
+                      const dName = app.doctor_name || app.doctorName || app.doctor || (app.department ? `Specialist (${app.department})` : 'Assigned Specialist');
+                      const dept = app.department || 'General Medicine';
+                      const dt = app.date || app.bookingDate || 'Scheduled';
+                      const slt = app.time_slot || app.timeSlot || app.slot || '10:00 AM';
+                      const cType = app.type || app.consultationType || 'in-person';
+                      const feeAmt = app.fee || app.consultationFee || 2000;
+                      const payStatus = app.payment_status || app.paymentStatus || 'unpaid';
+                      const st = app.status || 'pending';
+
+                      return (
+                        <tr key={app.id} className="hover:bg-white/5">
+                          <td className="py-3.5 px-4">
+                            <strong className="text-white block text-sm font-semibold">{pName}</strong>
+                            <span className="text-slate-400 block">{pPhone}</span>
+                            <span className="text-slate-500 text-[11px] block">{pEmail}</span>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className="text-slate-200 font-semibold block">{dName}</span>
+                            <span className="text-slate-400 text-[11px]">{dept}</span>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className="text-slate-300 block">{dt}</span>
+                            <span className="text-[#80CBC4] font-mono text-[11px]">{slt} ({cType})</span>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className="text-white font-bold block">₹{feeAmt}</span>
+                            <span className={`text-[10px] font-bold uppercase ${payStatus === 'paid' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                              {payStatus}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase inline-block ${
+                              st === 'confirmed' ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/50' :
+                              st === 'completed' ? 'bg-blue-950 text-blue-400 border border-blue-700/50' :
+                              st === 'cancelled' ? 'bg-rose-950 text-rose-400 border border-rose-700/50' :
+                              'bg-amber-950 text-amber-400 border border-amber-700/50'
+                            }`}>
+                              {st}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 text-right space-x-1">
                           {app.status !== 'confirmed' && (
                             <button 
                               onClick={() => handleUpdateAppointmentStatus(app.id, 'confirmed')}
@@ -809,9 +849,10 @@ export default function Dashboard() {
                           </button>
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
+                    );
+                  })
+                )}
+              </tbody>
               </table>
             </div>
 

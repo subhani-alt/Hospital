@@ -113,18 +113,28 @@ export default function Appointment() {
     const token = `APEX-${new Date().getFullYear()}-${Date.now().toString().slice(-5)}`;
     setBookingToken(token);
 
-    // Submit to Supabase
+    // Submit to Supabase & Backend API
     try {
       await createAppointmentInSupabase({
-        patientName,
-        patientPhone,
-        patientEmail,
+        patient_name: patientName,
+        patientName: patientName,
+        patient_phone: patientPhone,
+        patientPhone: patientPhone,
+        patient_email: patientEmail,
+        patientEmail: patientEmail,
+        doctor_name: selectedDoctor?.name || 'Assigned Specialist',
         doctorName: selectedDoctor?.name || 'Assigned Specialist',
         department: selectedDoctor?.deptName || selectedDept || 'General Medicine',
         date: bookingDate,
-        timeSlot,
+        bookingDate: bookingDate,
+        time_slot: timeSlot,
+        timeSlot: timeSlot,
         type: consultationType,
-        fee: selectedDoctor?.consultationFee || 2000
+        consultationType: consultationType,
+        fee: Number(selectedDoctor?.consultationFee || 2000),
+        consultationFee: Number(selectedDoctor?.consultationFee || 2000),
+        status: 'pending',
+        payment_status: 'unpaid'
       });
     } catch (err) {
       console.warn('Supabase appointment submission notice:', err);
