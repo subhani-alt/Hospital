@@ -295,7 +295,7 @@
       "originalPrice": 14000,
       "tests_count": 45,
       "testsCount": 45,
-      "recommended_for": "Heart Risk, High BP",
+      "recommended_for": "Heart Risk, High BP, Family Cardiac History",
       "recommendedFor": "Heart Risk, High BP, Family Cardiac History",
       "highlights": [
         "CT Coronary Angiography (Zero-Calcium Scan)",
@@ -310,7 +310,7 @@
     },
     {
       "id": "wellness-women-vital",
-      "name": "Apex Empress Women’s Wellness Shield",
+      "name": "Prestige Empress Women’s Wellness Shield",
       "badge": "Women Health",
       "category": "Women",
       "price": 11499,
@@ -318,8 +318,8 @@
       "originalPrice": 18000,
       "tests_count": 78,
       "testsCount": 78,
-      "recommended_for": "Women of All Ages, Hormonal Health",
-      "recommendedFor": "Women of All Ages, Hormonal Health",
+      "recommended_for": "Women of All Ages, Hormonal Health, Cervical & Breast Care",
+      "recommendedFor": "Women of All Ages, Hormonal Health, Cervical & Breast Care",
       "highlights": [
         "Digital Mammography / Breast USG",
         "Liquid-based Pap Smear",
@@ -333,7 +333,7 @@
     },
     {
       "id": "gut-digestive-screen",
-      "name": "Apex Comprehensive Gut & Liver Shield",
+      "name": "Prestige Comprehensive Gut & Liver Shield",
       "badge": "GI Premier",
       "category": "Gastroenterology",
       "price": 12999,
@@ -341,8 +341,8 @@
       "originalPrice": 19500,
       "tests_count": 52,
       "testsCount": 52,
-      "recommended_for": "Digestive Issues, Fatty Liver, Acidity",
-      "recommendedFor": "Digestive Issues, Fatty Liver, Acidity",
+      "recommended_for": "Digestive Issues, Fatty Liver, Acidity, IBS Prevention",
+      "recommendedFor": "Digestive Issues, Fatty Liver, Acidity, IBS Prevention",
       "highlights": [
         "FibroScan (Liver Stiffness Assessment)",
         "Diagnostic Upper GI Endoscopy",
@@ -352,6 +352,52 @@
         "Gastro: Video Endoscopy, FibroScan",
         "Liver Panel: LFT, Hepatitis B & C",
         "Consultation: Senior Gastroenterologist"
+      ]
+    },
+    {
+      "id": "senior-citizen-platinum",
+      "name": "Prestige Senior Citizen Platinum Care Shield",
+      "badge": "Senior Care",
+      "category": "Geriatric Care",
+      "price": 7999,
+      "original_price": 13500,
+      "originalPrice": 13500,
+      "tests_count": 65,
+      "testsCount": 65,
+      "recommended_for": "Seniors Aged 60+, Mobility, Vision & Chronic Wellness",
+      "recommendedFor": "Seniors Aged 60+, Mobility, Vision & Chronic Wellness",
+      "highlights": [
+        "DEXA Whole Body Bone Densitometry",
+        "Geriatric Functional Mobility Assessment",
+        "Diabetic Retinopathy & Glaucoma Screen"
+      ],
+      "inclusions": [
+        "Geriatric Consultation",
+        "Arthritis Panel & Hemogram",
+        "Kidney & Electrolyte Profile"
+      ]
+    },
+    {
+      "id": "diabetes-metabolic-guard",
+      "name": "Prestige Advanced Diabetes & Metabolic Guard",
+      "badge": "Diabetes Special",
+      "category": "Endocrinology",
+      "price": 5999,
+      "original_price": 10000,
+      "originalPrice": 10000,
+      "tests_count": 42,
+      "testsCount": 42,
+      "recommended_for": "Prediabetes, Type 1 & 2 Diabetes, Metabolic Syndrome",
+      "recommendedFor": "Prediabetes, Type 1 & 2 Diabetes, Metabolic Syndrome",
+      "highlights": [
+        "Continuous Glucose Monitoring (CGM) Review",
+        "Carotid Intima Thickness Scan",
+        "Diabetic Foot Neuropathy Screening"
+      ],
+      "inclusions": [
+        "Endocrinology Consultation",
+        "HbA1c & Blood Glucose",
+        "Lipid Sub-fractions"
       ]
     }
   ],

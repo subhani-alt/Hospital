@@ -39,8 +39,12 @@ const INITIAL_BLOGS = [
 ];
 
 const INITIAL_PACKAGES = [
-  { id: 'executive-master-check', name: 'Apex Executive Master Health Shield', badge: 'Most Popular', category: 'Comprehensive', price: 14999, original_price: 22000, tests_count: 94, recommended_for: 'Men & Women Aged 35+' },
-  { id: 'cardiac-vital-guard', name: 'Apex Advanced Cardiac Protection Package', badge: 'Heart Special', category: 'Cardiology', price: 8999, original_price: 14000, tests_count: 45, recommended_for: 'Heart Risk, High BP' }
+  { id: 'executive-master-check', name: 'Prestige Executive Master Health Shield', badge: 'Most Popular', category: 'Comprehensive', price: 14999, original_price: 22000, tests_count: 94, recommended_for: 'Men & Women Aged 35+' },
+  { id: 'cardiac-vital-guard', name: 'Prestige Advanced Cardiac Protection Package', badge: 'Heart Special', category: 'Cardiology', price: 8999, original_price: 14000, tests_count: 45, recommended_for: 'Heart Risk, High BP, Family Cardiac History' },
+  { id: 'wellness-women-vital', name: 'Prestige Empress Women’s Wellness Shield', badge: 'Women Health', category: 'Women', price: 11499, original_price: 18000, tests_count: 78, recommended_for: 'Women of All Ages, Hormonal Health, Cervical & Breast Care' },
+  { id: 'gut-digestive-screen', name: 'Prestige Comprehensive Gut & Liver Shield', badge: 'GI Premier', category: 'Gastroenterology', price: 12999, original_price: 19500, tests_count: 52, recommended_for: 'Digestive Issues, Fatty Liver, Acidity, IBS Prevention' },
+  { id: 'senior-citizen-platinum', name: 'Prestige Senior Citizen Platinum Care Shield', badge: 'Senior Care', category: 'Geriatric Care', price: 7999, original_price: 13500, tests_count: 65, recommended_for: 'Seniors Aged 60+, Mobility, Vision & Chronic Wellness' },
+  { id: 'diabetes-metabolic-guard', name: 'Prestige Advanced Diabetes & Metabolic Guard', badge: 'Diabetes Special', category: 'Endocrinology', price: 5999, original_price: 10000, tests_count: 42, recommended_for: 'Prediabetes, Type 1 & 2 Diabetes, Metabolic Syndrome' }
 ];
 
 const INITIAL_INQUIRIES = [
@@ -143,8 +147,18 @@ export default function Dashboard() {
         window.dispatchEvent(new Event('apex_blogs_updated'));
       }
       if (pkgRes?.data && pkgRes.data.length > 0) {
-        setPackages(pkgRes.data);
-        localStorage.setItem('apex_packages', JSON.stringify(pkgRes.data));
+        const merged = INITIAL_PACKAGES.map(base => {
+          const found = pkgRes.data.find(p => p.id === base.id);
+          return found ? { ...base, ...found } : base;
+        });
+        const custom = pkgRes.data.filter(p => !INITIAL_PACKAGES.some(b => b.id === p.id));
+        const allPkgs = [...merged, ...custom];
+        setPackages(allPkgs);
+        localStorage.setItem('apex_packages', JSON.stringify(allPkgs));
+        window.dispatchEvent(new Event('apex_packages_updated'));
+      } else {
+        setPackages(INITIAL_PACKAGES);
+        localStorage.setItem('apex_packages', JSON.stringify(INITIAL_PACKAGES));
         window.dispatchEvent(new Event('apex_packages_updated'));
       }
       if (inqRes?.data && inqRes.data.length > 0) {

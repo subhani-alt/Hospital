@@ -252,7 +252,6 @@ export function getLiveDoctors(includeHidden = false) {
 export const DOCTORS = getLiveDoctors();
 
 export const HEALTH_PACKAGES = [
-
   {
     id: 'executive-master-check',
     name: 'Prestige Executive Master Health Shield',
@@ -260,8 +259,11 @@ export const HEALTH_PACKAGES = [
     category: 'Comprehensive',
     price: 14999,
     originalPrice: 22000,
+    original_price: 22000,
     testsCount: 94,
+    tests_count: 94,
     recommendedFor: 'Men & Women Aged 35+',
+    recommended_for: 'Men & Women Aged 35+',
     highlights: ['Whole Body MRI Screening', '3D Echo & Stress Test', 'Comprehensive Cardiac Marker Panel', 'Full Body Tumor Markers', 'Diet & Lifestyle Physician Consult'],
     inclusions: [
       'Cardiology: TMT, 3D Echocardiogram, ECG',
@@ -279,8 +281,11 @@ export const HEALTH_PACKAGES = [
     category: 'Cardiology',
     price: 8999,
     originalPrice: 14000,
+    original_price: 14000,
     testsCount: 45,
+    tests_count: 45,
     recommendedFor: 'Heart Risk, High BP, Family Cardiac History',
+    recommended_for: 'Heart Risk, High BP, Family Cardiac History',
     highlights: ['CT Coronary Angiography (Zero-Calcium Scan)', 'High Sensitivity CRP (hs-CRP)', 'Lipoprotein (a)', 'Carotid Doppler Ultrasound'],
     inclusions: [
       'Cardiology: CT Coronary Angio, Treadmill Stress Test, 2D Echo',
@@ -296,8 +301,11 @@ export const HEALTH_PACKAGES = [
     category: 'Women',
     price: 11499,
     originalPrice: 18000,
+    original_price: 18000,
     testsCount: 78,
+    tests_count: 78,
     recommendedFor: 'Women of All Ages, Hormonal Health, Cervical & Breast Care',
+    recommended_for: 'Women of All Ages, Hormonal Health, Cervical & Breast Care',
     highlights: ['Digital Mammography / Breast USG', 'Liquid-based Pap Smear', 'DEXA Bone Density Scan', 'Hormone Profile (AMH, Estrogen, Progesterone)'],
     inclusions: [
       'Gynecology: Pap Smear, Pelvic USG, Clinical Breast Exam',
@@ -313,14 +321,57 @@ export const HEALTH_PACKAGES = [
     category: 'Gastroenterology',
     price: 12999,
     originalPrice: 19500,
+    original_price: 19500,
     testsCount: 52,
+    tests_count: 52,
     recommendedFor: 'Digestive Issues, Fatty Liver, Acidity, IBS Prevention',
+    recommended_for: 'Digestive Issues, Fatty Liver, Acidity, IBS Prevention',
     highlights: ['FibroScan (Liver Stiffness Assessment)', 'Diagnostic Upper GI Endoscopy', 'H. Pylori Antigen Test', 'Stool Microbiome & Calprotectin'],
     inclusions: [
       'Gastro: Video Endoscopy, FibroScan, USG Abdomen',
       'Liver Panel: LFT, Hepatitis B & C Screening, Ferritin',
       'Metabolic: Fasting Insulin, Lipid Profile, Uric Acid',
       'Consultation: Senior Gastroenterologist'
+    ]
+  },
+  {
+    id: 'senior-citizen-platinum',
+    name: 'Prestige Senior Citizen Platinum Care Shield',
+    badge: 'Senior Care',
+    category: 'Geriatric Care',
+    price: 7999,
+    originalPrice: 13500,
+    original_price: 13500,
+    testsCount: 65,
+    tests_count: 65,
+    recommendedFor: 'Seniors Aged 60+, Mobility, Vision & Chronic Wellness',
+    recommended_for: 'Seniors Aged 60+, Mobility, Vision & Chronic Wellness',
+    highlights: ['DEXA Whole Body Bone Densitometry', 'Geriatric Functional Mobility Assessment', 'Diabetic Retinopathy & Glaucoma Screen', 'High-Sensitivity Cardiac & Kidney Panel'],
+    inclusions: [
+      'Geriatric Consultation & Medication Reconciliation',
+      'Complete Hemogram, ESR, CRP & Arthritis Panel',
+      'Kidney & Electrolyte Profile (eGFR, Serum Creatinine, K+)',
+      'Audiometry Hearing Screening & Vision Evaluation'
+    ]
+  },
+  {
+    id: 'diabetes-metabolic-guard',
+    name: 'Prestige Advanced Diabetes & Metabolic Guard',
+    badge: 'Diabetes Special',
+    category: 'Endocrinology',
+    price: 5999,
+    originalPrice: 10000,
+    original_price: 10000,
+    testsCount: 42,
+    tests_count: 42,
+    recommendedFor: 'Prediabetes, Type 1 & 2 Diabetes, Metabolic Syndrome',
+    recommended_for: 'Prediabetes, Type 1 & 2 Diabetes, Metabolic Syndrome',
+    highlights: ['Continuous Glucose Monitoring (CGM) Review', 'High-Resolution Carotid Intima-Media Thickness Scan', 'Diabetic Peripheral Neuropathy & Foot Doppler', 'Microalbuminuria & Early Renal Protection Panel'],
+    inclusions: [
+      'Endocrinology Specialist Consultation',
+      'HbA1c Glycated Hemoglobin & Average Blood Glucose',
+      'Lipid Sub-fractions (ApoB / ApoA1 ratio)',
+      'Clinical Nutritionist Personalized Diet Chart'
     ]
   }
 ];

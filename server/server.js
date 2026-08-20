@@ -80,16 +80,28 @@ const persistStore = () => {
 
 const _saved = loadSavedStore();
 
+const MOCK_PACKAGES = [
+  { id: 'executive-master-check', name: 'Prestige Executive Master Health Shield', badge: 'Most Popular', category: 'Comprehensive', price: 14999, original_price: 22000, tests_count: 94, recommended_for: 'Men & Women Aged 35+' },
+  { id: 'cardiac-vital-guard', name: 'Prestige Advanced Cardiac Protection Package', badge: 'Heart Special', category: 'Cardiology', price: 8999, original_price: 14000, tests_count: 45, recommended_for: 'Heart Risk, High BP, Family Cardiac History' },
+  { id: 'wellness-women-vital', name: 'Prestige Empress Women’s Wellness Shield', badge: 'Women Health', category: 'Women', price: 11499, original_price: 18000, tests_count: 78, recommended_for: 'Women of All Ages, Hormonal Health, Cervical & Breast Care' },
+  { id: 'gut-digestive-screen', name: 'Prestige Comprehensive Gut & Liver Shield', badge: 'GI Premier', category: 'Gastroenterology', price: 12999, original_price: 19500, tests_count: 52, recommended_for: 'Digestive Issues, Fatty Liver, Acidity, IBS Prevention' },
+  { id: 'senior-citizen-platinum', name: 'Prestige Senior Citizen Platinum Care Shield', badge: 'Senior Care', category: 'Geriatric Care', price: 7999, original_price: 13500, tests_count: 65, recommended_for: 'Seniors Aged 60+, Mobility, Vision & Chronic Wellness' },
+  { id: 'diabetes-metabolic-guard', name: 'Prestige Advanced Diabetes & Metabolic Guard', badge: 'Diabetes Special', category: 'Endocrinology', price: 5999, original_price: 10000, tests_count: 42, recommended_for: 'Prediabetes, Type 1 & 2 Diabetes, Metabolic Syndrome' }
+];
+
 // In-Memory & Persistent Data Stores for Live Sync
 let doctorsStore = _saved?.doctorsStore || [...MOCK_DOCTORS];
 let blogsStore = _saved?.blogsStore || [
   { id: 'robotic-surgery-future-2026', title: 'How 5G-Enabled Robotic Surgery is Revolutionizing Quaternary Healthcare in 2026', category: 'Medical Breakthroughs', author: 'Dr. Ananya Sharma', date: 'February 12, 2026', read_time: '6 min read', summary: 'Discover how robotic-assisted surgical platforms with sub-millimeter precision are reducing recovery times.', image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800' },
   { id: 'fatty-liver-reversal-guide', title: 'Reversing Non-Alcoholic Fatty Liver Disease (MASLD): The Science of Early Precision Intervention', category: 'Gastroenterology', author: 'Dr. D. Nageshwar Reddy', date: 'January 28, 2026', read_time: '8 min read', summary: 'With MASLD affecting nearly 30% of global adults, early FibroScan detection offers a complete pathway to liver renewal.', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800' }
 ];
-let packagesStore = _saved?.packagesStore || [
-  { id: 'executive-master-check', name: 'Prestige Executive Master Health Shield', badge: 'Most Popular', category: 'Comprehensive', price: 14999, original_price: 22000, tests_count: 94, recommended_for: 'Men & Women Aged 35+' },
-  { id: 'cardiac-vital-guard', name: 'Prestige Advanced Cardiac Protection Package', badge: 'Heart Special', category: 'Cardiology', price: 8999, original_price: 14000, tests_count: 45, recommended_for: 'Heart Risk, High BP' }
-];
+
+const _mergedPkgs = MOCK_PACKAGES.map(base => {
+  const found = _saved?.packagesStore?.find(p => p.id === base.id);
+  return found ? { ...base, ...found } : base;
+});
+const _customPkgs = (_saved?.packagesStore || []).filter(p => !MOCK_PACKAGES.some(b => b.id === p.id));
+let packagesStore = [..._mergedPkgs, ..._customPkgs];
 let appointmentsStore = _saved?.appointmentsStore || [
   { id: 'b1a2c3d4-0001', patient_name: 'Rahul Verma', patient_phone: '+91 98765 43210', patient_email: 'rahul.verma@example.com', doctor_name: 'Dr. D. Nageshwar Reddy', department: 'Gastroenterology', date: '2026-08-05', time_slot: '10:30 AM', type: 'in-person', status: 'confirmed', fee: 2500, payment_status: 'paid', created_at: new Date().toISOString() },
   { id: 'b1a2c3d4-0002', patient_name: 'Priya Sharma', patient_phone: '+91 98111 22233', patient_email: 'priya.sharma@example.com', doctor_name: 'Dr. Ananya Sharma', department: 'Oncology', date: '2026-08-05', time_slot: '11:30 AM', type: 'online', status: 'pending', fee: 2000, payment_status: 'unpaid', created_at: new Date().toISOString() }
