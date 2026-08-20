@@ -16,7 +16,7 @@ if (process.platform === 'linux') {
   console.log('[Build] Linux environment detected. Ensuring Linux native binaries (Rollup, LightningCSS, Esbuild)...');
   try {
     execSync(
-      'npm install --no-save @rollup/rollup-linux-x64-gnu @rollup/rollup-linux-x64-musl lightningcss-linux-x64-gnu lightningcss-linux-x64-musl @esbuild/linux-x64',
+      'npm install --no-save --force --legacy-peer-deps --no-audit --no-fund @rollup/rollup-linux-x64-gnu@4.34.8 @rollup/rollup-linux-x64-musl@4.34.8 lightningcss-linux-x64-gnu@1.32.0 lightningcss-linux-x64-musl@1.32.0 @esbuild/linux-x64',
       { cwd: clientDir, stdio: 'inherit' }
     );
   } catch (err) {
