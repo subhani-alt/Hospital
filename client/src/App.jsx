@@ -1,5 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 
 import Navbar from './components/common/Navbar';
@@ -27,6 +27,28 @@ import Login from './pages/Auth/Login';
 import AdminDashboard from './pages/Admin';
 
 import { useStore } from './store/useStore';
+
+// Reload To Homepage: Ensures reloading the website returns to the Homepage
+function ReloadToHome() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    try {
+      const navEntries = performance.getEntriesByType('navigation');
+      const isReload = navEntries.length > 0 
+        ? navEntries[0].type === 'reload' 
+        : (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
+
+      if (isReload && !location.pathname.startsWith('/admin')) {
+        navigate('/', { replace: true });
+        window.scrollTo(0, 0);
+      }
+    } catch (e) {}
+  }, []);
+
+  return null;
+}
 
 // Scroll To Top component on route change
 function ScrollToTop() {
@@ -124,6 +146,7 @@ export default function App() {
         {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
         <Router>
+          <ReloadToHome />
           <ScrollToTop />
           <AppContent />
         </Router>
