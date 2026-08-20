@@ -18,5 +18,9 @@
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.34.8",
+    "@rollup/rollup-linux-x64-musl": "^4.34.8"
   }
 }
