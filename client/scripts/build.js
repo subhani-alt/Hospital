@@ -14,7 +14,7 @@ console.log('[Build] Target Client Directory:', clientDir);
 
 try {
   console.log('[Build] Executing Vite compilation...');
-  execSync('npx vite build', { cwd: clientDir, stdio: 'inherit' });
+  execSync('npm run build', { cwd: clientDir, stdio: 'inherit' });
   
   const clientDist = path.join(clientDir, 'dist');
   const rootDir = isClientSubdir ? path.resolve(cwd, '..') : cwd;
